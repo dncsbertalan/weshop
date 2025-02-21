@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 export function NavigationBar() {
     return (
-        <Flex as="nav" bg="green.500" p={4} color="white" align="center">
+        <Flex as="nav" bg="green.500" p={4} color="white" align="center" w="100%">
             <Link to={Navigation.home}>
                 <Heading size="xl">ÖNLAB PROJEKT</Heading>
             </Link>
