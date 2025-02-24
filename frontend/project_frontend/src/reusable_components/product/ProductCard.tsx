@@ -11,8 +11,10 @@ export function ProductCard({ product }: ProductCardProps) {
         <Card.Root 
             maxW="sm"   
             overflow="hidden"
-            background="pink"
-            backdropFilter="blur(10px)"
+            background="white"
+            backdropFilter="auto" 
+            backdropBlur="10px"
+            //backdropFilter="blur(0px)"
             //borderRadius="50px"
         >
             <Image

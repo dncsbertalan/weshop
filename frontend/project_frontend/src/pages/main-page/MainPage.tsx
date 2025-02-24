@@ -1,12 +1,34 @@
 import { ProductCard } from "@/reusable_components/product/ProductCard";
-import { getFakeProducts } from "@/test_data/ProductList";
+//import { getFakeProducts } from "@/test_data/ProductList";
 import { Box, Center, Flex, For, SimpleGrid } from "@chakra-ui/react";
 import { NavigationBar } from "../NavigationBar";
 import { Footer } from "../Footer";
+import { useQuery } from "@tanstack/react-query";
+import { Product } from "@/models/Product";
+
+const BASE_URL = "http://localhost:5220";
+
+async function fetchProducts() {
+    const response = await fetch(`${BASE_URL}/api/products`);
+    //return (await response.json());
+    return (await response.json()) as Product[];
+}
 
 export function MainPage() {
 
-    const products = getFakeProducts();
+    //const products = getFakeProducts();
+    //const queryClient = useQueryClient()
+
+    const {
+        isPending,
+        isError,
+        data: products
+    } = useQuery({
+        queryKey: ["products"],
+        queryFn: fetchProducts
+    });
+
+    //console.log(products);
 
     return (
         <Box>
@@ -19,11 +41,19 @@ export function MainPage() {
                         columnGap="2"
                         rowGap="4"
                     >
-                        <For each={products}>
+                        {isError && <div>
+                            ERROR VAN
+                        </div>}
+
+                        {isPending && <div>
+                            Loading...
+                        </div>}
+
+                        {!isPending && <For each={products}>
                             {(item) => (
                                 <ProductCard product={item} />
                             )}
-                        </For>
+                        </For>}
                     </SimpleGrid>
                 </Flex>
             </Center>
