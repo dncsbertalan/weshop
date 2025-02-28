@@ -1,6 +1,6 @@
 import { ProductCard } from "@/reusable_components/product/ProductCard";
 //import { getFakeProducts } from "@/test_data/ProductList";
-import { Box, Center, Flex, For, SimpleGrid } from "@chakra-ui/react";
+import { Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
 import { NavigationBar } from "../NavigationBar";
 import { Footer } from "../Footer";
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +31,10 @@ export function MainPage() {
     //console.log(products);
 
     return (
-        <Box>
+        <Flex
+            direction="column"
+            minHeight="100vh"
+        >
             <NavigationBar />
 
             <Center background="purple">
@@ -58,7 +61,9 @@ export function MainPage() {
                 </Flex>
             </Center>
 
+            <Spacer />
+
             <Footer></Footer>
-        </Box>
+        </Flex>
     );
 }
