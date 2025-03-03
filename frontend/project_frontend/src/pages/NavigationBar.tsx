@@ -3,7 +3,6 @@ import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaPowerOff } from "react-icons/fa";
 import { LuShoppingCart } from "react-icons/lu";
 import { Link } from "react-router";
-import { Filters } from "./main-page/Filters";
 
 export function NavigationBar() {
     return (
@@ -15,7 +14,6 @@ export function NavigationBar() {
             <Spacer />
             
             <HStack>
-                <Filters></Filters>
                 <Link to={Navigation.shoppingCart}>
                     <IconButton
                         aria-label="Shopping cart"

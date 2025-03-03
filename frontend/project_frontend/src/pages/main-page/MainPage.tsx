@@ -1,10 +1,11 @@
 import { ProductCard } from "@/reusable_components/product/ProductCard";
 //import { getFakeProducts } from "@/test_data/ProductList";
-import { Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
+import { Box, Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
 import { NavigationBar } from "../NavigationBar";
 import { Footer } from "../Footer";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@/models/Product";
+import { Filters } from "./Filters";
 
 const BASE_URL = "http://localhost:5220";
 
@@ -38,32 +39,42 @@ export function MainPage() {
             <NavigationBar />
 
             <Center background="purple">
-                <Flex background="red.500" borderRadius={10} padding={5}>
-                    <SimpleGrid
-                        columns={{ base: 1, md: 2, lg: 3 }}
-                        columnGap="2"
-                        rowGap="4"
-                    >
-                        {isError && <div>
-                            ERROR VAN
-                        </div>}
 
-                        {isPending && <div>
-                            Loading...
-                        </div>}
+                <Flex
+                    padding={5}
+                    gap={10}
+                >
+                    <Filters />
 
-                        {!isPending && <For each={products}>
-                            {(item) => (
-                                <ProductCard product={item} />
-                            )}
-                        </For>}
-                    </SimpleGrid>
+                    {/* Product cards */}
+                    <Flex background="red.500" borderRadius={15} padding={5}>
+                        <SimpleGrid
+                            columns={{ base: 1, md: 2, lg: 3 }}
+                            columnGap="4"
+                            rowGap="4"
+                        >
+                            {isError && <div>
+                                ERROR VAN
+                            </div>}
+
+                            {isPending && <div>
+                                Loading...
+                            </div>}
+
+                            {!isPending &&
+                                <For each={products}>
+                                    {(item) => (
+                                        <ProductCard product={item} />
+                                    )}
+                                </For>}
+                        </SimpleGrid>
+                    </Flex>
                 </Flex>
             </Center>
 
             <Spacer />
 
-            <Footer></Footer>
+            <Footer />
         </Flex>
     );
 }
