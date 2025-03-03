@@ -1,5 +1,7 @@
-﻿using Domain.Models;
+﻿using Domain.DTOs;
+using Domain.Models;
 using Domain.Repository;
+using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -8,23 +10,23 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
-    private readonly IProductRepository productRepository;
+    private readonly ProductService _productService;
 
-    public ProductsController(IProductRepository productRepository)
+    public ProductsController(ProductService productRepository)
     {
-        this.productRepository = productRepository;
+        _productService = productRepository;
     }
 
     [HttpGet]
-    public IEnumerable<Product> GetAll()
+    public IEnumerable<ProductDTO> GetAll()
     {
-        return productRepository.List();
+        return _productService.GetAll();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Product> Get(int id)
+    public ActionResult<ProductDTO> Get(int id)
     {
-        var product = productRepository.GetById(id);
+        var product = _productService.GetById(id);
         return product != null ? Ok(product): NotFound();
     }
 }

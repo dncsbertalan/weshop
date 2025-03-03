@@ -1,5 +1,7 @@
-﻿using Domain.Models;
+﻿using Domain.DTOs;
+using Domain.Models;
 using Domain.Repository;
+using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -8,16 +10,16 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class CategoriesController : ControllerBase
 {
-    private readonly ICategoryRepository categoryRepository;
+    private readonly CategoryService _categoryService;
 
-    public CategoriesController(ICategoryRepository categoryRepository)
+    public CategoriesController(CategoryService categoryService)
     {
-        this.categoryRepository = categoryRepository;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
-    public IEnumerable<Category> GetAll()
+    public IEnumerable<CategoryDTO> GetAll()
     {
-        return categoryRepository.List();
+        return _categoryService.List();
     }
 }

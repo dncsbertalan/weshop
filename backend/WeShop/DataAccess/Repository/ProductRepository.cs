@@ -1,10 +1,18 @@
-﻿using Domain.Models;
+﻿using Domain.DTOs;
+using Domain.Models;
 using Domain.Repository;
 
 namespace DataAccess.Repository;
 
 public class ProductRepository : IProductRepository
 {
+    private readonly WebshopDbContext _dbContext;
+
+    public ProductRepository(WebshopDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
     private readonly List<Product> products =
     [
         new Product() { Id = 1, Name = "Activity játszószőnyeg", Description = "Színes, fejlesztő játszószőnyeg kisbabáknak.", Price = 7488, AvailableQuantity = 21 },
@@ -39,13 +47,39 @@ public class ProductRepository : IProductRepository
         new Product() { Id = 30, Name = "Kisautó szett", Description = "10 darabos fém kisautó készlet.", Price = 6990, AvailableQuantity = 32 }
     ];
 
-    public Product? GetById(long id)
+    public ProductDTO? GetById(int id)
     {
-        return products.FirstOrDefault(x => x.Id == id);
+        
+        var result = _dbContext.Products.SingleOrDefault(x => x.Id == id);
+        if (result == null)
+        {
+            return null;
+        }
+        return new ProductDTO {
+            Id = result.Id,
+            Name = result.Name,
+            Description = result.Description,
+            Price = result.Price,
+            AvailableQuantity = result.AvailableQuantity,
+            Categories = result.Categories
+        };
     }
 
-    public IReadOnlyCollection<Product> List()
+    public IReadOnlyCollection<ProductDTO> List()
     {
-        return products;
+        var resultList = new List<ProductDTO>();
+        foreach (var product in _dbContext.Products.ToList())
+        {
+            resultList.Add(new ProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                AvailableQuantity = product.AvailableQuantity,
+                Categories = product.Categories
+            });
+        }
+        return resultList;
     }
 }

@@ -1,9 +1,19 @@
-﻿namespace Domain.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace Domain.Models;
+
+[Table("CartItem")]
 public class CartItem
 {
-    public long Id { get; set; }
-    public long CartId { get; set; }
-    public long ProductId { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key]
+    public int Id { get; set; }
+
+    [ForeignKey("CartId")]
+    public Cart Cart { get; set; }
+
+    [ForeignKey("ProductId")]
+    public Product Product { get; set; }
     public int Quantity { get; set; }
 }

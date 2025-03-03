@@ -1,10 +1,18 @@
-﻿using Domain.Models;
+﻿using Domain.DTOs;
+using Domain.Models;
 using Domain.Repository;
 
 namespace DataAccess.Repository;
 
 public class CategoryRepository : ICategoryRepository
 {
+    private readonly WebshopDbContext _context;
+
+    public CategoryRepository(WebshopDbContext context)
+    {
+        _context = context;
+    }
+
     private readonly List<Category> categories =
     [
         new Category() { Id = 1, Name = "Plüssjátékok", Description = "Puha és ölelni való plüssfigurák gyerekeknek." },
@@ -19,8 +27,18 @@ public class CategoryRepository : ICategoryRepository
         new Category() { Id = 10, Name = "Művészeti és kreatív játékok", Description = "Kifestők, gyurma szettek, rajzkészletek és egyéb kreatív játékok." }
     ];
 
-    public IReadOnlyCollection<Category> List()
+    public IReadOnlyCollection<CategoryDTO> List()
     {
-        return categories;
+        var resultList = new List<CategoryDTO>();
+        foreach (var category in _context.Categories.ToList())
+        {
+            resultList.Add(new CategoryDTO
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            });
+        }
+        return resultList;
     }
 }
