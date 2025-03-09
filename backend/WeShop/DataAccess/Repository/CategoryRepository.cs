@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 
@@ -27,12 +27,12 @@ public class CategoryRepository : ICategoryRepository
         new Category() { Id = 10, Name = "Művészeti és kreatív játékok", Description = "Kifestők, gyurma szettek, rajzkészletek és egyéb kreatív játékok." }
     ];
 
-    public IReadOnlyCollection<CategoryDTO> List()
+    public IReadOnlyCollection<CategoryDto> List()
     {
-        var resultList = new List<CategoryDTO>();
+        var resultList = new List<CategoryDto>();
         foreach (var category in _context.Categories.ToList())
         {
-            resultList.Add(new CategoryDTO
+            resultList.Add(new CategoryDto
             {
                 Id = category.Id,
                 Name = category.Name,

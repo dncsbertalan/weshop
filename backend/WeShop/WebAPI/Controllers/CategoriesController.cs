@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 using Domain.Services;
@@ -18,7 +18,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<CategoryDTO> GetAll()
+    public IEnumerable<CategoryDto> GetAll()
     {
         return _categoryService.List();
     }

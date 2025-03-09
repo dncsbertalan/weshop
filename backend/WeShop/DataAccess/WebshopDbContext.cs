@@ -1,9 +1,10 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
-public class WebshopDbContext : DbContext
+public class WebshopDbContext : IdentityDbContext<User>
 {
     public WebshopDbContext(DbContextOptions<WebshopDbContext> options) : base(options) { }
 
@@ -15,5 +16,5 @@ public class WebshopDbContext : DbContext
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<User> Users { get; set; }
+    //public DbSet<User> Users { get; set; }
 }

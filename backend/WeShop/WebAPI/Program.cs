@@ -1,7 +1,13 @@
+using DataAccess;
 using DataAccess.Repository;
+using Domain.Models;
 using Domain.Repository;
 using Domain.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 // CORS probléma
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -11,19 +17,17 @@ var builder = WebApplication.CreateBuilder(args);
 // CORS probléma
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
+    options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
                       {
-                          policy.WithOrigins("http://localhost:5173",
-                                              "http://localhost:5220");
+                          policy.WithOrigins("http://localhost:5173");
                       });
 });
 
-// Add services to the container.
+// Adding services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoryService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -33,10 +37,38 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Injecting the DbContext
-builder.Services.AddDbContext<DataAccess.WebshopDbContext>(options =>
+builder.Services.AddDbContext<WebshopDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<WebshopDbContext>()
+    .AddDefaultTokenProviders();
+
+// JWT konfiguráció
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true
+    };
+});
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -52,6 +84,7 @@ app.UseHttpsRedirection();
 // CORS probléma
 app.UseCors(MyAllowSpecificOrigins);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

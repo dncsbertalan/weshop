@@ -1,8 +1,8 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 
 namespace Domain.Repository;
 
 public interface ICategoryRepository
 {
-    IReadOnlyCollection<CategoryDTO> List();
+    IReadOnlyCollection<CategoryDto> List();
 }

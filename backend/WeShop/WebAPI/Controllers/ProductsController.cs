@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 using Domain.Services;
@@ -18,13 +18,13 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<ProductDTO> GetAll()
+    public IEnumerable<ProductDto> GetAll()
     {
         return _productService.GetAll();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<ProductDTO> Get(int id)
+    public ActionResult<ProductDto> Get(int id)
     {
         var product = _productService.GetById(id);
         return product != null ? Ok(product): NotFound();

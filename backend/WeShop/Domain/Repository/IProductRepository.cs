@@ -1,9 +1,9 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 
 namespace Domain.Repository;
 
 public interface IProductRepository
 {
-    IReadOnlyCollection<ProductDTO> List();
-    ProductDTO? GetById(int id);
+    IReadOnlyCollection<ProductDto> List();
+    ProductDto? GetById(int id);
 }

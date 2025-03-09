@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ public class CategoryService
         _repository = repository;
     }
 
-    public IReadOnlyCollection<CategoryDTO> List()
+    public IReadOnlyCollection<CategoryDto> List()
     {
         return _repository.List();
     }

@@ -1,8 +1,8 @@
 ﻿using Domain.Models;
 
-namespace Domain.DTOs;
+namespace Domain.Dtos;
 
-public class ProductDTO
+public class ProductDto
 {
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;

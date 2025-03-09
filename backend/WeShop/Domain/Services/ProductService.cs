@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 
@@ -13,12 +13,12 @@ public class ProductService
         _repository = repository;
     }
 
-    public IEnumerable<ProductDTO> GetAll()
+    public IEnumerable<ProductDto> GetAll()
     {
         return _repository.List();
     }
 
-    public ProductDTO? GetById(int id)
+    public ProductDto? GetById(int id)
     {
         return _repository.GetById(id);
     }

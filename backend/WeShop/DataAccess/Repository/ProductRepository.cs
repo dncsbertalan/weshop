@@ -1,4 +1,4 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 
@@ -47,7 +47,7 @@ public class ProductRepository : IProductRepository
         new Product() { Id = 30, Name = "Kisautó szett", Description = "10 darabos fém kisautó készlet.", Price = 6990, AvailableQuantity = 32 }
     ];
 
-    public ProductDTO? GetById(int id)
+    public ProductDto? GetById(int id)
     {
         
         var result = _dbContext.Products.SingleOrDefault(x => x.Id == id);
@@ -55,7 +55,7 @@ public class ProductRepository : IProductRepository
         {
             return null;
         }
-        return new ProductDTO {
+        return new ProductDto {
             Id = result.Id,
             Name = result.Name,
             Description = result.Description,
@@ -65,12 +65,12 @@ public class ProductRepository : IProductRepository
         };
     }
 
-    public IReadOnlyCollection<ProductDTO> List()
+    public IReadOnlyCollection<ProductDto> List()
     {
-        var resultList = new List<ProductDTO>();
+        var resultList = new List<ProductDto>();
         foreach (var product in _dbContext.Products.ToList())
         {
-            resultList.Add(new ProductDTO
+            resultList.Add(new ProductDto
             {
                 Id = product.Id,
                 Name = product.Name,

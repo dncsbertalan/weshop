@@ -1,8 +1,10 @@
-﻿using Domain.DTOs;
+﻿using Domain.Dtos;
+using Domain.Models;
 
 namespace Domain.Repository;
 
 public interface IUserRepository
 {
-    UserDTO? GetById(int id);
+    User? RegisterAsync(RegistrationDto registrationData);
+    string LoginAsync(LoginDto loginData);
 }
