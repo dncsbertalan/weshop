@@ -1,17 +1,67 @@
-import { Flex } from "@chakra-ui/react";
+import { Button, Field, Flex, Heading, Input, VStack } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { NavigationBar } from "../NavigationBar";
+import axios from "axios";
+import { LoginDto } from "@/dtos/LoginDto";
 
-const App = () => {
-    //const [showPassword, setShowPassword] = useState(false);
+export function LoginPage() {
+    const { register, handleSubmit } = useForm<LoginDto>();
 
-    //const handleShowClick = () => setShowPassword(!showPassword);
+    const onSubmit = async (data: LoginDto) => {
+        try {
+            const apiUrl = "/api/authentication/login";
+
+            const payload = {
+                email: data.email,
+                password: data.password
+            };
+
+            const response = await axios.post(apiUrl, payload, {
+                headers: { "Content-Type": "application/json" },
+            });
+
+            console.log("Succes:", response.data);
+            // TODO:
+            //       - go to main page
+            //       - handle staying logged in
+        }
+        catch (error: any) {
+            console.error("Error:", error.response?.data || error.message);
+        }
+    };
 
     return (
         <Flex
             background="gray"
+            width="100vw"
+            height="100vh"
+            padding={10}
+            justifyContent="center"
+            alignItems="center"
         >
+            <NavigationBar />
 
-        </Flex>
+            <VStack gap={4} p={6} boxShadow="lg" borderRadius="lg" bg="white" minWidth={300} maxW="400px" mx="auto" mt={10}>
+                <Heading size="lg">Login</Heading>
+
+                <Field.Root required>
+                    <Field.Label>
+                        E-mail<Field.RequiredIndicator />
+                    </Field.Label>
+                    <Input type="email" {...register("email")} placeholder="pelda@email.com" />
+                </Field.Root>
+
+                <Field.Root required>
+                    <Field.Label>
+                        Password <Field.RequiredIndicator />
+                    </Field.Label>
+                    <Input type="password" {...register("password")} placeholder="********" />
+                </Field.Root>
+
+                <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
+                    Login
+                </Button>
+            </VStack>
+        </Flex >
     );
 };
-
-export default App;

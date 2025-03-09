@@ -1,6 +1,7 @@
 import { Navigation } from "@/models/Navigation";
 import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
-import { FaPowerOff } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { FaRightFromBracket, FaRightToBracket } from "react-icons/fa6";
 import { LuShoppingCart } from "react-icons/lu";
 import { Link } from "react-router";
 
@@ -18,7 +19,6 @@ export function NavigationBar() {
                     <IconButton
                         aria-label="Shopping cart"
                         variant="ghost"
-                        color="teal"
                         rounded="full"
                         size="md"
                     >
@@ -30,11 +30,32 @@ export function NavigationBar() {
                     <IconButton
                         aria-label="Profil"
                         variant="ghost"
-                        color="teal"
                         rounded="full"
                         size="md"
                     >
-                        <FaPowerOff />
+                        <FaUser />
+                    </IconButton>
+                </Link>
+
+                <Link to={Navigation.login}>
+                    <IconButton
+                        aria-label="Login"
+                        variant="ghost"
+                        rounded="full"
+                        size="md"
+                    >
+                        <FaRightToBracket />
+                    </IconButton>
+                </Link>
+
+                <Link to={Navigation.registration}>
+                    <IconButton
+                        aria-label="Registration"
+                        variant="ghost"
+                        rounded="full"
+                        size="md"
+                    >
+                        <FaRightFromBracket />
                     </IconButton>
                 </Link>
             </HStack>

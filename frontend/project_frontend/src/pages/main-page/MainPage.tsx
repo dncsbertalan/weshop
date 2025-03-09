@@ -1,6 +1,6 @@
 import { ProductCard } from "@/reusable_components/product/ProductCard";
 //import { getFakeProducts } from "@/test_data/ProductList";
-import { Box, Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
+import { Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
 import { NavigationBar } from "../NavigationBar";
 import { Footer } from "../Footer";
 import { useQuery } from "@tanstack/react-query";
@@ -49,7 +49,7 @@ export function MainPage() {
                     {/* Product cards */}
                     <Flex background="red.500" borderRadius={15} padding={5}>
                         <SimpleGrid
-                            columns={{ base: 1, md: 2, lg: 3 }}
+                            columns={{ base: 1, md: 3, lg: 4 }}
                             columnGap="4"
                             rowGap="4"
                         >

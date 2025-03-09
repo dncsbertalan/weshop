@@ -28,7 +28,7 @@ export function Filters() {
     return (
         <MenuRoot>
             <MenuTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="xl" background="white" borderRadius={10}>
                     <HiSortAscending /> Sort
                 </Button>
             </MenuTrigger>

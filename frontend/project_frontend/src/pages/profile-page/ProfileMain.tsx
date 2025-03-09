@@ -1,5 +1,4 @@
-import { ProductCard } from "@/reusable_components/product/ProductCard";
-import { Flex, Center, SimpleGrid, For, Spacer } from "@chakra-ui/react";
+import { Flex, Center, Spacer } from "@chakra-ui/react";
 import { Footer } from "../Footer";
 import { Filters } from "../main-page/Filters";
 import { NavigationBar } from "../NavigationBar";
