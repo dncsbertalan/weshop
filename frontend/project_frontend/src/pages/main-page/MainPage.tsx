@@ -1,11 +1,12 @@
 import { ProductCard } from "@/reusable_components/product/ProductCard";
 //import { getFakeProducts } from "@/test_data/ProductList";
-import { Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
+import { Button, Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
 import { NavigationBar } from "../NavigationBar";
 import { Footer } from "../Footer";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@/models/Product";
 import { Filters } from "./Filters";
+import axios from "axios";
 
 const BASE_URL = "http://localhost:5220";
 
@@ -15,10 +16,21 @@ async function fetchProducts() {
     return (await response.json()) as Product[];
 }
 
-export function MainPage() {
+const apiUrl = "/api/authentication/hello";
+async function authTest() {
+    const token = JSON.parse(localStorage.getItem("token") ?? "ERROR");
+    console.log(token);
+    const response = await axios.get(apiUrl, {
+        headers: { 
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    console.log(response.data);
+    return response.data;
+}
 
-    //const products = getFakeProducts();
-    //const queryClient = useQueryClient()
+export function MainPage() {
 
     const {
         isPending,
@@ -28,8 +40,6 @@ export function MainPage() {
         queryKey: ["products"],
         queryFn: fetchProducts
     });
-
-    //console.log(products);
 
     return (
         <Flex

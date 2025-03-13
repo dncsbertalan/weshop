@@ -1,8 +1,7 @@
 import { Category } from "@/models/Category";
-import { Button, For, MenuContent, MenuItem, MenuRadioItemGroup, MenuRoot, MenuTrigger } from "@chakra-ui/react";
+import { Accordion, Checkbox, CheckboxGroup, Fieldset, Flex, For, Span } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { HiSortAscending } from "react-icons/hi";
 
 const BASE_URL = "http://localhost:5220";
 
@@ -14,8 +13,6 @@ async function fetchCategories() {
 
 export function Filters() {
 
-    const [value, setValue] = useState("asc")
-
     const {
         //isPending,
         //isError,
@@ -25,25 +22,56 @@ export function Filters() {
         queryFn: fetchCategories
     });
 
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(["s", "h"]);
+    
     return (
-        <MenuRoot>
-            <MenuTrigger asChild>
-                <Button variant="ghost" size="xl" background="white" borderRadius={10}>
-                    <HiSortAscending /> Sort
-                </Button>
-            </MenuTrigger>
-            <MenuContent minW="10rem">
-                <MenuRadioItemGroup
-                    value={value}
-                    onValueChange={(e) => setValue(e.value)}
-                >
-                    <For each={categories}>
-                        {(item: Category) => (
-                            <MenuItem value={item.name}>{item.name}</MenuItem>
-                        )}
-                    </For>
-                </MenuRadioItemGroup>
-            </MenuContent>
-        </MenuRoot>
+        <Flex
+            background="whiteAlpha.500"
+            padding={3}
+            borderRadius={10}
+            minWidth={250}
+            maxHeight={300}
+            zIndex={1000}
+            //pos="absolute"
+            //border="1px solid rgba(255, 255, 255, 0.35)"
+            shadow="2px 2px 10px 3px rgba(0, 0, 0, 0.2);"
+            backdropFilter="blur(10px)"
+        >
+            <Accordion.Root multiple defaultValue={["b"]}>
+                <Accordion.Item key={0} value={""}>
+                    <Accordion.ItemTrigger>
+                        <Span flex="1">Categories</Span>
+                        <Accordion.ItemIndicator />
+                    </Accordion.ItemTrigger>
+                    <Accordion.ItemContent>
+                        <Accordion.ItemBody>
+
+                            {/* Categories */}
+
+                            <CheckboxGroup
+                                value={selectedCategories}
+                                onChange={(values) => console.log(values) /*setSelectedCategories(values as string[])*/}
+                            >
+                                <Fieldset.Root>
+                                    <Fieldset.Legend />
+                                    <Fieldset.Content>
+                                        <For each={categories}>
+                                            {(category) => (
+                                                <Checkbox.Root key={category.id} value={category.name}>
+                                                    <Checkbox.HiddenInput />
+                                                    <Checkbox.Control />
+                                                    <Checkbox.Label>{category.name}</Checkbox.Label>
+                                                </Checkbox.Root>
+                                            )}
+                                        </For>
+                                    </Fieldset.Content>
+                                </Fieldset.Root>
+                            </CheckboxGroup>
+
+                        </Accordion.ItemBody>
+                    </Accordion.ItemContent>
+                </Accordion.Item>
+            </Accordion.Root>
+        </Flex>
     );
 }

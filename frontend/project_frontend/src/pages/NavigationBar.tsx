@@ -7,13 +7,22 @@ import { Link } from "react-router";
 
 export function NavigationBar() {
     return (
-        <Flex as="nav" bg="green.500" p={4} color="white" align="center" w="100%">
+        <Flex
+            as="nav"
+            background="green.500"
+            //background="whiteAlpha.500"
+            padding={4}
+            color="white"
+            align="center"
+            width="100%"
+            zIndex={1000}
+        >
             <Link to={Navigation.home}>
                 <Heading size="xl">WeShop</Heading>
             </Link>
 
             <Spacer />
-            
+
             <HStack>
                 <Link to={Navigation.shoppingCart}>
                     <IconButton

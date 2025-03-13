@@ -21,6 +21,7 @@ export function LoginPage() {
             });
 
             console.log("Succes:", response.data);
+            localStorage.setItem("token", JSON.stringify(response.data));
             // TODO:
             //       - go to main page
             //       - handle staying logged in

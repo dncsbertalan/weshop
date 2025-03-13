@@ -1,18 +1,36 @@
 import { Center, Flex, For, VStack, Box } from "@chakra-ui/react";
 import { Footer } from "../Footer";
 import { NavigationBar } from "../NavigationBar"
-import { Cart } from "@/models/Cart";
-import { getFakeProducts } from "@/test_data/ProductList";
-import { ProductCardHorizontal } from "@/reusable_components/product/ProductCardHorizontal";
+import axios from "axios";
+import { CartItemDto } from "@/dtos/CartItemDto";
+import { useQuery } from "@tanstack/react-query";
+import { CartItemHCard } from "@/reusable_components/product/CartItemHCard";
 
-const cart: Cart = {
-    id: 1,
-    items: getFakeProducts(),
-};
+const apiUrl = "/api/carts";
+async function fetchCartItems() {
+    const token = JSON.parse(localStorage.getItem("token") ?? "ERROR");
+    const response = await axios.get(apiUrl, {
+        headers: { 
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    console.log(response.data);
+    return (response.data as CartItemDto[]);
+}
 
 export function CartMain() {
 
-    const total = cart.items.reduce((sum, item) => sum + item.price, 0);
+    //const total = cart.items.reduce((sum, item) => sum + item.price, 0);
+
+    const {
+        //isPending,
+        //isError,
+        data: cart
+    } = useQuery({
+        queryKey: ["cartItems"],
+        queryFn: fetchCartItems
+    });
 
     return (
         <div>
@@ -22,11 +40,11 @@ export function CartMain() {
                 <Flex background="red.500" borderRadius={10} padding={5}>
                     <VStack>
                         <Box background="gray" padding={3}>
-                            {total}
+                            {/*total*/}összeg
                         </Box>
-                        <For each={cart.items}>
+                        <For each={cart}>
                             {(item) => (
-                                <ProductCardHorizontal product={item} />
+                                <CartItemHCard cartItem={item} />
                             )}
                         </For>
                     </VStack>
