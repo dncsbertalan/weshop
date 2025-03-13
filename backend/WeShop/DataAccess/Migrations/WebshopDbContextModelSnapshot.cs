@@ -24,11 +24,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
+                    b.Property<long>("CategoriesId")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
+                    b.Property<long>("ProductsId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("CategoriesId", "ProductsId");
 
@@ -39,11 +39,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CityName")
                         .IsRequired()
@@ -66,11 +66,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.Cart", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -85,17 +85,17 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.CartItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
+                    b.Property<long>("CartId")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -111,11 +111,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -132,14 +132,12 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
+                    b.Property<long>("AddressId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
@@ -158,14 +156,12 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.OrderItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -203,11 +199,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
@@ -466,7 +462,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Domain.Models.CartItem", b =>
                 {
                     b.HasOne("Domain.Models.Cart", "Cart")
-                        .WithMany()
+                        .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -504,7 +500,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Domain.Models.OrderItem", b =>
                 {
                     b.HasOne("Domain.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -561,6 +557,16 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("Domain.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

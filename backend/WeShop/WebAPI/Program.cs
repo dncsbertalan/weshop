@@ -9,12 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-// CORS probléma
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 var builder = WebApplication.CreateBuilder(args);
 
 // CORS probléma
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
@@ -25,12 +23,12 @@ builder.Services.AddCors(options =>
 
 // Adding services to the container.
 builder.Services.AddControllers();
-builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<CategoryService>();
-builder.Services.AddScoped<AuthenticationService>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -41,7 +39,7 @@ builder.Services.AddDbContext<WebshopDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+// Adding the identity 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<WebshopDbContext>()
     .AddDefaultTokenProviders();

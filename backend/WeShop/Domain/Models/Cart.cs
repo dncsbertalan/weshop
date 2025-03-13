@@ -8,11 +8,10 @@ public class Cart
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [ForeignKey("UserId")]
     public User User { get; set; }
 
-    //[ForeignKey("CartItemId")]
-    //public List<CartItem> CarItems { get; set; } = [];
+    public virtual List<CartItem> CartItems { get; set; } = [];
 }

@@ -8,7 +8,7 @@ public class Product
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [Required]
     public string Name { get; set; } = string.Empty;
@@ -19,7 +19,5 @@ public class Product
 
     [Required]
     public int AvailableQuantity { get; set; }
-
-    //[ForeignKey("CategoryId")]
     public List<Category> Categories { get; set; } = [];
 }

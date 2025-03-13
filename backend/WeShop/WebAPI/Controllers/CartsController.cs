@@ -1,6 +1,11 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 using Domain.Repository;
+using Domain.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers;
 
@@ -8,17 +13,40 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class CartsController : ControllerBase
 {
-    private readonly ICartRepository cartRepository;
+    private readonly CartService _cartService;
 
-    public CartsController(ICartRepository cartRepository)
+    public CartsController(CartService cartService)
     {
-        this.cartRepository = cartRepository;
+        _cartService = cartService;
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Cart> Get(int id)
+    [Authorize]
+    public async Task<ActionResult<List<CartItemDto>>> GetCart(long id)
     {
-        var cart = cartRepository.GetById(id);
-        return cart != null ? Ok(cart) : NotFound();
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var carts = await _cartService.GetCartById(userId, id);
+        return Ok(carts);
+    }
+
+    [HttpPost("{id}")]
+    [Authorize]
+    public async Task<IActionResult> AddItemToCart(long id, [FromBody] CartItemModifyingDto productData)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _cartService.AddItemToCart(id, userId, productData);
+
+        if (!result)
+            return BadRequest("An error occured modifying cart data.");
+
+        return Ok("Product successfully added to cart.");
     }
 }

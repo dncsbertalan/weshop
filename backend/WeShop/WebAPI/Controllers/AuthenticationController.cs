@@ -16,14 +16,12 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    //private readonly AuthenticationService _userService;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly IConfiguration _configuration;
 
-    public AuthenticationController(AuthenticationService userService, UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+    public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
     {
-        //_userService = userService;
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
@@ -61,18 +59,19 @@ public class AuthenticationController : ControllerBase
         return Ok(token);
     }
 
-    [HttpGet]
+    [HttpGet("hello")]
     [Authorize]
     public ActionResult<string> HelloLoggedIn()
     {
-        return Ok("Hi");
+        return Ok(new { message = "Hi" });
     }
 
     private string GenerateJwtToken(User user)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));

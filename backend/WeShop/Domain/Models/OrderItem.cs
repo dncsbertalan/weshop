@@ -6,9 +6,8 @@ namespace Domain.Models;
 [Table("OrderItem")]
 public class OrderItem
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [ForeignKey("OrderId")]
     public Order Order { get; set; }

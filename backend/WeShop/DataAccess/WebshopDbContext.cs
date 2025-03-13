@@ -16,5 +16,4 @@ public class WebshopDbContext : IdentityDbContext<User>
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Product> Products { get; set; }
-    //public DbSet<User> Users { get; set; }
 }

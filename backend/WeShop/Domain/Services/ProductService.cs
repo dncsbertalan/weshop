@@ -1,5 +1,4 @@
 ﻿using Domain.Dtos;
-using Domain.Models;
 using Domain.Repository;
 
 namespace Domain.Services;
@@ -18,7 +17,7 @@ public class ProductService
         return _repository.List();
     }
 
-    public ProductDto? GetById(int id)
+    public ProductDto? GetById(string id)
     {
         return _repository.GetById(id);
     }

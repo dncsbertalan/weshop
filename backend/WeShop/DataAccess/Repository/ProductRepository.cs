@@ -47,10 +47,10 @@ public class ProductRepository : IProductRepository
         new Product() { Id = 30, Name = "Kisautó szett", Description = "10 darabos fém kisautó készlet.", Price = 6990, AvailableQuantity = 32 }
     ];
 
-    public ProductDto? GetById(int id)
+    public ProductDto? GetById(string id)
     {
         
-        var result = _dbContext.Products.SingleOrDefault(x => x.Id == id);
+        var result = _dbContext.Products.SingleOrDefault(product => product.Id.ToString() == id);
         if (result == null)
         {
             return null;
@@ -67,8 +67,9 @@ public class ProductRepository : IProductRepository
 
     public IReadOnlyCollection<ProductDto> List()
     {
+        var products = _dbContext.Products.ToList();
         var resultList = new List<ProductDto>();
-        foreach (var product in _dbContext.Products.ToList())
+        foreach (var product in products)
         {
             resultList.Add(new ProductDto
             {

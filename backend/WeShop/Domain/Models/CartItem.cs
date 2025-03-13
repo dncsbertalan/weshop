@@ -8,7 +8,7 @@ public class CartItem
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [ForeignKey("CartId")]
     public Cart Cart { get; set; }

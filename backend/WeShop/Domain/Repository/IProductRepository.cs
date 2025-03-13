@@ -5,5 +5,5 @@ namespace Domain.Repository;
 public interface IProductRepository
 {
     IReadOnlyCollection<ProductDto> List();
-    ProductDto? GetById(int id);
+    ProductDto? GetById(string id);
 }
