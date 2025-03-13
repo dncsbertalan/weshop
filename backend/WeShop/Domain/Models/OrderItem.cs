@@ -1,23 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Domain.Models;
 
-namespace Domain.Models;
-
-[Table("OrderItem")]
 public class OrderItem
 {
-    [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    [ForeignKey("OrderId")]
-    public Order Order { get; set; }
-
-    [Required]
+    public Guid Id { get; set; }
+    public Guid OrderId { get; set; }
     public string ProductName { get; set; } = string.Empty;
-
-    [Required]
     public double Price { get; set; }
-
-    [Required]
     public int Quantity { get; set; }
 }

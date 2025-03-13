@@ -1,18 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Domain.Models;
 
-namespace Domain.Models;
-
-public class User : IdentityUser
+public class User
 {
-    [Required]
+    public string Id { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
-
-    [Required] 
     public string LastName { get; set; } = string.Empty;
-
-    [Required]
-    [DataType(DataType.Date)]
+    public string Email { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
 }

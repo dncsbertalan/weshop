@@ -15,7 +15,7 @@ public class CartRepository : ICartRepository
         _context = context;
     }
 
-    public async Task<bool> AddItemToCart(string userId, CartItemModifyingDto productData)
+    public async Task<bool> AddItemToCart(string userId, CartItemModificationDto productData)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user is null) return false;
@@ -27,7 +27,7 @@ public class CartRepository : ICartRepository
                                     .FirstOrDefaultAsync(cart => cart.User.Id == userId);
         if (cart is null)
         {
-            cart = new Cart
+            cart = new Cart_Data
             {
                 User = user
             };
@@ -39,7 +39,7 @@ public class CartRepository : ICartRepository
         // If the product is not yet in the cart
         if (existingCartItem is null)
         {
-            var newCartItem = new CartItem
+            var newCartItem = new CartItem_Data
             {
                 Cart = cart,
                 Quantity = productData.Quantity,

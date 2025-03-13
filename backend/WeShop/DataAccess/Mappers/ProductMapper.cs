@@ -7,5 +7,5 @@ namespace DataAccess.Mappers;
 [Mapper]
 public partial class ProductMapper
 {
-    public partial ProductDto ToDto(Product product);
+    public partial ProductDto ToDto(Product_Data product);
 }

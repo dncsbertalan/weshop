@@ -1,19 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Domain.Models;
 
-namespace Domain.Models;
-
-[Table("Order")]
 public class Order
 {
-    [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    [ForeignKey("AddressId")]
-    public Address Address { get; set; }
-
-    [ForeignKey("PaymentMethodId")]
-    public PaymentMethod PaymentMethod { get; set; }
-    public virtual List<OrderItem> Items { get; set; } = [];
+    public Guid Id { get; set; }
+    public long AddressId { get; set; }
+    public int PaymentMethodId { get; set; }
     public bool IsCompleted { get; set; }
 }

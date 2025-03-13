@@ -1,7 +1,6 @@
 ﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Services;
 

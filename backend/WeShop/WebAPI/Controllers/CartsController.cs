@@ -36,7 +36,7 @@ public class CartsController : ControllerBase
 
     [HttpPost("{id}")]
     [Authorize]
-    public async Task<IActionResult> AddItemToCart(long id, [FromBody] CartItemModifyingDto productData)
+    public async Task<IActionResult> AddItemToCart(long id, [FromBody] CartItemModificationDto productData)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))

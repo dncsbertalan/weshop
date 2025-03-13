@@ -1,7 +1,6 @@
 ﻿using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Services;
 
@@ -14,7 +13,7 @@ public class CartService
         _cartRepository = cartRepository;
     }
 
-    public async Task<bool> AddItemToCart(long cartId, string userId, CartItemModifyingDto productData)
+    public async Task<bool> AddItemToCart(long cartId, string userId, CartItemModificationDto productData)
     {
         return await _cartRepository.AddItemToCart(userId, productData);
     }

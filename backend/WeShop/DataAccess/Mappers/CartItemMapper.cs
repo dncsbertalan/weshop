@@ -7,5 +7,5 @@ namespace DataAccess.Mappers;
 [Mapper]
 public partial class CartItemMapper
 {
-    public partial CartItemDto ToDto(CartItem cartItem);
+    public partial CartItemDto ToDto(CartItem_Data cartItem);
 }

@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Models;
+
+[Table("Cart")]
+public class Cart_Data
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key]
+    public long Id { get; set; }
+
+    [ForeignKey("UserId")]
+    public User_Data User { get; set; }
+
+    public virtual List<CartItem_Data> CartItems { get; set; } = [];
+}

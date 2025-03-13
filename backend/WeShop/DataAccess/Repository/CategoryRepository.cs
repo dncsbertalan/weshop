@@ -13,18 +13,18 @@ public class CategoryRepository : ICategoryRepository
         _context = context;
     }
 
-    private readonly List<Category> categories =
+    private readonly List<Category_Data> categories =
     [
-        new Category() { Id = 1, Name = "Plüssjátékok", Description = "Puha és ölelni való plüssfigurák gyerekeknek." },
-        new Category() { Id = 2, Name = "Építőjátékok", Description = "LEGO és egyéb kreatív építőkészletek minden korosztálynak." },
-        new Category() { Id = 3, Name = "Társasjátékok", Description = "Stratégiai, családi és partijátékok kicsiknek és nagyoknak." },
-        new Category() { Id = 4, Name = "Távirányítós játékok", Description = "Autók, helikopterek és más izgalmas távirányítós játékok." },
-        new Category() { Id = 5, Name = "Szerepjátékok", Description = "Játékkonyhák, orvosi szettek és egyéb szerepjáték kellékek." },
-        new Category() { Id = 6, Name = "Kültéri játékok", Description = "Sporteszközök, ugrálókötelek, homokozó szettek és felfújható medencék." },
-        new Category() { Id = 7, Name = "Puzzle és memóriajátékok", Description = "Fejlesztő puzzle-k és memóriajátékok különböző nehézségi szinteken." },
-        new Category() { Id = 8, Name = "Interaktív és oktató játékok", Description = "Tanulótabletek, beszélő babák és egyéb fejlesztő játékok." },
-        new Category() { Id = 9, Name = "Járművek és kisautók", Description = "Versenypályák, kisautó szettek és vonatszettek minden korosztály számára." },
-        new Category() { Id = 10, Name = "Művészeti és kreatív játékok", Description = "Kifestők, gyurma szettek, rajzkészletek és egyéb kreatív játékok." }
+        new Category_Data() { Id = 1, Name = "Plüssjátékok", Description = "Puha és ölelni való plüssfigurák gyerekeknek." },
+        new Category_Data() { Id = 2, Name = "Építőjátékok", Description = "LEGO és egyéb kreatív építőkészletek minden korosztálynak." },
+        new Category_Data() { Id = 3, Name = "Társasjátékok", Description = "Stratégiai, családi és partijátékok kicsiknek és nagyoknak." },
+        new Category_Data() { Id = 4, Name = "Távirányítós játékok", Description = "Autók, helikopterek és más izgalmas távirányítós játékok." },
+        new Category_Data() { Id = 5, Name = "Szerepjátékok", Description = "Játékkonyhák, orvosi szettek és egyéb szerepjáték kellékek." },
+        new Category_Data() { Id = 6, Name = "Kültéri játékok", Description = "Sporteszközök, ugrálókötelek, homokozó szettek és felfújható medencék." },
+        new Category_Data() { Id = 7, Name = "Puzzle és memóriajátékok", Description = "Fejlesztő puzzle-k és memóriajátékok különböző nehézségi szinteken." },
+        new Category_Data() { Id = 8, Name = "Interaktív és oktató játékok", Description = "Tanulótabletek, beszélő babák és egyéb fejlesztő játékok." },
+        new Category_Data() { Id = 9, Name = "Járművek és kisautók", Description = "Versenypályák, kisautó szettek és vonatszettek minden korosztály számára." },
+        new Category_Data() { Id = 10, Name = "Művészeti és kreatív játékok", Description = "Kifestők, gyurma szettek, rajzkészletek és egyéb kreatív játékok." }
     ];
 
     public IReadOnlyCollection<CategoryDto> List()
