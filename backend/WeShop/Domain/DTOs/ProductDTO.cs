@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace Domain.Dtos;
+﻿namespace Domain.Dtos;
 
 public class ProductDto
 {
@@ -9,5 +7,5 @@ public class ProductDto
     public string Description { get; set; } = string.Empty;
     public double Price { get; set; }
     public int AvailableQuantity { get; set; }
-    public List<Category> Categories { get; set; } = [];
+    public List<CategoryDto> Categories { get; set; } = [];
 }

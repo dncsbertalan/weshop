@@ -12,7 +12,7 @@ public class ProductService(IProductRepository _repository)
         return _repository.List();
     }
 
-    public async Task<Product?> GetById(long id)
+    public async Task<ProductDto?> GetById(long id)
     {
         return await _repository.GetById(id);
     }

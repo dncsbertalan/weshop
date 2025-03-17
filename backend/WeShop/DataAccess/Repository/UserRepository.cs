@@ -1,12 +1,12 @@
 ﻿using DataAccess.Mappers;
-using Domain.Models;
+using Domain.Dtos;
 using Domain.Repository;
 
 namespace DataAccess.Repository;
 
 public class UserRepository(WebshopDbContext _context) : IUserRepository
 {
-    public async Task<User?> GetUserById(string userId)
+    public async Task<UserDto?> GetUserById(string userId)
     {
         var user = await _context.Users.FindAsync(userId);
 

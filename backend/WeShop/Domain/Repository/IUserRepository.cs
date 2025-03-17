@@ -1,8 +1,8 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
 
 namespace Domain.Repository;
 
 public interface IUserRepository
 {
-    Task<User?> GetUserById(string userId);
+    Task<UserDto?> GetUserById(string userId);
 }

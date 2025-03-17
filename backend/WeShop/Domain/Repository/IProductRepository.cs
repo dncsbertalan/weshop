@@ -6,5 +6,5 @@ namespace Domain.Repository;
 public interface IProductRepository
 {
     IReadOnlyCollection<ProductDto> List();
-    Task<Product?> GetById(long id);
+    Task<ProductDto?> GetById(long id);
 }

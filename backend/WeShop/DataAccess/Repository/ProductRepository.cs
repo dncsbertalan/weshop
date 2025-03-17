@@ -50,7 +50,7 @@ public class ProductRepository : IProductRepository
         new Product_Data() { Id = 30, Name = "Kisautó szett", Description = "10 darabos fém kisautó készlet.", Price = 6990, AvailableQuantity = 32 }
     ];
 
-    public async Task<Product?> GetById(long id)
+    public async Task<ProductDto?> GetById(long id)
     {
         var result = await _dbContext.Products.SingleOrDefaultAsync(product => product.Id == id);
         if (result == null)
