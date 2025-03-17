@@ -1,35 +1,11 @@
 import { Button, Field, Flex, Heading, Input, VStack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { NavigationBar } from "../NavigationBar";
-import axios from "axios";
 import { LoginDto } from "@/dtos/LoginDto";
+import { authLogin } from "@/api/authApi";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
-
-    const onSubmit = async (data: LoginDto) => {
-        try {
-            const apiUrl = "/api/authentication/login";
-
-            const payload = {
-                email: data.email,
-                password: data.password
-            };
-
-            const response = await axios.post(apiUrl, payload, {
-                headers: { "Content-Type": "application/json" },
-            });
-
-            console.log("Succes:", response.data);
-            localStorage.setItem("token", JSON.stringify(response.data));
-            // TODO:
-            //       - go to main page
-            //       - handle staying logged in
-        }
-        catch (error: any) {
-            console.error("Error:", error.response?.data || error.message);
-        }
-    };
 
     return (
         <Flex
@@ -59,7 +35,7 @@ export function LoginPage() {
                     <Input type="password" {...register("password")} placeholder="********" />
                 </Field.Root>
 
-                <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
+                <Button colorScheme="blue" w="full" onClick={handleSubmit(authLogin)}>
                     Login
                 </Button>
             </VStack>

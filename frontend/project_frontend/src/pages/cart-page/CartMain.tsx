@@ -1,23 +1,10 @@
-import { Center, Flex, For, VStack, Box } from "@chakra-ui/react";
+import { Center, Flex, For, VStack, Box, Spacer } from "@chakra-ui/react";
 import { Footer } from "../Footer";
 import { NavigationBar } from "../NavigationBar"
-import axios from "axios";
-import { CartItemDto } from "@/dtos/CartItemDto";
 import { useQuery } from "@tanstack/react-query";
 import { CartItemHCard } from "@/reusable_components/product/CartItemHCard";
-
-const apiUrl = "/api/carts";
-async function fetchCartItems() {
-    const token = JSON.parse(localStorage.getItem("token") ?? "ERROR");
-    const response = await axios.get(apiUrl, {
-        headers: { 
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
-    });
-    console.log(response.data);
-    return (response.data as CartItemDto[]);
-}
+import { NavBarFiller } from "../navBarFiller";
+import { getCart } from "@/api/cartApi";
 
 export function CartMain() {
 
@@ -29,14 +16,21 @@ export function CartMain() {
         data: cart
     } = useQuery({
         queryKey: ["cartItems"],
-        queryFn: fetchCartItems
+        queryFn: getCart
     });
 
     return (
-        <div>
+        <Flex
+            flexDirection="column"
+            minHeight="100vh"
+        >
             <NavigationBar />
+            <NavBarFiller />
 
-            <Center background="purple">
+            <Center
+                background="purple"
+                padding={5}
+            >
                 <Flex background="red.500" borderRadius={10} padding={5}>
                     <VStack>
                         <Box background="gray" padding={3}>
@@ -51,7 +45,8 @@ export function CartMain() {
                 </Flex>
             </Center>
 
+            <Spacer />
             <Footer />
-        </div>
+        </Flex>
     );
 }

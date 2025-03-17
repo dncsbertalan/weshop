@@ -4,6 +4,7 @@ import { Filters } from "../main-page/Filters";
 import { NavigationBar } from "../NavigationBar";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@/models/User";
+import { NavBarFiller } from "../navBarFiller";
 
 const BASE_URL = "http://localhost:5220";
 
@@ -29,6 +30,7 @@ export function ProfileMain() {
             minHeight="100vh"
         >
             <NavigationBar />
+            <NavBarFiller />
 
             <Center background="purple">
 
@@ -49,7 +51,7 @@ export function ProfileMain() {
 
             <Spacer />
 
-            <Footer></Footer>
+            <Footer />
         </Flex>
     );
 }

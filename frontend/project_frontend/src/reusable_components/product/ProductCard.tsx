@@ -1,11 +1,16 @@
+import { useCart } from '@/context/cartContext'
 import { Product } from '@/models/Product'
-import { Card, Image, Text } from '@chakra-ui/react'
+import { Button, Card, Image, Text } from '@chakra-ui/react'
 
 type ProductCardProps = {
     product: Product
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+    const { addItem } = useCart();
+    const add = () => {
+        addItem(product.id);
+    }
 
     return (
         <Card.Root 
@@ -39,6 +44,11 @@ export function ProductCard({ product }: ProductCardProps) {
             </Card.Body>
 
             <Card.Footer gap="2">
+                <Button
+                    onClick={add}
+                >
+                    Add to cart
+                </Button>
             </Card.Footer>
         </Card.Root>
     );

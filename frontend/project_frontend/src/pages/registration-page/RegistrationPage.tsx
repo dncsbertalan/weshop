@@ -2,33 +2,10 @@ import { Button, Field, Flex, Heading, HStack, Input, VStack } from "@chakra-ui/
 import { NavigationBar } from "../NavigationBar";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { authRegister } from "@/api/authApi";
 
 export function RegistrationPage() {
     const { register, handleSubmit } = useForm<RegistrationDto>();
-
-    const onSubmit = async (data: RegistrationDto) => {
-        try {
-            const apiUrl = "/api/authentication/register";
-
-            const payload = {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                birthDate: data.dob,
-                password: data.password
-            };
-
-            const response = await axios.post(apiUrl, payload, {
-                headers: { "Content-Type": "application/json" },
-            });
-
-            console.log("Sikeres regisztráció:", response.data);
-        }
-        catch (error: any) {
-            console.error("Regisztrációs hiba:", error.response?.data || error.message);
-        }
-    };
 
     return (
         <Flex
@@ -81,7 +58,7 @@ export function RegistrationPage() {
                     <Input type="password" {...register("password")} placeholder="********" />
                 </Field.Root>
 
-                <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
+                <Button colorScheme="blue" w="full" onClick={handleSubmit(authRegister)}>
                     Register
                 </Button>
             </VStack>

@@ -10,6 +10,7 @@ export function Footer() {
             //flexDirection="row-reverse"
             justifyContent="flex-start"
             alignItems="center"
+            width="100%"
         >
             <VStack>
                 <Link to={Navigation.home}>
