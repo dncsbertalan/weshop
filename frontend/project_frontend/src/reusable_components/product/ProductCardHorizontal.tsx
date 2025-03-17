@@ -1,14 +1,25 @@
+import { useCart } from '@/context/cartContext';
 import { Product } from '@/models/Product'
-import { Badge, Box, Button, Card, HStack, Image, Text } from '@chakra-ui/react'
+import { Badge, Box, Card, HStack, IconButton, Image, Text } from '@chakra-ui/react'
+import { FaTrashCan } from 'react-icons/fa6';
 
 type ProductCardHorizontalProps = {
     product: Product
 }
 
 export function ProductCardHorizontal({ product }: ProductCardHorizontalProps) {
+    const { removeItem } = useCart();
+    const remove = () => {
+        removeItem(product.id);
+    }
 
     return (
-        <Card.Root flexDirection="row" overflow="hidden" maxW="xl">
+        <Card.Root
+            flexDirection="row"
+            overflow="hidden"
+            //maxW="xl" 
+            minWidth="500px"
+        >
             <Image
                 objectFit="cover"
                 maxW="200px"
@@ -32,7 +43,11 @@ export function ProductCardHorizontal({ product }: ProductCardHorizontalProps) {
                     </HStack>
                 </Card.Body>
                 <Card.Footer>
-                    <Button></Button>
+                    <IconButton
+                        onClick={remove}
+                    >
+                        <FaTrashCan />
+                    </IconButton>
                 </Card.Footer>
             </Box>
         </Card.Root>

@@ -1,8 +1,10 @@
-import { Button, Field, Flex, Heading, Input, VStack } from "@chakra-ui/react";
+import { Button, Field, Flex, Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { NavigationBar } from "../NavigationBar";
 import { LoginDto } from "@/dtos/LoginDto";
 import { authLogin } from "@/api/authApi";
+import { Link } from "react-router";
+import { Navigation } from "@/models/Navigation";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
@@ -38,6 +40,14 @@ export function LoginPage() {
                 <Button colorScheme="blue" w="full" onClick={handleSubmit(authLogin)}>
                     Login
                 </Button>
+                <Text>
+                    Doesn't have an account yet?
+                </Text>
+                <Link to={Navigation.registration}>
+                    <Text>
+                        Create one
+                    </Text>
+                </Link>
             </VStack>
         </Flex >
     );

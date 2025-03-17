@@ -3,13 +3,10 @@ import { Footer } from "../Footer";
 import { NavigationBar } from "../NavigationBar"
 import { useQuery } from "@tanstack/react-query";
 import { CartItemHCard } from "@/reusable_components/product/CartItemHCard";
-import { NavBarFiller } from "../navBarFiller";
+import { NavBarFiller } from "../NavBarFiller";
 import { getCart } from "@/api/cartApi";
 
 export function CartMain() {
-
-    //const total = cart.items.reduce((sum, item) => sum + item.price, 0);
-
     const {
         //isPending,
         //isError,

@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { addProductToCart, getCart, } from "../api/cartApi";
+import { addProductToCart, deleteProductFromCart, getCart, } from "../api/cartApi";
 import { CartItemDto } from "@/dtos/CartItemDto";
 
 interface CartContextType {
     cart: CartItemDto[];
     addItem: (productId: number) => Promise<void>;
-    //removeItem: (cartItemId: number) => Promise<void>;
+    removeItem: (cartItemId: number) => Promise<void>;
     //clearCart: () => void;
 }
 
@@ -38,15 +38,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    /*const removeItem = async (cartItemId: number) => {
+    const removeItem = async (cartItemId: number) => {
         try {
-            await removeFromCart(cartItemId);
+            await deleteProductFromCart(cartItemId);
             const updatedCart = await getCart();
             setCart(updatedCart);
         } catch (error) {
             console.error("Hiba az eltávolításkor:", error);
         }
-    };*/
+    };
 
     // Kosár teljes kiürítése
     /*const clearCart = () => {
@@ -54,7 +54,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     };*/
 
     return (
-        <CartContext.Provider value={{ cart, addItem, /*removeItem,*/ /*clearCart*/ }}>
+        <CartContext.Provider value={{ cart, addItem, removeItem, /*clearCart*/ }}>
             {children}
         </CartContext.Provider>
     );

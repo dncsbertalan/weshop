@@ -1,7 +1,7 @@
 import { Category } from "@/models/Category";
 
 export type CartItemDto = {
-    id: string;
+    id: number;
     name: string;
     description: string;
     price: number;

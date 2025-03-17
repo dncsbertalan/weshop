@@ -1,9 +1,10 @@
 import api from "@/api/axiosInstance";
+import { useAuth } from "@/context/authContext";
 import { Navigation } from "@/models/Navigation";
 import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
-import { FaRightFromBracket, FaRightToBracket } from "react-icons/fa6";
-import { LuPlus, LuShoppingCart } from "react-icons/lu";
+import { FaRightToBracket } from "react-icons/fa6";
+import { LuShoppingCart } from "react-icons/lu";
 import { Link } from "react-router";
 
 const apiUrl = "/api/carts";
@@ -14,6 +15,8 @@ async function createCart() {
 }
 
 export function NavigationBar() {
+    const { isAuthenticated } = useAuth();
+
     return (
         <Flex
             as="nav"
@@ -37,7 +40,7 @@ export function NavigationBar() {
             <Spacer />
 
             <HStack>
-                <IconButton
+                {/*<IconButton
                     aria-label="Shopping cart"
                     variant="ghost"
                     rounded="full"
@@ -45,9 +48,9 @@ export function NavigationBar() {
                     onClick={createCart}
                 >
                     <LuPlus />
-                </IconButton>
+                </IconButton>*/}
 
-                <Link to={Navigation.shoppingCart}>
+                {isAuthenticated && <Link to={Navigation.shoppingCart}>
                     <IconButton
                         aria-label="Shopping cart"
                         variant="ghost"
@@ -58,9 +61,9 @@ export function NavigationBar() {
                         <LuShoppingCart />
                         Cart
                     </IconButton>
-                </Link>
+                </Link>}
 
-                <Link to={Navigation.profile}>
+                {isAuthenticated && <Link to={Navigation.profile}>
                     <IconButton
                         aria-label="Profil"
                         variant="ghost"
@@ -71,9 +74,9 @@ export function NavigationBar() {
                         <FaUser />
                         Profil
                     </IconButton>
-                </Link>
+                </Link>}
 
-                <Link to={Navigation.login}>
+                {!isAuthenticated &&<Link to={Navigation.login}>
                     <IconButton
                         aria-label="Login"
                         variant="ghost"
@@ -82,9 +85,9 @@ export function NavigationBar() {
                     >
                         <FaRightToBracket />
                     </IconButton>
-                </Link>
+                </Link>}
 
-                <Link to={Navigation.registration}>
+                {/*<Link to={Navigation.registration}>
                     <IconButton
                         aria-label="Registration"
                         variant="ghost"
@@ -93,7 +96,7 @@ export function NavigationBar() {
                     >
                         <FaRightFromBracket />
                     </IconButton>
-                </Link>
+                </Link>*/}
             </HStack>
         </Flex>
     );

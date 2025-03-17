@@ -5,7 +5,7 @@ import { Footer } from "../Footer";
 import { useQuery } from "@tanstack/react-query";
 import { Filters } from "./Filters";
 import { getProducts } from "@/api/productApi";
-import { NavBarFiller } from "../navBarFiller"
+import { NavBarFiller } from "../NavBarFiller"
 
 export function MainPage() {
 
