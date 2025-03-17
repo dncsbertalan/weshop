@@ -1,11 +1,10 @@
-﻿using Domain.Dtos;
-using Domain.Models;
+﻿using Domain.Models;
 using Riok.Mapperly.Abstractions;
 
 namespace DataAccess.Mappers;
 
 [Mapper]
-public partial class CartItemMapper
+public static partial class CartItemMapper
 {
-    public partial CartItemDto ToDto(CartItem_Data cartItem);
+    public static partial CartItem ToDto(CartItem_Data cartItem);
 }

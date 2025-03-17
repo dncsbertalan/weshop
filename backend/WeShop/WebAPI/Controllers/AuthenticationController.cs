@@ -16,11 +16,11 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User_Data> _userManager;
+    private readonly SignInManager<User_Data> _signInManager;
     private readonly IConfiguration _configuration;
 
-    public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+    public AuthenticationController(UserManager<User_Data> userManager, SignInManager<User_Data> signInManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -30,7 +30,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationDto registrationData)
     {
-        var user = new User
+        var user = new User_Data
         {
             UserName = registrationData.Email,
             Email = registrationData.Email,
@@ -66,7 +66,7 @@ public class AuthenticationController : ControllerBase
         return Ok(new { message = "Hi" });
     }
 
-    private string GenerateJwtToken(User user)
+    private string GenerateJwtToken(User_Data user)
     {
         var claims = new List<Claim>
         {

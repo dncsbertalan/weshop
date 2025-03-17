@@ -26,9 +26,10 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -40,7 +41,7 @@ builder.Services.AddDbContext<WebshopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 // Adding the identity 
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User_Data, IdentityRole>()
     .AddEntityFrameworkStores<WebshopDbContext>()
     .AddDefaultTokenProviders();
 

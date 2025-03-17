@@ -1,9 +1,10 @@
 ﻿using Domain.Dtos;
+using Domain.Models;
 
 namespace Domain.Repository;
 
 public interface IProductRepository
 {
     IReadOnlyCollection<ProductDto> List();
-    ProductDto? GetById(string id);
+    Task<Product?> GetById(long id);
 }

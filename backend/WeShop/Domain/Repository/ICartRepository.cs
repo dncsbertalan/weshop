@@ -6,10 +6,11 @@ namespace Domain.Repository;
 
 public interface ICartRepository
 {
-    Task CreateCart(string userId);
-    Task<CartDto?> GetCartById(long cartId);
-    Task<List<CartItemDto>> GetCartItems(long cartId);
-    Task AddProductToCart(string userId, ProductDto productData);
-    Task DeleteProductFromCart(Guid productId);
-    Task ModifyProductInCart(CartItemModificationDto modificationData);
+    Task<Cart> CreateCart(string userId);
+    Task<Cart?> GetCartById(long cartId);
+    Task<Cart?> GetCartByUserId(string userId);
+    Task<List<CartItem>> GetCartItems(long cartId);
+    Task<bool> AddProductToCart(long cartId, long productId);
+    Task<bool> DeleteProductFromCart(Guid productId);
+    Task<bool> ModifyProductInCart(CartItemModificationDto modificationData);
 }

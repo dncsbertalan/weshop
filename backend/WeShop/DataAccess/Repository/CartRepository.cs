@@ -1,20 +1,13 @@
-﻿using Domain.Dtos;
+﻿using DataAccess.Mappers;
+using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace DataAccess.Repository;
 
-public class CartRepository : ICartRepository
+public class CartRepository(WebshopDbContext _context) : ICartRepository
 {
-    private readonly WebshopDbContext _context;
-
-    public CartRepository(WebshopDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<bool> AddItemToCart(string userId, CartItemModificationDto productData)
     {
         var user = await _context.Users.FindAsync(userId);
@@ -58,32 +51,66 @@ public class CartRepository : ICartRepository
         return true;
     }
 
-    public async Task<CartDto?> GetCartById(long cartId)
+    public async Task<bool> AddProductToCart(long cartId, long productId)
     {
-        throw new NotImplementedException();
-        //return await _context.Carts.Include(cart => cart.CartItems)
-          //                          .FirstOrDefaultAsync(c => c.Id == cartId);
+        var cart = await _context.Carts.FindAsync(cartId);
+        var product = await _context.Products.FindAsync(productId);
+
+        var newCartItem = new CartItem_Data
+        {
+            Product = product!,
+            Cart = cart!,
+            Quantity = 1
+        };
+
+        await _context.CartItems.AddAsync(newCartItem);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
-    public async Task<List<CartItemDto>> GetCartItems(string id)
+    public async Task<Cart> CreateCart(string userId)
     {
-        var query = await _context.CartItems
-            .Where(ci => ci.Cart.User.Id == id)
+        var user = await _context.Users.FindAsync(userId);
+        var cart = new Cart_Data
+        {
+            User = user!
+        };
+
+        await _context.Carts.AddAsync(cart);
+        await _context.SaveChangesAsync();
+
+        return  CartMapper.ToDto(cart);
+    }
+
+    public Task<bool> DeleteProductFromCart(Guid productId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Cart?> GetCartById(long cartId)
+    {
+        throw new NotImplementedException();
+        //return await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);
+    }
+
+    public async Task<Cart?> GetCartByUserId(string userId)
+    {
+        var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.User.Id == userId);
+        return cart is null ? null : CartMapper.ToDto(cart);
+    }
+
+    public async Task<List<CartItem>> GetCartItems(long cartId)
+    {
+        var cartItems = await _context.CartItems
+            .Include(ci => ci.Product)
+            .Include(ci => ci.Cart)
+            .Where(ci => ci.Cart.Id == cartId)
             .ToListAsync();
 
-        List<CartItemDto> result = [];
-        foreach (var cartItem in query)
+        List<CartItem> result = [];
+        foreach (var cartItem in cartItems)
         {
-            result.Add(new CartItemDto
-            {
-                Id = cartItem.Id,
-                Quantity = cartItem.Quantity,
-                //Name = cartItem.Product.Name,
-                //Description = cartItem.Product.Description,
-                //Price = cartItem.Product.Price,
-                //AvailableQuantity = cartItem.Product.AvailableQuantity,
-                //Categories = [.. cartItem.Product.Categories],
-            });
+            result.Add(CartItemMapper.ToDto(cartItem));
         }
 
         return result;
@@ -95,7 +122,7 @@ public class CartRepository : ICartRepository
         return cart is null ? null : cart.User.Id;
     }
 
-    public bool RemoveItemFromCart(int productId)
+    public Task<bool> ModifyProductInCart(CartItemModificationDto modificationData)
     {
         throw new NotImplementedException();
     }

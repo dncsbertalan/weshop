@@ -1,6 +1,9 @@
-﻿using Domain.Dtos;
+﻿using DataAccess.Mappers;
+using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace DataAccess.Repository;
 
@@ -47,22 +50,14 @@ public class ProductRepository : IProductRepository
         new Product_Data() { Id = 30, Name = "Kisautó szett", Description = "10 darabos fém kisautó készlet.", Price = 6990, AvailableQuantity = 32 }
     ];
 
-    public ProductDto? GetById(string id)
+    public async Task<Product?> GetById(long id)
     {
-        
-        var result = _dbContext.Products.SingleOrDefault(product => product.Id.ToString() == id);
+        var result = await _dbContext.Products.SingleOrDefaultAsync(product => product.Id == id);
         if (result == null)
         {
             return null;
         }
-        return new ProductDto {
-            Id = result.Id,
-            Name = result.Name,
-            Description = result.Description,
-            Price = result.Price,
-            AvailableQuantity = result.AvailableQuantity,
-            Categories = result.Categories
-        };
+        return ProductMapper.ToDto(result);
     }
 
     public IReadOnlyCollection<ProductDto> List()
@@ -78,7 +73,7 @@ public class ProductRepository : IProductRepository
                 Description = product.Description,
                 Price = product.Price,
                 AvailableQuantity = product.AvailableQuantity,
-                Categories = product.Categories
+                //Categories = product.Categories
             });
         }
         return resultList;

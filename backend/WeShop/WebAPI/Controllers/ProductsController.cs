@@ -24,7 +24,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<ProductDto> Get(string id)
+    public ActionResult<ProductDto> Get(long id)
     {
         var product = _productService.GetById(id);
         return product != null ? Ok(product): NotFound();

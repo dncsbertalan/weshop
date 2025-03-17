@@ -1,24 +1,19 @@
 ﻿using Domain.Dtos;
+using Domain.Models;
 using Domain.Repository;
+using System.Threading.Tasks;
 
 namespace Domain.Services;
 
-public class ProductService
+public class ProductService(IProductRepository _repository)
 {
-    private readonly IProductRepository _repository;
-
-    public ProductService(IProductRepository repository)
-    {
-        _repository = repository;
-    }
-
     public IEnumerable<ProductDto> GetAll()
     {
         return _repository.List();
     }
 
-    public ProductDto? GetById(string id)
+    public async Task<Product?> GetById(long id)
     {
-        return _repository.GetById(id);
+        return await _repository.GetById(id);
     }
 }

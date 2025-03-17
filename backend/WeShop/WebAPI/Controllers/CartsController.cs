@@ -1,28 +1,18 @@
 ﻿using Domain.Dtos;
-using Domain.Models;
-using Domain.Repository;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CartsController : ControllerBase
+public class CartsController(CartService _cartService) : ControllerBase
 {
-    private readonly CartService _cartService;
-
-    public CartsController(CartService cartService)
-    {
-        _cartService = cartService;
-    }
-
-    [HttpGet("{id}")]
+    [HttpPost]
     [Authorize]
-    public async Task<ActionResult<List<CartItemDto>>> GetCart(long id)
+    public async Task<IActionResult> CreateCart()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -30,22 +20,40 @@ public class CartsController : ControllerBase
             return Unauthorized();
         }
 
-        var carts = await _cartService.GetCartById(userId, id);
-        return Ok(carts);
+        var newCart = await _cartService.CreateCart(userId);
+
+        return Ok(newCart);
     }
 
-    [HttpPost("{id}")]
+    [HttpGet("me")]
     [Authorize]
-    public async Task<IActionResult> AddItemToCart(long id, [FromBody] CartItemModificationDto productData)
+    public async Task<ActionResult<CartDto>> GetCart()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
+        {
             return Unauthorized();
+        }
 
-        var result = await _cartService.AddItemToCart(id, userId, productData);
+        var carts = await _cartService.GetCartById(userId);
 
-        if (!result)
-            return BadRequest("An error occured modifying cart data.");
+        return Ok(carts);
+    }
+
+    [HttpPost("me/products")]
+    [Authorize]
+    //public async Task<IActionResult> AddProductToCart(long id, [FromBody] AddProductToCartDto productData)
+    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartDto productData)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _cartService.AddProductToCart(userId, productData);
+
+        if (!result) return BadRequest("An error occured adding product to cart.");
 
         return Ok("Product successfully added to cart.");
     }
