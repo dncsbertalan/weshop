@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 using Riok.Mapperly.Abstractions;
 
 namespace DataAccess.Mappers;
@@ -6,5 +7,5 @@ namespace DataAccess.Mappers;
 [Mapper]
 public static partial class UserMapper
 {
-    public static partial User ToDto(User_Data userData);
+    public static partial UserDto ToDto(User_Data userData);
 }
