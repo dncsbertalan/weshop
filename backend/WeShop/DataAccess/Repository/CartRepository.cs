@@ -82,9 +82,26 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return  CartMapper.ToDto(cart);
     }
 
-    public Task<bool> DeleteProductFromCart(Guid productId)
+    public async Task<bool> DeleteProductFromCart(long cartId, long cartItemId)
     {
-        throw new NotImplementedException();
+        //var cart = await _context.Carts.FindAsync(cartId);
+        var cartItem = await _context.CartItems
+            .Where(ci => ci.Id == cartItemId && ci.Cart.Id == cartId)
+            .ExecuteDeleteAsync();
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
+    {
+        //var cart = await _context.Carts.FindAsync(cartId);
+        var cartItem = await _context.CartItems
+            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
+            .ExecuteDeleteAsync();
+
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<Cart?> GetCartById(long cartId)

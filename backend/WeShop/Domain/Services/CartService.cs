@@ -63,8 +63,17 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return cartItems;
     }
 
-    public bool RemoveItemFromCart(int productId)
+    public async Task<bool> RemoveItemFromCart(string userId, long productId)
     {
-        throw new NotImplementedException();
+        var user = await _userRepository.GetUserById(userId);
+        if (user is null) return false;
+
+        var cart = await _cartRepository.GetCartByUserId(userId);
+        if (cart is null || cart.UserId != userId) return false;
+
+        //var product = await _productRepository.GetById(productId);
+        //if (product is null) return false;
+
+        return await _cartRepository.DeleteProductFromCart(cart.Id, productId);
     }
 }

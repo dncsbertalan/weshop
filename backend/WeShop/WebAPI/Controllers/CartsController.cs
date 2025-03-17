@@ -57,4 +57,25 @@ public class CartsController(CartService _cartService) : ControllerBase
 
         return Ok("Product successfully added to cart.");
     }
+
+    [HttpDelete("me/products/{productId}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteProductFromCart(long productId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _cartService.RemoveItemFromCart(userId, productId);
+
+        if (!result)
+        {
+            return NotFound(new { message = "Cart or product not found in the cart." });
+        }
+
+        return Ok();
+        //return NoContent();
+    }
 }
