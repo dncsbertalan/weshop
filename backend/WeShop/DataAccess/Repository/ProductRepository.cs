@@ -62,19 +62,11 @@ public class ProductRepository : IProductRepository
 
     public IReadOnlyCollection<ProductDto> List()
     {
-        var products = _dbContext.Products.ToList();
+        var products = _dbContext.Products.Include(product => product.Categories).ToList();
         var resultList = new List<ProductDto>();
         foreach (var product in products)
         {
-            resultList.Add(new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                AvailableQuantity = product.AvailableQuantity,
-                //Categories = product.Categories
-            });
+            resultList.Add(ProductMapper.ToDto(product));
         }
         return resultList;
     }

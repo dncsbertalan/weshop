@@ -22,7 +22,7 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CategoryProduct", b =>
+            modelBuilder.Entity("Category_DataProduct_Data", b =>
                 {
                     b.Property<long>("CategoriesId")
                         .HasColumnType("bigint");
@@ -34,10 +34,10 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct");
+                    b.ToTable("Category_DataProduct_Data");
                 });
 
-            modelBuilder.Entity("Domain.Models.Address", b =>
+            modelBuilder.Entity("Domain.Models.Address_Data", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,26 +64,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Address");
                 });
 
-            modelBuilder.Entity("Domain.Models.Cart", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Cart");
-                });
-
-            modelBuilder.Entity("Domain.Models.CartItem", b =>
+            modelBuilder.Entity("Domain.Models.CartItem_Data", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +90,26 @@ namespace DataAccess.Migrations
                     b.ToTable("CartItem");
                 });
 
-            modelBuilder.Entity("Domain.Models.Category", b =>
+            modelBuilder.Entity("Domain.Models.Cart_Data", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("Domain.Models.Category_Data", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,31 +130,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("Domain.Models.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("AddressId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PaymentMethodId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("Domain.Models.OrderItem", b =>
+            modelBuilder.Entity("Domain.Models.OrderItem_Data", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,7 +156,31 @@ namespace DataAccess.Migrations
                     b.ToTable("OrderItem");
                 });
 
-            modelBuilder.Entity("Domain.Models.PaymentMethod", b =>
+            modelBuilder.Entity("Domain.Models.Order_Data", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("AddressId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PaymentMethodId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("Domain.Models.PaymentMethod_Data", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -197,7 +197,7 @@ namespace DataAccess.Migrations
                     b.ToTable("PaymentMethod");
                 });
 
-            modelBuilder.Entity("Domain.Models.Product", b =>
+            modelBuilder.Entity("Domain.Models.Product_Data", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,7 +224,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("Domain.Models.User", b =>
+            modelBuilder.Entity("Domain.Models.User_Data", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -433,41 +433,30 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CategoryProduct", b =>
+            modelBuilder.Entity("Category_DataProduct_Data", b =>
                 {
-                    b.HasOne("Domain.Models.Category", null)
+                    b.HasOne("Domain.Models.Category_Data", null)
                         .WithMany()
                         .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Product", null)
+                    b.HasOne("Domain.Models.Product_Data", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Models.Cart", b =>
+            modelBuilder.Entity("Domain.Models.CartItem_Data", b =>
                 {
-                    b.HasOne("Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Models.CartItem", b =>
-                {
-                    b.HasOne("Domain.Models.Cart", "Cart")
+                    b.HasOne("Domain.Models.Cart_Data", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Product", "Product")
+                    b.HasOne("Domain.Models.Product_Data", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -478,15 +467,37 @@ namespace DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Domain.Models.Order", b =>
+            modelBuilder.Entity("Domain.Models.Cart_Data", b =>
                 {
-                    b.HasOne("Domain.Models.Address", "Address")
+                    b.HasOne("Domain.Models.User_Data", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Models.OrderItem_Data", b =>
+                {
+                    b.HasOne("Domain.Models.Order_Data", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Domain.Models.Order_Data", b =>
+                {
+                    b.HasOne("Domain.Models.Address_Data", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.PaymentMethod", "PaymentMethod")
+                    b.HasOne("Domain.Models.PaymentMethod_Data", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -495,17 +506,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("PaymentMethod");
-                });
-
-            modelBuilder.Entity("Domain.Models.OrderItem", b =>
-                {
-                    b.HasOne("Domain.Models.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -519,7 +519,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Domain.Models.User", null)
+                    b.HasOne("Domain.Models.User_Data", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -528,7 +528,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Domain.Models.User", null)
+                    b.HasOne("Domain.Models.User_Data", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -543,7 +543,7 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User", null)
+                    b.HasOne("Domain.Models.User_Data", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -552,19 +552,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Domain.Models.User", null)
+                    b.HasOne("Domain.Models.User_Data", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Models.Cart", b =>
+            modelBuilder.Entity("Domain.Models.Cart_Data", b =>
                 {
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("Domain.Models.Order", b =>
+            modelBuilder.Entity("Domain.Models.Order_Data", b =>
                 {
                     b.Navigation("Items");
                 });

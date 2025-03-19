@@ -83,6 +83,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
             .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
         
         return cart is null ? null : CartMapper.Map(cart);

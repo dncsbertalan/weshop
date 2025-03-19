@@ -264,7 +264,7 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryProduct",
+                name: "Category_DataProduct_Data",
                 columns: table => new
                 {
                     CategoriesId = table.Column<long>(type: "bigint", nullable: false),
@@ -272,15 +272,15 @@ namespace DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryProduct", x => new { x.CategoriesId, x.ProductsId });
+                    table.PrimaryKey("PK_Category_DataProduct_Data", x => new { x.CategoriesId, x.ProductsId });
                     table.ForeignKey(
-                        name: "FK_CategoryProduct_Category_CategoriesId",
+                        name: "FK_Category_DataProduct_Data_Category_CategoriesId",
                         column: x => x.CategoriesId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CategoryProduct_Product_ProductsId",
+                        name: "FK_Category_DataProduct_Data_Product_ProductsId",
                         column: x => x.ProductsId,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -390,8 +390,8 @@ namespace DataAccess.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryProduct_ProductsId",
-                table: "CategoryProduct",
+                name: "IX_Category_DataProduct_Data_ProductsId",
+                table: "Category_DataProduct_Data",
                 column: "ProductsId");
 
             migrationBuilder.CreateIndex(
@@ -432,7 +432,7 @@ namespace DataAccess.Migrations
                 name: "CartItem");
 
             migrationBuilder.DropTable(
-                name: "CategoryProduct");
+                name: "Category_DataProduct_Data");
 
             migrationBuilder.DropTable(
                 name: "OrderItem");

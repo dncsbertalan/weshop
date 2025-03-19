@@ -22,7 +22,11 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         if (user is null) return false;
 
         var cartId = await _cartRepository.GetCartIdFromUserId(userId);
-        if (cartId is null) return false;
+        // If the user doesn't have a cart create one
+        if (cartId is null)
+        {
+            cartId = await _cartRepository.CreateCart(userId);
+        }
 
         var product = await _productRepository.GetById(productData.ProductId);
         if (product is null) return false;
