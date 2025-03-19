@@ -59,9 +59,9 @@ public class CartsController(CartService _cartService) : ControllerBase
         return Ok("Product successfully added to cart.");
     }
 
-    [HttpDelete("me/products/{productId}")]
+    [HttpDelete("me/products/{cartItemId}")]
     [Authorize]
-    public async Task<IActionResult> DeleteProductFromCart(long productId)
+    public async Task<IActionResult> DeleteProductFromCart(long cartItemId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -69,7 +69,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.RemoveItemFromCart(userId, productId);
+        var result = await _cartService.RemoveItemFromCart(userId, cartItemId);
 
         if (!result)
         {

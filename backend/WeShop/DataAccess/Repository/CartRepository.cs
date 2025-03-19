@@ -69,6 +69,15 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
+    public async Task<bool> DeleteProductFromCart(long cartId, long cartItemId)
+    {
+        var deletedCartItems = await _context.CartItems
+            .Where(ci => ci.Id == cartItemId && ci.Cart.Id == cartId)
+            .ExecuteDeleteAsync();
+
+        return deletedCartItems > 0;
+    }
+
     public async Task<CartDto?> GetCartItems(long cartId)
     {
         var cart = await _context.Carts
@@ -81,15 +90,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     #endregion
 
-    public async Task<bool> DeleteProductFromCart(long cartId, long cartItemId)
-    {
-        var cartItem = await _context.CartItems
-            .Where(ci => ci.Id == cartItemId && ci.Cart.Id == cartId)
-            .ExecuteDeleteAsync();
-
-        await _context.SaveChangesAsync();
-        return true;
-    }
+    
 
     public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
     {
