@@ -1,10 +1,10 @@
 import { Flex, Center, Spacer } from "@chakra-ui/react";
-import { Footer } from "../Footer";
+import { Footer } from "../footer/Footer";
 import { Filters } from "../main-page/Filters";
-import { NavigationBar } from "../NavigationBar";
+import { NavigationBar } from "../navigation-bar/NavigationBar";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@/models/User";
-import { NavBarFiller } from "../navBarFiller";
+import { NavBarFiller } from "../navigation-bar/NavBarFiller";
 
 const BASE_URL = "http://localhost:5220";
 

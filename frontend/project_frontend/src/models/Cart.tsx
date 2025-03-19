@@ -1,6 +1,5 @@
-import { Product } from "./Product";
+import { CartItemDto } from "@/dtos/CartItemDto";
 
 export type Cart = {
-    id: number;
-    items: Product[];
+    cartItems: CartItemDto[];
 }

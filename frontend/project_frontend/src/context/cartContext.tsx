@@ -1,18 +1,17 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { addProductToCart, deleteProductFromCart, getCart, } from "../api/cartApi";
-import { CartItemDto } from "@/dtos/CartItemDto";
+import { Cart } from "@/models/Cart";
 
 interface CartContextType {
-    cart: CartItemDto[];
+    cart: Cart;
     addItem: (productId: number) => Promise<void>;
     removeItem: (cartItemId: number) => Promise<void>;
-    //clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-    const [cart, setCart] = useState<CartItemDto[]>([]);
+    const [cart, setCart] = useState<Cart>({ cartItems: [] });
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -48,13 +47,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    // Kosár teljes kiürítése
-    /*const clearCart = () => {
-        setCart([]); // (Ha van API endpoint a teljes ürítésre, akkor ott is hívható)
-    };*/
-
     return (
-        <CartContext.Provider value={{ cart, addItem, removeItem, /*clearCart*/ }}>
+        <CartContext.Provider value={{ cart, addItem, removeItem }}>
             {children}
         </CartContext.Provider>
     );

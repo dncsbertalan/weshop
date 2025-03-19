@@ -4,7 +4,9 @@ import { Link } from "react-router";
 
 export function Footer() {
     return (
-        <Flex background="gray.500"
+        <Flex 
+            background="gray.500"
+            //backgroundColor="rgb(245, 245, 247)"
             padding={5}
             //paddingLeft={{ md: 50 }}
             //flexDirection="row-reverse"

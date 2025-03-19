@@ -1,11 +1,11 @@
-import { ProductCard } from "@/reusable_components/product/ProductCard";
+import { ProductCard } from "@/components/product/ProductCard";
 import { Center, Flex, For, SimpleGrid, Spacer } from "@chakra-ui/react";
-import { NavigationBar } from "../NavigationBar";
-import { Footer } from "../Footer";
+import { Footer } from "../footer/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { Filters } from "./Filters";
 import { getProducts } from "@/api/productApi";
-import { NavBarFiller } from "../NavBarFiller"
+import { NavBarFiller } from "../navigation-bar/NavBarFiller"
+import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
 
 export function MainPage() {
 
@@ -23,7 +23,7 @@ export function MainPage() {
             direction="column"
             minHeight="100vh"
         >
-            <NavigationBar />
+            <GlobalNavBar />
             <NavBarFiller />
 
             <Center background="purple">

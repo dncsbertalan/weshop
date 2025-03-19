@@ -1,9 +1,9 @@
 import { Center, Flex, For, VStack, Box, Spacer } from "@chakra-ui/react";
-import { Footer } from "../Footer";
-import { NavigationBar } from "../NavigationBar"
+import { Footer } from "../footer/Footer";
+import { NavigationBar } from "../navigation-bar/NavigationBar"
 import { useQuery } from "@tanstack/react-query";
-import { CartItemHCard } from "@/reusable_components/product/CartItemHCard";
-import { NavBarFiller } from "../NavBarFiller";
+import { CartItemHCard } from "@/components/product/CartItemHCard";
+import { NavBarFiller } from "../navigation-bar/NavBarFiller";
 import { getCart } from "@/api/cartApi";
 
 export function CartMain() {
@@ -33,7 +33,7 @@ export function CartMain() {
                         <Box background="gray" padding={3}>
                             {/*total*/}összeg
                         </Box>
-                        <For each={cart}>
+                        <For each={cart?.cartItems}>
                             {(item) => (
                                 <CartItemHCard cartItem={item} />
                             )}

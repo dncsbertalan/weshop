@@ -1,37 +1,20 @@
-import api from "@/api/axiosInstance";
 import { useAuth } from "@/context/authContext";
 import { Navigation } from "@/models/Navigation";
 import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
-import { LuShoppingCart } from "react-icons/lu";
+import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
 
-const apiUrl = "/api/carts";
-async function createCart() {
-    const response = await api.post(apiUrl, null);
-    console.log(response.data);
-    return response.data;
-}
-
-export function NavigationBar() {
+export function NavBarInner() {
     const { isAuthenticated } = useAuth();
 
     return (
         <Flex
-            as="nav"
-            background="whiteAlpha.800"
-            //background="rgba(255, 100, 0, 0.3)"
-            padding={4}
-            color="black"
             align="center"
-            width="100%"
-            height="72px"
-            zIndex={1000}
-            position="fixed"
-            top={0}
-            shadow="2px 2px 10px 3px rgba(0, 0, 0, 0.2);"
-            backdropFilter="saturate(180%) blur(20px)"
+            width="1024px"
+            maxWidth="1024px"
+            height="77px"
         >
             <Link to={Navigation.home}>
                 <Heading size="xl">WeShop</Heading>
@@ -58,7 +41,7 @@ export function NavigationBar() {
                         size="md"
                         padding={2}
                     >
-                        <LuShoppingCart />
+                        <MdOutlineShoppingCart />
                         Cart
                     </IconButton>
                 </Link>}
@@ -76,7 +59,7 @@ export function NavigationBar() {
                     </IconButton>
                 </Link>}
 
-                {!isAuthenticated &&<Link to={Navigation.login}>
+                {!isAuthenticated && <Link to={Navigation.login}>
                     <IconButton
                         aria-label="Login"
                         variant="ghost"
