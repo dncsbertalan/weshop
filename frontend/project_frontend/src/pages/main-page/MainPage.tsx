@@ -6,6 +6,7 @@ import { Filters } from "./Filters";
 import { getProducts } from "@/api/productApi";
 import { NavBarFiller } from "../navigation-bar/NavBarFiller"
 import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
+import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
 
 export function MainPage() {
 
@@ -26,7 +27,7 @@ export function MainPage() {
             <GlobalNavBar />
             <NavBarFiller />
 
-            <Center background="purple">
+            <Center backgroundColor="#EAEAEA">
                 <Flex
                     padding={5}
                     gap={10}
@@ -34,9 +35,16 @@ export function MainPage() {
                     <Filters />
 
                     {/* Product cards */}
-                    <Flex background="red.500" borderRadius={15} padding={5}>
+                    <Flex
+                        borderRadius={15}
+                        padding="20px"
+                        backgroundColor="whiteAlpha.800"
+                        width="100%"
+                        shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
+                        backdropFilter="saturate(180%) blur(20px)"
+                    >
                         <SimpleGrid
-                            columns={{ base: 1, md: 2, lg: 4 }}
+                            columns={{ base: 1, md: 2, lg: 3 }}
                             columnGap="4"
                             rowGap="4"
                         >
@@ -48,12 +56,15 @@ export function MainPage() {
                                 Loading...
                             </div>}
 
-                            {!isPending &&
-                                <For each={products}>
-                                    {(item) => (
-                                        <ProductCard product={item} />
-                                    )}
-                                </For>}
+                            {!isPending && (
+                                <>
+                                    <SkeletonProductCard />
+                                    <For each={products}>
+                                        {(item) => (
+                                            <ProductCard product={item} />
+                                        )}
+                                    </For>
+                                </>)}
                         </SimpleGrid>
                     </Flex>
                 </Flex>

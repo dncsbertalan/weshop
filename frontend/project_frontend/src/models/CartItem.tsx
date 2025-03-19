@@ -1,6 +1,6 @@
 import { Category } from "@/models/Category";
 
-export type CartItemDto = {
+export type CartItem = {
     id: number;
     quantity: number;
     productId: number;

@@ -2,6 +2,7 @@ import { useCart } from '@/context/cartContext';
 import { Product } from '@/models/Product'
 import { Badge, Box, Card, HStack, IconButton, Image, Text } from '@chakra-ui/react'
 import { FaTrashCan } from 'react-icons/fa6';
+import { CategoryBadge } from './CategoryBadge';
 
 type ProductCardHorizontalProps = {
     product: Product
@@ -37,10 +38,17 @@ export function ProductCardHorizontal({ product }: ProductCardHorizontalProps) {
                             {product.price} Ft
                         </Text>
                     </Card.Description>
+
                     <HStack mt="4">
                         <Badge></Badge>
                         <Badge></Badge>
                     </HStack>
+                    {product.categories &&
+                        <Box marginTop="4">
+                            {product.categories.map((category) => (
+                                <CategoryBadge key={category.id} categoryName={category.name} />
+                            ))}
+                        </Box>}
                 </Card.Body>
                 <Card.Footer>
                     <IconButton

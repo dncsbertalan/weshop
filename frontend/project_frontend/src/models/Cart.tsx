@@ -1,4 +1,4 @@
-import { CartItemDto } from "@/dtos/CartItemDto";
+import { CartItemDto } from "@/models/CartItem";
 
 export type Cart = {
     cartItems: CartItemDto[];

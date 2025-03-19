@@ -1,4 +1,4 @@
-import { Center, Flex, For, VStack, Box, Spacer } from "@chakra-ui/react";
+import { Center, Flex, For, VStack, Spacer } from "@chakra-ui/react";
 import { Footer } from "../footer/Footer";
 import { NavigationBar } from "../navigation-bar/NavigationBar"
 import { useQuery } from "@tanstack/react-query";
@@ -25,14 +25,18 @@ export function CartMain() {
             <NavBarFiller />
 
             <Center
-                background="purple"
+                backgroundColor="#EAEAEA"
                 padding={5}
             >
-                <Flex background="red.500" borderRadius={10} padding={5}>
+                <Flex
+                    borderRadius={15}
+                    padding="20px"
+                    backgroundColor="whiteAlpha.800"
+                    //width="100%"
+                    shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
+                    backdropFilter="saturate(180%) blur(20px)"
+                >
                     <VStack>
-                        <Box background="gray" padding={3}>
-                            {/*total*/}összeg
-                        </Box>
                         <For each={cart?.cartItems}>
                             {(item) => (
                                 <CartItemHCard cartItem={item} />

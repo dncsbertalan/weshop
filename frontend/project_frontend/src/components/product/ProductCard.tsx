@@ -3,8 +3,8 @@ import { Product } from '@/models/Product'
 import { Button, Card, Icon, Image, Spacer, Text } from '@chakra-ui/react'
 import { MdAddShoppingCart } from 'react-icons/md'
 
-type ProductCardProps = {
-    product: Product
+interface ProductCardProps {
+    product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
@@ -14,9 +14,10 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <Card.Root 
-            maxW="sm"   
+        <Card.Root
+            maxW="sm"
             overflow="hidden"
+            //minWidth="300px"
             //backgroundColor="whiteAlpha.500"
             backgroundColor="white"
             //backdropFilter="auto" 
@@ -32,13 +33,20 @@ export function ProductCard({ product }: ProductCardProps) {
                 //src= {product.picture}
                 src='https://thewholeserving.com/wp-content/uploads/2014/06/Citrus-Cactus-Juice5.jpg'
                 height={250}
-                alt= {product.pictureAlternative}
+                alt={product.pictureAlternative}
             />
             <Card.Body gap="2">
 
                 <Card.Title>
                     {product.name}
                 </Card.Title>
+
+                {/*product.categories &&
+                    <Box>
+                        {product.categories.map((category) => (
+                            <CategoryBadge key={category.id} categoryName={category.name} />
+                        ))}
+                    </Box>*/}
 
                 <Card.Description>
                     {product.description}
@@ -47,6 +55,8 @@ export function ProductCard({ product }: ProductCardProps) {
                 <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
                     {product.price} Ft
                 </Text>
+
+
 
             </Card.Body>
 
