@@ -41,10 +41,26 @@ public class CartsController(CartService _cartService) : ControllerBase
         return Ok(carts);
     }
 
+    [HttpPatch("me/products/{cartItemId}")]
+    [Authorize]
+    public async Task<IActionResult> ModifyCartItem(long cartItemId, [FromBody] CartItemModificationData modificationData)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _cartService.ModifyCartItem(userId, cartItemId, modificationData);
+
+        if (!result) return BadRequest(new { message = "An error occured modifying the product in cart." });
+
+        return Ok(new { message = "Product successfully modifyed in cart." });
+    }
+
     [HttpPost("me/products")]
     [Authorize]
-    //public async Task<IActionResult> AddProductToCart(long id, [FromBody] AddProductToCartDto productData)
-    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartDto productData)
+    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartData productData)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))

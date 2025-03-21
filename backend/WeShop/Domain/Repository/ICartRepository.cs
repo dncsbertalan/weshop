@@ -11,5 +11,5 @@ public interface ICartRepository
     Task<CartDto?> GetCartItems(long cartId);
     Task<bool> AddProductToCart(long cartId, long productId);
     Task<bool> DeleteProductFromCart(long cartId, long productId);
-    Task<bool> ModifyProductInCart(CartItemModificationDto modificationData);
+    Task<bool> ModifyProductInCart(long cartId, long cartItemId, CartItemModificationData modificationData);
 }

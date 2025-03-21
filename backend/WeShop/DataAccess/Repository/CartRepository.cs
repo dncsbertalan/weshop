@@ -89,9 +89,26 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart is null ? null : CartMapper.Map(cart);
     }
 
+    public async Task<bool> ModifyProductInCart(long cartId, long cartItemId, CartItemModificationData modificationData)
+    {
+        var cart = await _context.Carts
+            .Include(cart => cart.CartItems)
+            .FirstOrDefaultAsync(cart => cart.Id == cartId);
+        if (cart is null) return false;
+
+        var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+        if (cartItem is null) return false;
+
+        cartItem.Quantity = modificationData.Quantity;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     #endregion
 
-    
+
 
     public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
     {
@@ -108,19 +125,5 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     {
         throw new NotImplementedException();
         //return await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);
-    }
-
-
-    
-
-    public async Task<string?> GetUserIdByCartId(long cartId)
-    {
-        var cart = await _context.Carts.FindAsync(cartId);
-        return cart is null ? null : cart.User.Id;
-    }
-
-    public Task<bool> ModifyProductInCart(CartItemModificationDto modificationData)
-    {
-        throw new NotImplementedException();
     }
 }
