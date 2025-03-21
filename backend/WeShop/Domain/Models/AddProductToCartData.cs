@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models;
 
-public class AddProductToCartDto
+public class AddProductToCartData
 {
     public long ProductId { get; set; }
 }
