@@ -60,14 +60,21 @@ public class ProductRepository : IProductRepository
         return ProductMapper.ToDto(result);
     }
 
-    public IReadOnlyCollection<ProductDto> List()
+    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize)
     {
-        var products = _dbContext.Products.Include(product => product.Categories).ToList();
-        var resultList = new List<ProductDto>();
-        foreach (var product in products)
-        {
-            resultList.Add(ProductMapper.ToDto(product));
-        }
-        return resultList;
+        var totalItems = await _dbContext.Products.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+        if (page > totalPages) return null;
+
+        var products = await _dbContext.Products
+            .Include(product => product.Categories)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var productDtos = products.Select(ProductMapper.ToDto).ToList();
+
+        return new PagedResult<ProductDto>(productDtos, totalItems, totalPages, page);
     }
 }

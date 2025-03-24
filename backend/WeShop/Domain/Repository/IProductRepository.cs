@@ -5,6 +5,6 @@ namespace Domain.Repository;
 
 public interface IProductRepository
 {
-    IReadOnlyCollection<ProductDto> List();
+    Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize);
     Task<ProductDto?> GetById(long id);
 }
