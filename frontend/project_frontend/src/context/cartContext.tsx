@@ -1,18 +1,74 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext } from "react";
 import { addProductToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cartApi";
 import { Cart } from "@/models/Cart";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface CartContextType {
     cart: Cart;
-    addItem: (productId: number) => Promise<void>;
-    removeItem: (cartItemId: number) => Promise<void>;
-    modifyItem: (cartItemId: number, quantity: number) => Promise<void>;
+    cartIsPending: boolean;
+    cartIsError: boolean;
+    addItemToCart: (productId: number) => Promise<void>;
+    removeItemToCart: (cartItemId: number) => Promise<void>;
+    modifyItemToCart: (cartItemId: number, quantity: number) => Promise<void>;
 }
+
+const CART_QUERY_KEY = "cart";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-    const [cart, setCart] = useState<Cart>({ cartItems: [] });
+    const queryClient = useQueryClient();
+
+     // Get the cart items from the server.
+     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError } = useQuery({
+        queryKey: [CART_QUERY_KEY],
+        queryFn: getCart,
+        staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
+        retry: 1, // retry once if there is a problem
+    });
+
+    // Add item to the cart.
+    const addItemMutation = useMutation({
+        mutationFn: addProductToCart,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
+        },
+        onError: (error) => {
+            console.error("Error adding item to cart:", error);
+        },
+    });
+
+    // Remove item from the cart.
+    const removeItemMutation = useMutation({
+        mutationFn: deleteProductFromCart,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
+        },
+    });
+    
+    // Modify the quantity of an item in the cart.
+    const modifyItemMutation = useMutation({
+        mutationFn: ({ cartItemId, quantity }: { cartItemId: number; quantity: number }) =>
+            modifyProductInCart(cartItemId, quantity),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
+        },
+    });
+
+    return (
+        <CartContext.Provider value={{
+            cart,
+            cartIsPending,
+            cartIsError,
+            addItemToCart: (productId) => addItemMutation.mutateAsync(productId),
+            removeItemToCart: (cartItemId) => removeItemMutation.mutateAsync(cartItemId),
+            modifyItemToCart: (cartItemId, quantity) => modifyItemMutation.mutateAsync({ cartItemId, quantity }),
+        }}>
+            {children}
+        </CartContext.Provider>
+    );
+
+    /*const [cart, setCart] = useState<Cart>({ cartItems: [] });
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -62,7 +118,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         <CartContext.Provider value={{ cart, addItem, removeItem, modifyItem }}>
             {children}
         </CartContext.Provider>
-    );
+    );*/
 };
 
 // Hook a context használatához

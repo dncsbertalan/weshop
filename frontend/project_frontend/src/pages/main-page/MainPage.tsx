@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Menu, Portal, Spacer } from "@chakra-ui/react";
+import { Center, Flex, Spacer } from "@chakra-ui/react";
 import { Footer } from "../footer/Footer";
 import { FiltersSection } from "./FiltersSection";
 import { NavBarFiller } from "../navigation-bar/NavBarFiller"

@@ -9,7 +9,7 @@ type ProductCardHorizontalProps = {
 }
 
 export function ProductCardHorizontal({ product }: ProductCardHorizontalProps) {
-    const { removeItem } = useCart();
+    const { removeItemToCart: removeItem } = useCart();
     const remove = () => {
         removeItem(product.id);
     }

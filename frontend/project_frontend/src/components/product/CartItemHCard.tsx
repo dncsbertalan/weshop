@@ -11,7 +11,7 @@ type ProductCardHorizontalProps = {
 }
 
 export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
-    const { removeItem, modifyItem } = useCart();
+    const { removeItemToCart: removeItem, modifyItemToCart: modifyItem } = useCart();
     const remove = async () => {
         removeItem(cartItem.id);
     }

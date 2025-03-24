@@ -3,7 +3,7 @@ import { Button, EmptyState, VStack } from "@chakra-ui/react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
 
-export function CartItemsSectionEmpty() {
+export function CartItemSectionEmpty() {
     return (
         <EmptyState.Root
             size="lg"

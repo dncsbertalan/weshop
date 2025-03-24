@@ -9,7 +9,7 @@ interface ProductInfoDialogProps {
 }
 
 export function ProductInfoDialog({ product }: ProductInfoDialogProps) {
-    const { addItem } = useCart();
+    const { addItemToCart: addItem } = useCart();
     const add = () => {
         addItem(product.id);
     }
