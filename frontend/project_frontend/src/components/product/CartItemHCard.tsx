@@ -1,16 +1,18 @@
 import { useCart } from '@/context/cartContext';
 import { CartItem } from '@/models/CartItem';
-import { Box, Card, IconButton, Image, Text } from '@chakra-ui/react'
+import { Box, Card, HStack, IconButton, Image, NumberInput, Text } from '@chakra-ui/react'
 import { FaTrashCan } from 'react-icons/fa6';
 import { CategoryBadge } from './CategoryBadge';
+//import { BiMinus, BiPlus } from 'react-icons/bi';
+import { LuMinus, LuPlus } from 'react-icons/lu';
 
 type ProductCardHorizontalProps = {
     cartItem: CartItem
 }
 
 export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
-    const { removeItem } = useCart();
-    const remove = () => {
+    const { removeItem, modifyItem } = useCart();
+    const remove = async () => {
         removeItem(cartItem.id);
     }
 
@@ -19,13 +21,12 @@ export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
             <Image
                 objectFit="cover"
                 maxW="200px"
-                src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-                //alt={product.pictureAlternative}
-            />
+                src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" />
+
+            <Box>
                 <Card.Body>
-                    <Card.Title mb="2">
-                        {cartItem.name}
-                    </Card.Title>
+                    <Card.Title mb="2">{cartItem.name}</Card.Title>
+
                     <Card.Description>
                         {cartItem.description}
                         <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
@@ -35,21 +36,62 @@ export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
                             {cartItem.quantity}
                         </Text>
                     </Card.Description>
-                    
+
                     {cartItem.categories &&
-                    <Box marginTop="4">
-                        {cartItem.categories.map((category) => (
-                            <CategoryBadge key={category.id} categoryName={category.name} />
-                        ))}
-                    </Box>}
+                        <Box marginTop="4">
+                            {cartItem.categories.map((category) => (
+                                <CategoryBadge key={category.id} categoryName={category.name} />
+                            ))}
+                        </Box>}
                 </Card.Body>
                 <Card.Footer>
                     <IconButton
                         onClick={remove}
+                        rounded="full"
                     >
                         <FaTrashCan />
                     </IconButton>
+
+                    <NumberInput.Root value={cartItem.quantity.toString()} unstyled spinOnPress={false}>
+                        <HStack gap="2">
+
+                            {cartItem.quantity > 1 &&
+                                <NumberInput.DecrementTrigger
+                                    asChild
+                                    onClick={() => modifyItem(cartItem.id, cartItem.quantity - 1)}
+                                >
+                                    <IconButton variant="outline" size="sm">
+                                        <LuMinus />
+                                    </IconButton>
+                                </NumberInput.DecrementTrigger>
+                            }
+
+                            {cartItem.quantity <= 1 &&
+                                <NumberInput.DecrementTrigger
+                                asChild
+                                onClick={remove}
+                            >
+                                <IconButton variant="outline" size="sm">
+                                    <FaTrashCan />
+                                </IconButton>
+                            </NumberInput.DecrementTrigger>
+                            }
+
+                            <NumberInput.ValueText textAlign="center" fontSize="lg" minW="3ch" />
+
+                            <NumberInput.IncrementTrigger
+                                asChild
+                                onClick={() => modifyItem(cartItem.id, cartItem.quantity + 1)}
+                            >
+                                <IconButton variant="outline" size="sm">
+                                    <LuPlus />
+                                </IconButton>
+                            </NumberInput.IncrementTrigger>
+
+                        </HStack>
+                    </NumberInput.Root>
                 </Card.Footer>
+            </Box>
         </Card.Root>
     );
 }

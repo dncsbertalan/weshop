@@ -1,5 +1,6 @@
 import { useCart } from '@/context/cartContext'
 import { Product } from '@/models/Product'
+import { ProductInfoDialog } from '@/pages/product-page/ProductInfoDialog';
 import { Button, Card, Icon, Image, Spacer, Text } from '@chakra-ui/react'
 import { MdAddShoppingCart } from 'react-icons/md'
 
@@ -9,7 +10,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
     const { addItem } = useCart();
-    const add = () => {
+    const add = async () => {
         addItem(product.id);
     }
 
@@ -17,16 +18,15 @@ export function ProductCard({ product }: ProductCardProps) {
         <Card.Root
             maxW="sm"
             overflow="hidden"
-            //minWidth="300px"
-            //backgroundColor="whiteAlpha.500"
             backgroundColor="white"
-            //backdropFilter="auto" 
-            //backdropBlur="10px"
             backdropFilter="blur(20px)"
-            //borderRadius="50px"
             borderRadius={18}
             border="none"
-            boxShadow="5px 5px 10px 3px rgba(0, 0, 0, 0.3)"
+            boxShadow="0px 0px 10px rgba(0, 0, 0, 0.3)"
+            _hover={{
+                boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)", scale: 1.025
+            }}
+            transition="scale 0.2s ease-in-out"
         >
             <Image
                 //src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
@@ -61,6 +61,14 @@ export function ProductCard({ product }: ProductCardProps) {
             </Card.Body>
 
             <Card.Footer gap="2">
+                {/*<Link to={`/product/${product.id}`}>
+                    <Button
+                        rounded="full"
+                    >
+                        Details
+                    </Button>
+                </Link>*/}
+                <ProductInfoDialog product={product} />
                 <Spacer />
                 <Button
                     rounded="full"
@@ -72,6 +80,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     Add to cart
                 </Button>
             </Card.Footer>
+
         </Card.Root>
     );
 }

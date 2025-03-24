@@ -11,7 +11,7 @@ async function fetchCategories() {
     return (await response.json()) as Category[];
 }
 
-export function Filters() {
+export function FiltersSection() {
 
     const {
         //isPending,

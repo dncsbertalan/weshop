@@ -10,7 +10,7 @@ export function GlobalNavBar() {
             background="whiteAlpha.800"
             width="100%"
             height="77px" // 77     apple 44px
-            zIndex={10_000}
+            zIndex={1_000} //10_000
             position="fixed"
             top={0}
             //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"

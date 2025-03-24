@@ -4,6 +4,7 @@ import api from "./axiosInstance";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 
 export const authLogin = async (loginData: LoginDto) => {
+
     try {
         const response = await api.post(authApi_login, {
             email: loginData.email,

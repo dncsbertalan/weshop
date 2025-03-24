@@ -6,7 +6,7 @@ export function NavBarFiller() {
             //backgroundColor="purple"
             align="center"
             width="100%"
-            height="72px"
+            height="77px"
         />
     );
 }

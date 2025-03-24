@@ -1,51 +1,33 @@
-import { Flex, Center, Spacer } from "@chakra-ui/react";
+import { Flex, Center, Spacer, Button } from "@chakra-ui/react";
 import { Footer } from "../footer/Footer";
-import { Filters } from "../main-page/Filters";
-import { NavigationBar } from "../navigation-bar/NavigationBar";
-import { useQuery } from "@tanstack/react-query";
-import { User } from "@/models/User";
 import { NavBarFiller } from "../navigation-bar/NavBarFiller";
-
-const BASE_URL = "http://localhost:5220";
-
-async function fetchUser() {
-    const response = await fetch(`${BASE_URL}/api/products`);
-    //return (await response.json());
-    return (await response.json()) as User;
-}
+import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
+import { useAuth } from "@/context/authContext";
+import { useNavigate } from "react-router";
+import { Navigation } from "@/models/Navigation";
 
 export function ProfileMain() {
-    const {
-        //isPending,
-        //isError,
-        data: user
-    } = useQuery({
-        queryKey: ["user"],
-        queryFn: fetchUser
-    });
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
     return (
         <Flex
             direction="column"
             minHeight="100vh"
         >
-            <NavigationBar />
+            <GlobalNavBar />
             <NavBarFiller />
 
-            <Center background="purple">
+            <Center background="#EAEAEA">
 
                 <Flex
                     padding={5}
                     gap={10}
                 >
-                    <Filters />
-
-                    {/* Information*/}
-                    <Flex background="red.500" borderRadius={15} padding={5}>
-                        <div>
-                            {user?.firstName} {user?.lastName}
-                        </div>
-                    </Flex>
+                    <Button rounded="full" size="2xl" onClick={() => {
+                        logout();
+                        navigate(Navigation.home);
+                    }}>Logout</Button>
                 </Flex>
             </Center>
 

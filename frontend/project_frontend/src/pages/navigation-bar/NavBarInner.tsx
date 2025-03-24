@@ -1,6 +1,7 @@
 import { useAuth } from "@/context/authContext";
+import { useCart } from "@/context/cartContext";
 import { Navigation } from "@/models/Navigation";
-import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
+import { Badge, Flex, Float, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
@@ -8,13 +9,16 @@ import { Link } from "react-router";
 
 export function NavBarInner() {
     const { isAuthenticated } = useAuth();
+    const { cart } = useCart();
 
     return (
         <Flex
             align="center"
-            width="1024px"
-            maxWidth="1024px"
+            // apple 1024px
+            width="8xl"
+            maxWidth="8xl"
             height="77px"
+            margin="0px 2rem"
         >
             <Link to={Navigation.home}>
                 <Heading size="xl">WeShop</Heading>
@@ -43,6 +47,11 @@ export function NavBarInner() {
                     >
                         <MdOutlineShoppingCart />
                         Cart
+                        <Float offsetY="4px" offsetX="4px">
+                            <Badge backgroundColor="red" color="white" rounded="full">
+                                {cart.cartItems.length}
+                            </Badge>
+                        </Float>
                     </IconButton>
                 </Link>}
 
@@ -67,6 +76,7 @@ export function NavBarInner() {
                         size="md"
                     >
                         <FaRightToBracket />
+                        Login
                     </IconButton>
                 </Link>}
 

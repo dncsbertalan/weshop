@@ -2,12 +2,20 @@ import { Button, Field, Flex, Heading, Input, Text, VStack } from "@chakra-ui/re
 import { useForm } from "react-hook-form";
 import { NavigationBar } from "../navigation-bar/NavigationBar";
 import { LoginDto } from "@/dtos/LoginDto";
-import { authLogin } from "@/api/authApi";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Navigation } from "@/models/Navigation";
+import { useAuth } from "@/context/authContext";
+import { authLogin } from "@/api/authApi";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
+    const { login, token } = useAuth();
+    const navigate = useNavigate();
+    const onSubmit = async (data: LoginDto) => {
+        authLogin(data);
+        login(token!);
+        navigate(Navigation.home);
+    }
 
     return (
         <Flex
@@ -20,14 +28,16 @@ export function LoginPage() {
         >
             <NavigationBar />
 
-            <VStack gap={4} p={6} boxShadow="lg" borderRadius="lg" bg="white" minWidth={300} maxW="400px" mx="auto" mt={10}>
+            <VStack gap={4} p={6} boxShadow="lg" borderRadius="lg" bg="white" minWidth={300} maxW="400px" mx="auto" mt={10}
+                shadow="3px 3px 10px rgba(0,0,0,0.2)"
+            >
                 <Heading size="lg">Login</Heading>
 
                 <Field.Root required>
                     <Field.Label>
                         E-mail<Field.RequiredIndicator />
                     </Field.Label>
-                    <Input type="email" {...register("email")} placeholder="pelda@email.com" />
+                    <Input type="email" {...register("email")} placeholder="example@email.com" />
                 </Field.Root>
 
                 <Field.Root required>
@@ -37,7 +47,7 @@ export function LoginPage() {
                     <Input type="password" {...register("password")} placeholder="********" />
                 </Field.Root>
 
-                <Button colorScheme="blue" w="full" onClick={handleSubmit(authLogin)}>
+                <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
                     Login
                 </Button>
                 <Text>

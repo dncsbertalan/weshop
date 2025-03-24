@@ -17,11 +17,11 @@ export function Footer() {
                 justifyContent="flex-start"
                 alignItems="center"
                 width="100%"
-                maxWidth="1200px"
+                maxWidth="8xl"
                 paddingTop="10px"
                 borderTop="1px solid white"
             >
-                <VStack>
+                <VStack alignItems="flex-start">
                     <Link to={Navigation.home}>
                         <Text color="white">
                             Main page

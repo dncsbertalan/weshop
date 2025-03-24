@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { addProductToCart, deleteProductFromCart, getCart, } from "../api/cartApi";
+import { addProductToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cartApi";
 import { Cart } from "@/models/Cart";
 
 interface CartContextType {
     cart: Cart;
     addItem: (productId: number) => Promise<void>;
     removeItem: (cartItemId: number) => Promise<void>;
+    modifyItem: (cartItemId: number, quantity: number) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -47,8 +48,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const modifyItem = async (cartItemId: number, quantity: number) => {
+        try {
+            await modifyProductInCart(cartItemId, quantity);
+            const updatedCart = await getCart();
+            setCart(updatedCart);
+        } catch (error) {
+            console.error("Hiba a módosításkor:", error);
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cart, addItem, removeItem }}>
+        <CartContext.Provider value={{ cart, addItem, removeItem, modifyItem }}>
             {children}
         </CartContext.Provider>
     );
