@@ -1,24 +1,35 @@
 import { ProductCard } from "@/components/product/ProductCard";
-import { Flex, SimpleGrid, For, Button } from "@chakra-ui/react";
+import { Flex, SimpleGrid, For, Button, Pagination, ButtonGroup, IconButton } from "@chakra-ui/react";
 import { ProductSectionLoading } from "./ProductSectionLoading";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/api/productApi";
 import { ProductsSectionError } from "./ProductsSectionError";
 import { Toaster, toaster } from "@/components/ui/toaster";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { usePagination } from "@/hooks/usePagination";
+import { useEffect } from "react";
 
 export function ProductSection() {
+    const { page, pageSize, setPage } = usePagination();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, /*behavior: "smooth"*/ });
+    }, [page]);
+
     const {
         isPending,
         isError,
         data: products
     } = useQuery({
-        queryKey: ["products"],
-        queryFn: getProducts
+        queryKey: ["products", page, pageSize],
+        queryFn: () => getProducts(page, pageSize)
     });
     //{/*<Link to={`/product/${item.id}`} key={item.id}>*/}
 
     return (
         <Flex
+            flexDirection="column"
+            alignItems="center"
             borderRadius={18}
             padding="2rem"
             backgroundColor="whiteAlpha.800"
@@ -29,17 +40,18 @@ export function ProductSection() {
         >
             <Toaster />
             <Button
-      variant="outline"
-      size="sm"
-      onClick={() =>
-        toaster.create({
-          description: "File saved successfully",
-          type: "info",
-        })
-      }
-    >
-      Show Toast
-    </Button>
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                    toaster.create({
+                        description: "File saved successfully",
+                        type: "info",
+                    })
+                }
+            >
+                Show Toast
+            </Button>
+
             <SimpleGrid
                 columns={{ base: 1, md: 2, lg: 3 }}
                 gap="1.5rem"
@@ -54,13 +66,45 @@ export function ProductSection() {
                 }
 
                 {!isPending && (
-                    <For each={products}>
+                    <For each={products?.items}>
                         {(item) => (
                             <ProductCard product={item} key={item.id} />
                         )}
                     </For>
                 )}
             </SimpleGrid>
+
+            {!isPending && 
+            <Pagination.Root 
+            count={products?.totalItems} 
+            pageSize={pageSize} 
+            defaultPage={1} 
+            page={page} 
+            onPageChange={(details) => { setPage(details.page) }}
+            marginTop={5}
+            >
+                <ButtonGroup variant="ghost" size="sm" rounded="full">
+                    <Pagination.PrevTrigger asChild>
+                        <IconButton borderLeftRadius="9999px">
+                            <LuChevronLeft />
+                        </IconButton>
+                    </Pagination.PrevTrigger>
+
+                    <Pagination.Items
+                        render={(page) => (
+                            <IconButton variant={{ base: "ghost", _selected: "outline" }}>
+                                {page.value}
+                            </IconButton>
+                        )}
+                    />
+
+                    <Pagination.NextTrigger asChild>
+                        <IconButton borderRightRadius="9999px">
+                            <LuChevronRight />
+                        </IconButton>
+                    </Pagination.NextTrigger>
+                </ButtonGroup>
+            </Pagination.Root>}
         </Flex>
     );
 }

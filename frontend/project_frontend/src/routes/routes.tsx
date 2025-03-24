@@ -26,6 +26,7 @@ const router = createBrowserRouter([
     {
       path: Navigation.product,
       element: <ProductPage />,
+      
     },
     // Protected routes
     {
