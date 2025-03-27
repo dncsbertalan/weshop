@@ -12,9 +12,8 @@ interface CartContextType {
     modifyItemToCart: (cartItemId: number, quantity: number) => Promise<void>;
 }
 
-const CART_QUERY_KEY = "cart";
-
 const CartContext = createContext<CartContextType | undefined>(undefined);
+const CART_QUERY_KEY = "cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();

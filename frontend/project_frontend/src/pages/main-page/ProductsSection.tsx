@@ -1,30 +1,30 @@
 import { ProductCard } from "@/components/product/ProductCard";
 import { Flex, SimpleGrid, For, Button, Pagination, ButtonGroup, IconButton } from "@chakra-ui/react";
 import { ProductSectionLoading } from "./ProductSectionLoading";
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/api/productApi";
 import { ProductsSectionError } from "./ProductsSectionError";
 import { Toaster, toaster } from "@/components/ui/toaster";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import { usePagination } from "@/hooks/usePagination";
 import { useEffect } from "react";
+import { useProduct } from "@/context/productContext";
+import { Reveal } from "@/animations/Reveal";
 
 export function ProductSection() {
-    const { page, pageSize, setPage } = usePagination();
+    //const { page, pageSize, setPage } = usePagination();
+
+    const { products, productsIsError: isError, productsIsPending: isPending, page, pageSize, setPage } = useProduct();
 
     useEffect(() => {
-        window.scrollTo({ top: 0, /*behavior: "smooth"*/ });
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }, [page]);
 
-    const {
-        isPending,
-        isError,
-        data: products
+    /*const {
+        //isPending,
+        //isError,
+        //data: products
     } = useQuery({
         queryKey: ["products", page, pageSize],
         queryFn: () => getProducts(page, pageSize)
-    });
-    //{/*<Link to={`/product/${item.id}`} key={item.id}>*/}
+    });*/
 
     return (
         <Flex
@@ -68,43 +68,47 @@ export function ProductSection() {
                 {!isPending && (
                     <For each={products?.items}>
                         {(item) => (
-                            <ProductCard product={item} key={item.id} />
+                            <Reveal>
+                                <ProductCard product={item} key={item.id} />
+                            </Reveal>
                         )}
                     </For>
                 )}
             </SimpleGrid>
 
-            {!isPending && 
-            <Pagination.Root 
-            count={products?.totalItems} 
-            pageSize={pageSize} 
-            defaultPage={1} 
-            page={page} 
-            onPageChange={(details) => { setPage(details.page) }}
-            marginTop={5}
-            >
-                <ButtonGroup variant="ghost" size="sm" rounded="full">
-                    <Pagination.PrevTrigger asChild>
-                        <IconButton borderLeftRadius="9999px">
-                            <LuChevronLeft />
-                        </IconButton>
-                    </Pagination.PrevTrigger>
+            {!isPending && !isError &&
+                <Pagination.Root
+                    count={products?.totalItems}
+                    pageSize={pageSize}
+                    defaultPage={1}
+                    page={page}
+                    onPageChange={(details) => { setPage(details.page) }}
+                    marginTop={5}
+                >
+                    <ButtonGroup variant="ghost" size="sm" rounded="full">
+                        <Pagination.PrevTrigger asChild>
 
-                    <Pagination.Items
-                        render={(page) => (
-                            <IconButton variant={{ base: "ghost", _selected: "outline" }}>
-                                {page.value}
+                            <IconButton borderLeftRadius="9999px">
+                                <LuChevronLeft />
                             </IconButton>
-                        )}
-                    />
+                        </Pagination.PrevTrigger>
 
-                    <Pagination.NextTrigger asChild>
-                        <IconButton borderRightRadius="9999px">
-                            <LuChevronRight />
-                        </IconButton>
-                    </Pagination.NextTrigger>
-                </ButtonGroup>
-            </Pagination.Root>}
+                        <Pagination.Items
+                            render={(page) => (
+                                <IconButton variant={{ base: "ghost", _selected: "outline" }}>
+                                    {page.value}
+                                </IconButton>
+                            )}
+                        />
+
+                        <Pagination.NextTrigger asChild>
+                            <IconButton borderRightRadius="9999px">
+                                <LuChevronRight />
+                            </IconButton>
+                        </Pagination.NextTrigger>
+
+                    </ButtonGroup>
+                </Pagination.Root>}
         </Flex>
     );
 }

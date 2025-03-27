@@ -1,28 +1,9 @@
-import { Category } from "@/models/Category";
-import { Accordion, Checkbox, CheckboxGroup, Fieldset, Flex, For, Span } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
-const BASE_URL = "http://localhost:5220";
-
-async function fetchCategories() {
-    const response = await fetch(`${BASE_URL}/api/categories`);
-    //return (await response.json());
-    return (await response.json()) as Category[];
-}
+import { useProduct } from "@/context/productContext";
+import { Accordion, Checkbox, Fieldset, Flex, For, Span } from "@chakra-ui/react";
 
 export function FiltersSection() {
-
-    const {
-        //isPending,
-        //isError,
-        data: categories
-    } = useQuery({
-        queryKey: ["categories"],
-        queryFn: fetchCategories
-    });
-
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(["s", "h"]);
+    const { categories, selectedCategories, toggleCategory } = useProduct();
     
     return (
         <Flex
@@ -30,7 +11,8 @@ export function FiltersSection() {
             padding={3}
             borderRadius={10}
             minWidth={250}
-            maxHeight={300}
+            height="min"
+            //maxHeight={300}
             //pos="absolute"
             //border="1px solid rgba(255, 255, 255, 0.35)"
             shadow="2px 2px 10px 3px rgba(0, 0, 0, 0.2);"
@@ -47,25 +29,23 @@ export function FiltersSection() {
 
                             {/* Categories */}
 
-                            <CheckboxGroup
-                                value={selectedCategories}
-                                onChange={(values) => console.log(values) /*setSelectedCategories(values as string[])*/}
-                            >
-                                <Fieldset.Root>
-                                    <Fieldset.Legend />
-                                    <Fieldset.Content>
-                                        <For each={categories}>
-                                            {(category) => (
-                                                <Checkbox.Root key={category.id} value={category.name}>
-                                                    <Checkbox.HiddenInput />
-                                                    <Checkbox.Control />
-                                                    <Checkbox.Label>{category.name}</Checkbox.Label>
-                                                </Checkbox.Root>
-                                            )}
-                                        </For>
-                                    </Fieldset.Content>
-                                </Fieldset.Root>
-                            </CheckboxGroup>
+                            <Fieldset.Root>
+                                <Fieldset.Legend />
+                                <Fieldset.Content>
+                                    <For each={categories}>
+                                        {(category) => (
+                                            <Checkbox.Root key={category.id}
+                                                checked={selectedCategories.includes(category.id)}
+                                                onChange={() => toggleCategory(category.id)}
+                                            >
+                                                <Checkbox.HiddenInput />
+                                                <Checkbox.Control rounded="full" />
+                                                <Checkbox.Label>{category.name}</Checkbox.Label>
+                                            </Checkbox.Root>
+                                        )}
+                                    </For>
+                                </Fieldset.Content>
+                            </Fieldset.Root>
 
                         </Accordion.ItemBody>
                     </Accordion.ItemContent>
