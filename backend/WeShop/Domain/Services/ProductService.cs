@@ -7,10 +7,10 @@ namespace Domain.Services;
 
 public class ProductService(IProductRepository _repository)
 {
-    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize)
+    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize, string? categoryIds)
     {
         if (page < 1 || pageSize < 1) return null;
-        return await _repository.GetProducts(page, pageSize);
+        return await _repository.GetProducts(page, pageSize, categoryIds);
     }
 
     public async Task<ProductDto?> GetById(long id)

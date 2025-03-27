@@ -19,9 +19,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 30)
+    public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 30, [FromQuery] string? categoryIds = null)
     {
-        var result = await _productService.GetProducts(page, pageSize);
+        var result = await _productService.GetProducts(page, pageSize, categoryIds);
         if (result is null)
         {
             return BadRequest(new { message = "Something went wrong" });

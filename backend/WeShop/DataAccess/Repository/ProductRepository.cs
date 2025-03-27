@@ -3,6 +3,7 @@ using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Repository;
@@ -60,15 +61,25 @@ public class ProductRepository : IProductRepository
         return ProductMapper.ToDto(result);
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize)
+    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize, string? categoryIds)
     {
-        var totalItems = await _dbContext.Products.CountAsync();
+        var query = _dbContext.Products.Include(product => product.Categories).AsQueryable();
+
+        // Filtering by categories
+        if (!string.IsNullOrEmpty(categoryIds))
+        {
+            var categoryIdList = categoryIds.Split(',').Select(long.Parse).ToList();
+            query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
+        }
+
+        var totalItems = await query.CountAsync();    // _dbContext.Products.CountAsync();
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
         if (page > totalPages) return null;
 
-        var products = await _dbContext.Products
-            .Include(product => product.Categories)
+        var products = await query
+            //await _dbContext.Products
+            //.Include(product => product.Categories)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

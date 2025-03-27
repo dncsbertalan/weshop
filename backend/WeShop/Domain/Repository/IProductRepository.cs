@@ -5,6 +5,6 @@ namespace Domain.Repository;
 
 public interface IProductRepository
 {
-    Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize);
+    Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize, string? categoryIds);
     Task<ProductDto?> GetById(long id);
 }
