@@ -1,4 +1,4 @@
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 import { Button, EmptyState, VStack } from "@chakra-ui/react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";

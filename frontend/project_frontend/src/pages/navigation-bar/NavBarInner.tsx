@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 import { Badge, Flex, Float, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";

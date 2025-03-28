@@ -4,7 +4,7 @@ import { NavBarFiller } from "../navigation-bar/NavBarFiller";
 import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
 import { useAuth } from "@/context/authContext";
 import { useNavigate } from "react-router";
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 
 export function ProfileMain() {
     const { logout } = useAuth();

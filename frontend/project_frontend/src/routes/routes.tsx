@@ -1,4 +1,4 @@
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 import { CartMain } from "@/pages/cart-page/CartMain";
 import { LoginPage } from "@/pages/login-page/LoginPage";
 import { MainPage } from "@/pages/main-page/MainPage";

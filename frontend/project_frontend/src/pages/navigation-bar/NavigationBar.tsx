@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/authContext";
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";

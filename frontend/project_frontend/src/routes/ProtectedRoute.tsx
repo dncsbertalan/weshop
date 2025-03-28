@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/authContext";
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 import { Navigate, Outlet } from "react-router";
 
 const ProtectedRoute = () => {

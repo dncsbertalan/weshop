@@ -1,4 +1,4 @@
-import { Navigation } from "@/models/Navigation";
+import { Navigation } from "@/routes/navigation";
 import { Flex, VStack, Text } from "@chakra-ui/react";
 import { Link } from "react-router";
 
