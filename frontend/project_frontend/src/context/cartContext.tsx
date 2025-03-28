@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { addProductToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cartApi";
+import { addProductToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cart-api";
 import { Cart } from "@/models/Cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

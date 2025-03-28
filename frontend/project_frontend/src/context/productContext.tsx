@@ -1,5 +1,5 @@
-import { getCategories } from "@/api/categoryApi";
-import { getProducts } from "@/api/productApi";
+import { getCategories } from "@/api/category-api";
+import { getProducts } from "@/api/product-api";
 import { usePagination } from "@/hooks/usePagination";
 import { Category } from "@/models/Category";
 import { PagedProducts } from "@/models/PagedProducts";

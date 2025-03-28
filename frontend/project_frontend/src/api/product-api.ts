@@ -1,5 +1,5 @@
 
-import api from "./axiosInstance"
+import api from "./axios-instance"
 import { PagedProducts } from "@/models/PagedProducts";
 
 export const getProducts = async (page: number, pageSize: number) => {

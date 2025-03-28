@@ -2,7 +2,7 @@ import { Button, Field, Flex, Heading, HStack, Input, VStack } from "@chakra-ui/
 import { NavigationBar } from "../navigation-bar/NavigationBar";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { useForm } from "react-hook-form";
-import { authRegister } from "@/api/authApi";
+import { authRegister } from "@/api/auth-api";
 
 export function RegistrationPage() {
     const { register, handleSubmit } = useForm<RegistrationDto>();

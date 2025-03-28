@@ -1,5 +1,5 @@
-import { cartApi_addItemToCart, cartApi_getCart } from "./apiConstants"
-import api from "./axiosInstance"
+import { cartApi_addItemToCart, cartApi_getCart } from "./api-constants"
+import api from "./axios-instance"
 import { Cart } from "@/models/Cart";
 
 export const getCart = async () => {

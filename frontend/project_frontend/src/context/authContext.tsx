@@ -1,4 +1,4 @@
-import { authToken } from "@/api/apiConstants";
+import { authToken } from "@/api/api-constants";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {

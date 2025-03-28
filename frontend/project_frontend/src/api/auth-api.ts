@@ -1,6 +1,6 @@
 import { LoginDto } from "@/dtos/LoginDto";
-import { authApi_login, authApi_register, authToken } from "./apiConstants";
-import api from "./axiosInstance";
+import { authApi_login, authApi_register, authToken } from "./api-constants";
+import api from "./axios-instance";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 
 export const authLogin = async (loginData: LoginDto) => {

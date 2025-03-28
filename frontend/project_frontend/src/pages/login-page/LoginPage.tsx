@@ -5,7 +5,7 @@ import { LoginDto } from "@/dtos/LoginDto";
 import { Link, useNavigate } from "react-router";
 import { Navigation } from "@/models/Navigation";
 import { useAuth } from "@/context/authContext";
-import { authLogin } from "@/api/authApi";
+import { authLogin } from "@/api/auth-api";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
