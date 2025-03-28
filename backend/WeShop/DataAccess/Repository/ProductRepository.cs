@@ -73,6 +73,8 @@ public class ProductRepository : IProductRepository
         }
 
         var totalItems = await query.CountAsync();    // _dbContext.Products.CountAsync();
+        if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
+
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
         if (page > totalPages) return null;

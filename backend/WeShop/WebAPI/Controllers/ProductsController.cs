@@ -19,7 +19,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 30, [FromQuery] string? categoryIds = null)
+    public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 30,
+        [FromQuery(Name = "filters")] string? categoryIds = null)
     {
         var result = await _productService.GetProducts(page, pageSize, categoryIds);
         if (result is null)
