@@ -1,11 +1,10 @@
 import { getCategories } from "@/api/category-api";
 import { getProducts } from "@/api/product-api";
-import { usePagination } from "@/hooks/usePagination";
+import useProductFilters from "@/hooks/use-product-filters";
 import { Category } from "@/models/Category";
 import { PagedProducts } from "@/models/PagedProducts";
-import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useEffect } from "react";
 
 interface ProductContextType {
     // Products
@@ -20,7 +19,7 @@ interface ProductContextType {
     isPendingCategories: boolean;
     isErrorCategories: boolean;
     selectedCategories: number[];
-    toggleCategory: (value: number) => Promise<void>;
+    toggleCategory: (value: number) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -28,16 +27,18 @@ const PRODUCT_CACHE_KEY = "products";
 const CATEGORY_CACHE_KEY = "categories";
 
 export const ProductProvider = ({ children }: { children: React.ReactNode }) => {
-    //const queryClient = useQueryClient();
-    const { page, pageSize, setPage } = usePagination();
+    const { page, pageSize, categories: selectedCategories, setPage, setCategories, searchParams } = useProductFilters();
+
+    //#region Products
 
     const {
         isPending: productsIsPending,
         isError: productsIsError,
         data: products = { items: [], currentsPages: 0, totalItems: 0, totalPages: 0 },
+        refetch,
     } = useQuery({
         queryKey: [PRODUCT_CACHE_KEY, page, pageSize],
-        queryFn: () => getProducts(page, pageSize),
+        queryFn: () => getProducts(page, pageSize, selectedCategories.join(",")),
         staleTime: 1000 * 60 * 5,
     });
 
@@ -46,38 +47,27 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
         setPage(newPage);
     };
 
+    useEffect(() => {
+        refetch();
+    }, [searchParams]);
+
+    //#endregion    
+
     //#region  Categories 
 
     const {
         isPending: isPendingCategories,
         isError: isErrorCategories,
-        data: categories = []
+        data: categories = [],
     } = useQuery({
         queryKey: [CATEGORY_CACHE_KEY],
         queryFn: getCategories,
         staleTime: 1000 * 60 * 5,
     });
 
-    //const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-
-    /*const toggleCategory = async (value: number) => {
-        setSelectedCategories((prev) =>
-            prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
-        );
-    };*/
-
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const selectedCategories = searchParams.get("categories")
-        ? searchParams.get("categories")!.split(",").map(Number)
-        : [];
-
     const toggleCategory = (value: number) => {
-        const newSelection = selectedCategories.includes(value)
-            ? selectedCategories.filter((item) => item !== value)
-            : [...selectedCategories, value];
-
-        setSearchParams({ categories: newSelection.join(",") });
+        setPage(1);
+        setCategories(value);
     };
 
     //#endregion

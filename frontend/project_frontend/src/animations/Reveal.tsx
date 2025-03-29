@@ -17,12 +17,13 @@ export const Reveal = ({ children }: { children: React.ReactNode }) => {
         <Flex ref={ref} justifyContent="center" alignItems="center">
             <motion.div
                 variants={{
-                    hidden: { opacity: 0, translateY: 75 },
+                    hidden: { opacity: 0, translateY: 10 },
                     visible: { opacity: 1, translateY: 0 }
                 }}
                 initial="hidden"
                 animate={mainControls}
-                transition={{ duration: 0.5, delay: 0.25 }}
+                transition={{ duration: 0.3, delay: 0.25, ease: "easeInOut" }}
+                //transition={{ duration: 0.5, delay: 0.25 }}
             >
                 {children}
             </motion.div>

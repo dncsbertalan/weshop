@@ -9,22 +9,11 @@ import { useProduct } from "@/context/productContext";
 import { Reveal } from "@/animations/Reveal";
 
 export function ProductSection() {
-    //const { page, pageSize, setPage } = usePagination();
-
     const { products, productsIsError: isError, productsIsPending: isPending, page, pageSize, setPage } = useProduct();
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, [page]);
-
-    /*const {
-        //isPending,
-        //isError,
-        //data: products
-    } = useQuery({
-        queryKey: ["products", page, pageSize],
-        queryFn: () => getProducts(page, pageSize)
-    });*/
 
     return (
         <Flex
@@ -86,8 +75,8 @@ export function ProductSection() {
                     marginTop={5}
                 >
                     <ButtonGroup variant="ghost" size="sm" rounded="full">
-                        <Pagination.PrevTrigger asChild>
 
+                        <Pagination.PrevTrigger asChild>
                             <IconButton borderLeftRadius="9999px">
                                 <LuChevronLeft />
                             </IconButton>
