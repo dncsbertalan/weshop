@@ -3,7 +3,7 @@ import { getProducts } from "@/api/product-api";
 import useProductFilters from "@/hooks/use-product-filters";
 import { Category } from "@/models/Category";
 import { PagedProducts } from "@/models/PagedProducts";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect } from "react";
 
 interface ProductContextType {
@@ -20,6 +20,11 @@ interface ProductContextType {
     isErrorCategories: boolean;
     selectedCategories: number[];
     toggleCategory: (value: number) => void;
+    // Price
+    minPrice: number;
+    maxPrice: number;
+    setMinPrice: (minPrice: number) => void;
+    setMaxPrice: (maxPrice: number) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -27,7 +32,7 @@ const PRODUCT_CACHE_KEY = "products";
 const CATEGORY_CACHE_KEY = "categories";
 
 export const ProductProvider = ({ children }: { children: React.ReactNode }) => {
-    const { page, pageSize, categories: selectedCategories, setPage, setCategories, searchParams } = useProductFilters();
+    const { searchParams, page, pageSize, categories: selectedCategories, setPage, setCategories, minPrice, maxPrice, setMinPrice, setMaxPrice } = useProductFilters();
 
     //#region Products
 
@@ -37,8 +42,8 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
         data: products = { items: [], currentsPages: 0, totalItems: 0, totalPages: 0 },
         refetch,
     } = useQuery({
-        queryKey: [PRODUCT_CACHE_KEY, page, pageSize],
-        queryFn: () => getProducts(page, pageSize, selectedCategories.join(",")),
+        queryKey: [PRODUCT_CACHE_KEY, page, pageSize, minPrice, maxPrice, selectedCategories],
+        queryFn: () => getProducts(page, pageSize, selectedCategories.join(","), minPrice, maxPrice),
         staleTime: 1000 * 60 * 5,
     });
 
@@ -49,6 +54,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
 
     useEffect(() => {
         refetch();
+        console.log("useeffect");
     }, [searchParams]);
 
     //#endregion    
@@ -72,6 +78,15 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
 
     //#endregion
 
+    //#region  Price 
+
+    const setMinPriceSafe = (value: number) => {
+        setPage(1);
+        setMinPrice(value);
+    };
+
+    //#endregion
+
     return (
         <ProductContext.Provider value={{
             products,
@@ -85,6 +100,10 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
             isErrorCategories,
             selectedCategories,
             toggleCategory,
+            minPrice,
+            maxPrice,
+            setMinPrice: setMinPriceSafe,
+            setMaxPrice,
         }}>
             {children}
         </ProductContext.Provider>

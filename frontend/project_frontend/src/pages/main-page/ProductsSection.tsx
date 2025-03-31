@@ -1,8 +1,8 @@
 import { ProductCard } from "@/components/product/ProductCard";
-import { Flex, SimpleGrid, For, Button, Pagination, ButtonGroup, IconButton } from "@chakra-ui/react";
+import { Flex, SimpleGrid, For, Pagination, ButtonGroup, IconButton } from "@chakra-ui/react";
 import { ProductSectionLoading } from "./ProductSectionLoading";
 import { ProductsSectionError } from "./ProductsSectionError";
-import { Toaster, toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect } from "react";
 import { useProduct } from "@/context/productContext";
@@ -28,18 +28,6 @@ export function ProductSection() {
             backdropFilter="saturate(180%) blur(20px)"
         >
             <Toaster />
-            <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                    toaster.create({
-                        description: "File saved successfully",
-                        type: "info",
-                    })
-                }
-            >
-                Show Toast
-            </Button>
 
             <SimpleGrid
                 columns={{ base: 1, md: 2, lg: 3 }}

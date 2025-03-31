@@ -8,6 +8,7 @@ import { RegistrationPage } from "@/pages/registration-page/RegistrationPage";
 import { TempErrorScreen } from "@/pages/TempErrorScreen";
 import { Routes, Route } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
+import { CheckoutPage } from "@/pages/checkout-page/CheckoutPage";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
       <Route path={Navigation.login} element={<LoginPage />} />
       <Route path={Navigation.product} element={<ProductPage />} />
       <Route element={<ProtectedRoute />}>
+        <Route path={Navigation.checkout} element={<CheckoutPage />} />
         <Route path={Navigation.shoppingCart} element={<CartMain />} />
         <Route path={Navigation.profile} element={<ProfileMain />} />
       </Route>

@@ -7,9 +7,13 @@ export default function useProductFilters() {
     const page = Number(searchParams.get(ProductFilterKeys.page)) || ProductQueryDefaults.page;
     const pageSize = Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductQueryDefaults.pageSize;
     const categories = searchParams.get(ProductFilterKeys.categories)?.split(",").map(Number) || [];
+    const minPrice = Number(searchParams.get(ProductFilterKeys.minPrice)) || ProductQueryDefaults.minPrice;
+    const maxPrice = Number(searchParams.get(ProductFilterKeys.maxPrice)) || ProductQueryDefaults.maxPrice;
 
-    const setPage = (newPage: number) => {
-        updateQueryParam(ProductFilterKeys.page, newPage.toString());
+    const setPage = (newPage: number | null) => {
+        console.log("faz")
+        console.log(newPage)
+        updateQueryParam(ProductFilterKeys.page, newPage?.toString() ?? null);
     };
 
     const setCategories = (newCategoryId: number) => {
@@ -20,5 +24,13 @@ export default function useProductFilters() {
         updateQueryParam(ProductFilterKeys.categories, newSelection.length === 0 ? null : newSelection.join(","));
     };
 
-    return { page, pageSize, categories, setPage, setCategories, searchParams };
+    const setMinPrice = (newMinPrice?: number | null) => {
+        updateQueryParam(ProductFilterKeys.minPrice, newMinPrice?.toString() ?? null);
+    };
+
+    const setMaxPrice = (newMaxPrice?: number | null) => {
+        updateQueryParam(ProductFilterKeys.maxPrice, newMaxPrice?.toString() ?? null);
+    };
+
+    return { searchParams, page, pageSize, categories, setPage, setCategories, minPrice, maxPrice, setMinPrice, setMaxPrice };
 };

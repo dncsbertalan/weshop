@@ -4,9 +4,15 @@ import { NavBarFiller } from "../navigation-bar/NavBarFiller";
 import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
 import { CartItemSection } from "./CartItemSection";
 import { useCart } from "@/context/cartContext";
+import { useNavigate } from "react-router";
+import { Navigation } from "@/routes/navigation";
 
 export function CartMain() {
     const { cart } = useCart();
+    const navigate = useNavigate();
+    const checkout = () => {
+        navigate(Navigation.checkout);
+    };
 
     const total = cart.cartItems.reduce((acc, item) => acc + item.price, 0);
 
@@ -42,7 +48,7 @@ export function CartMain() {
                                 <Heading size="5xl">{total} Ft</Heading>
                             </HStack>
                             <Separator size="lg" />
-                            <Button rounded="full">
+                            <Button rounded="full" onClick={checkout}>
                                 Checkout
                             </Button>
                         </VStack>

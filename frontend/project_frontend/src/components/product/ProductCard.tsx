@@ -3,6 +3,7 @@ import { Product } from '@/models/Product'
 import { ProductInfoDialog } from '@/pages/product-page/ProductInfoDialog';
 import { Button, Card, Icon, Image, Spacer, Text } from '@chakra-ui/react'
 import { MdAddShoppingCart } from 'react-icons/md'
+import { toaster } from '../ui/toaster';
 
 interface ProductCardProps {
     product: Product;
@@ -12,6 +13,10 @@ export function ProductCard({ product }: ProductCardProps) {
     const { addItemToCart: addItem } = useCart();
     const add = async () => {
         addItem(product.id);
+        toaster.create({
+            description: `${product.name} was successfully added to your cart.`,
+            type: "info",
+        })
     }
 
     return (

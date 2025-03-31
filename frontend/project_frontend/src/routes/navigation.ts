@@ -5,4 +5,5 @@ export const Navigation = {
     login: '/login',
     registration: '/registration',
     product: '/product/:id',
+    checkout: '/checkout',
 };
