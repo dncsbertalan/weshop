@@ -8,15 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository(WebshopDbContext _context) : IProductRepository
 {
-    private readonly WebshopDbContext _dbContext;
-
-    public ProductRepository(WebshopDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     private readonly List<Product_Data> products =
     [
         new Product_Data() { Id = 1, Name = "Activity játszószőnyeg", Description = "Színes, fejlesztő játszószőnyeg kisbabáknak.", Price = 7488, AvailableQuantity = 21 },
@@ -53,7 +46,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<ProductDto?> GetById(long id)
     {
-        var result = await _dbContext.Products.SingleOrDefaultAsync(product => product.Id == id);
+        var result = await _context.Products.SingleOrDefaultAsync(product => product.Id == id);
         if (result == null)
         {
             return null;
@@ -61,9 +54,11 @@ public class ProductRepository : IProductRepository
         return ProductMapper.ToDto(result);
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize, string? categoryIds)
+    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice)
     {
-        var query = _dbContext.Products.Include(product => product.Categories).AsQueryable();
+        var query = _context.Products.Include(product => product.Categories).AsQueryable();
+
+        query = query.Where(product => product.Price >= minPrice && product.Price <= maxPrice);
 
         // Filtering by categories
         if (!string.IsNullOrEmpty(categoryIds))
@@ -72,19 +67,19 @@ public class ProductRepository : IProductRepository
             query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
         }
 
-        var totalItems = await query.CountAsync();    // _dbContext.Products.CountAsync();
+        var totalItems = query.Count();    // await _dbContext.Products.CountAsync();
         if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
         if (page > totalPages) return null;
 
-        var products = await query
+        var products = query
             //await _dbContext.Products
             //.Include(product => product.Categories)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToList();
 
         var productDtos = products.Select(ProductMapper.ToDto).ToList();
 

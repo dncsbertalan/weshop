@@ -22,9 +22,11 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 30,
-        [FromQuery(Name = "filters")] string? categoryIds = null)
+        [FromQuery(Name = "filters")] string? categoryIds = null,
+        [FromQuery(Name = "min")] double minPrice = 1000,
+        [FromQuery(Name = "max")] double maxPrice = 100_000)
     {
-        var result = await _productService.GetProducts(page, pageSize, categoryIds);
+        var result = await _productService.GetProducts(page, pageSize, categoryIds, minPrice, maxPrice);
         if (result is null)
         {
             return BadRequest(new { message = "Something went wrong" });
