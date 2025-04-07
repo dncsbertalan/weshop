@@ -9,15 +9,8 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController : ControllerBase
+public class ProductsController(ProductService _productRepository) : ControllerBase
 {
-    private readonly ProductService _productService;
-
-    public ProductsController(ProductService productRepository)
-    {
-        _productService = productRepository;
-    }
-
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(
         [FromQuery] int page = 1,
@@ -26,7 +19,7 @@ public class ProductsController : ControllerBase
         [FromQuery(Name = "min")] double minPrice = 1000,
         [FromQuery(Name = "max")] double maxPrice = 100_000)
     {
-        var result = await _productService.GetProducts(page, pageSize, categoryIds, minPrice, maxPrice);
+        var result = await _productRepository.GetProducts(page, pageSize, categoryIds, minPrice, maxPrice);
         if (result is null)
         {
             return BadRequest(new { message = "Something went wrong" });
@@ -38,7 +31,7 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<ProductDto> Get(long id)
     {
-        var product = _productService.GetById(id);
+        var product = _productRepository.GetById(id);
         return product != null ? Ok(product): NotFound();
     }
 }

@@ -9,11 +9,22 @@ public class Order_Data
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
+    [Required]
+    public string UserId { get; set; }
+    [ForeignKey("UserId")]
+    public User_Data User { get; set; }
+
     [ForeignKey("AddressId")]
     public Address_Data Address { get; set; }
 
+    [Required]
+    public int PaymentMethodId { get; set; }
     [ForeignKey("PaymentMethodId")]
     public PaymentMethod_Data PaymentMethod { get; set; }
+
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime CreatedAt { get; set; }
     public virtual List<OrderItem_Data> Items { get; set; } = [];
     public bool IsCompleted { get; set; }
 }

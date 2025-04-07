@@ -6,6 +6,7 @@ namespace Domain.Repository;
 public interface ICartRepository
 {
     Task<long> CreateCart(string userId);
+    Task DeleteCart(long cartId);
     Task<Cart?> GetCartById(long cartId);
     Task<long?> GetCartIdFromUserId(string userId);
     Task<CartDto?> GetCartItems(long cartId);

@@ -32,6 +32,14 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return await _cartRepository.CreateCart(userId);
     }
 
+    public async Task DeleteCart(long cartId)
+    {
+        //var user = await _userRepository.GetUserById(cartId);
+        //if (user is null) return;
+
+        await _cartRepository.DeleteCart(cartId);
+    }
+
     public async Task<CartDto?> GetCartById(string userId)
     {
         var user = await _userRepository.GetUserById(userId);

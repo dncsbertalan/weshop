@@ -9,6 +9,8 @@ public class OrderItem_Data
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
+    [Required]
+    public Guid OrderId { get; set; }
     [ForeignKey("OrderId")]
     public Order_Data Order { get; set; }
 
@@ -20,4 +22,8 @@ public class OrderItem_Data
 
     [Required]
     public int Quantity { get; set; }
+
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime CreatedAt { get; set; }
 }

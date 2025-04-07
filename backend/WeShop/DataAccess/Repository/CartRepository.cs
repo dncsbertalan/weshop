@@ -24,6 +24,21 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart.Id;
     }
 
+    public async Task DeleteCart(long cartId)
+    {
+
+        var cart = await _context.Carts
+            .Include(cart => cart.CartItems)
+            .FirstOrDefaultAsync(cart => cart.Id == cartId);
+
+        if (cart is null) return;
+
+        _context.CartItems.RemoveRange(cart.CartItems);
+        _context.Carts.Remove(cart);
+
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<long?> GetCartIdFromUserId(string userId)
     {
         var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.User.Id == userId);
