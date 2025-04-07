@@ -54,7 +54,6 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
 
     useEffect(() => {
         refetch();
-        console.log("useeffect");
     }, [searchParams]);
 
     //#endregion    

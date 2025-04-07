@@ -47,11 +47,11 @@ export function NavBarInner() {
                     >
                         <MdOutlineShoppingCart />
                         Cart
-                        <Float offsetY="4px" offsetX="4px">
+                        {cart.cartItems && <Float offsetY="4px" offsetX="4px">
                             <Badge backgroundColor="red" color="white" rounded="full">
                                 {cart.cartItems.length}
                             </Badge>
-                        </Float>
+                        </Float>}
                     </IconButton>
                 </Link>}
 

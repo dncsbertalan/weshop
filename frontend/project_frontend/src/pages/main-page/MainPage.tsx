@@ -20,6 +20,7 @@ export function MainPage() {
                     padding="20px 50px"
                     gap={10}
                     width="100%"
+                    //maxWidth="1440px"
                     height="max"
                 >
              

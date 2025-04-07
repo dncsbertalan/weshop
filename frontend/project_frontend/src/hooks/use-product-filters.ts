@@ -10,10 +10,8 @@ export default function useProductFilters() {
     const minPrice = Number(searchParams.get(ProductFilterKeys.minPrice)) || ProductQueryDefaults.minPrice;
     const maxPrice = Number(searchParams.get(ProductFilterKeys.maxPrice)) || ProductQueryDefaults.maxPrice;
 
-    const setPage = (newPage: number | null) => {
-        console.log("faz")
-        console.log(newPage)
-        updateQueryParam(ProductFilterKeys.page, newPage?.toString() ?? null);
+    const setPage = (newPage: number) => {
+        updateQueryParam(ProductFilterKeys.page, newPage.toString());
     };
 
     const setCategories = (newCategoryId: number) => {
@@ -24,12 +22,12 @@ export default function useProductFilters() {
         updateQueryParam(ProductFilterKeys.categories, newSelection.length === 0 ? null : newSelection.join(","));
     };
 
-    const setMinPrice = (newMinPrice?: number | null) => {
-        updateQueryParam(ProductFilterKeys.minPrice, newMinPrice?.toString() ?? null);
+    const setMinPrice = (newMinPrice: number) => {
+        updateQueryParam(ProductFilterKeys.minPrice, newMinPrice.toString());
     };
 
-    const setMaxPrice = (newMaxPrice?: number | null) => {
-        updateQueryParam(ProductFilterKeys.maxPrice, newMaxPrice?.toString() ?? null);
+    const setMaxPrice = (newMaxPrice: number) => {
+        updateQueryParam(ProductFilterKeys.maxPrice, newMaxPrice.toString());
     };
 
     return { searchParams, page, pageSize, categories, setPage, setCategories, minPrice, maxPrice, setMinPrice, setMaxPrice };

@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { addProductToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cart-api";
 import { Cart } from "@/models/Cart";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryObserverResult, RefetchOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface CartContextType {
     cart: Cart;
@@ -10,6 +10,7 @@ interface CartContextType {
     addItemToCart: (productId: number) => Promise<void>;
     removeItemToCart: (cartItemId: number) => Promise<void>;
     modifyItemToCart: (cartItemId: number, quantity: number) => Promise<void>;
+    refetch: (options: RefetchOptions) => Promise<QueryObserverResult<Cart, Error>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -19,7 +20,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();
 
      // Get the cart items from the server.
-     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError } = useQuery({
+     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError, refetch } = useQuery({
         queryKey: [CART_QUERY_KEY],
         queryFn: getCart,
         staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
@@ -62,6 +63,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             addItemToCart: (productId) => addItemMutation.mutateAsync(productId),
             removeItemToCart: (cartItemId) => removeItemMutation.mutateAsync(cartItemId),
             modifyItemToCart: (cartItemId, quantity) => modifyItemMutation.mutateAsync({ cartItemId, quantity }),
+            refetch,
         }}>
             {children}
         </CartContext.Provider>

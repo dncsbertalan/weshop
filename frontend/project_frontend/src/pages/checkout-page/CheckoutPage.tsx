@@ -2,6 +2,7 @@ import { Center, Flex, Spacer } from "@chakra-ui/react";
 import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
 import { NavBarFiller } from "../navigation-bar/NavBarFiller";
 import { Footer } from "../footer/Footer";
+import { CheckoutSteps } from "./CheckoutSteps";
 
 export function CheckoutPage() {
     return (
@@ -16,12 +17,10 @@ export function CheckoutPage() {
             <Center
                 backgroundColor="#EAEAEA"
                 padding={5}
+                minHeight="100%"
             >
-                hali
+                <CheckoutSteps />
             </Center>
-            <Flex bg="red" p="20" w="10" h={100}>
-                heli
-            </Flex>
             
             <Spacer />
             <Footer />

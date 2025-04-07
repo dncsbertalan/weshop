@@ -15,7 +15,7 @@ export function LoginPage() {
         authLogin(data);
         login(token!);
         navigate(Navigation.home);
-    }
+    };
 
     return (
         <Flex

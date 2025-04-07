@@ -4,8 +4,6 @@ import { Accordion, Box, Checkbox, Fieldset, Flex, For, HStack, Slider, SliderVa
 import { useState } from "react";
 
 export function FiltersSection() {
-    const { categories, selectedCategories, toggleCategory } = useProduct();
-
     return (
         <Box position="relative">
             <Flex
@@ -24,50 +22,57 @@ export function FiltersSection() {
             >
                 <VStack width="100%">
                     <PriceSelection />
-
-                    <Accordion.Root multiple defaultValue={["b"]}>
-                        <Accordion.Item key={0} value={""}>
-                            <Accordion.ItemTrigger>
-                                <Span flex="1">Categories</Span>
-                                <Accordion.ItemIndicator />
-                            </Accordion.ItemTrigger>
-                            <Accordion.ItemContent>
-                                <Accordion.ItemBody>
-
-                                    {/* Categories */}
-
-                                    <Fieldset.Root>
-                                        <Fieldset.Legend />
-                                        <Fieldset.Content>
-                                            <For each={categories}>
-                                                {(category) => (
-                                                    <Checkbox.Root key={category.id}
-                                                        checked={selectedCategories.includes(category.id)}
-                                                        onChange={() => toggleCategory(category.id)}
-                                                    >
-                                                        <Checkbox.HiddenInput />
-                                                        <Checkbox.Control rounded="full" />
-                                                        <Checkbox.Label>{category.name}</Checkbox.Label>
-                                                    </Checkbox.Root>
-                                                )}
-                                            </For>
-                                        </Fieldset.Content>
-                                    </Fieldset.Root>
-
-                                </Accordion.ItemBody>
-                            </Accordion.ItemContent>
-                        </Accordion.Item>
-                    </Accordion.Root>
+                    <CategorySelection />
                 </VStack>
             </Flex>
         </Box>
     );
 }
 
+function CategorySelection() {
+    const { categories, selectedCategories, toggleCategory } = useProduct();
+
+    return (
+        <Accordion.Root multiple defaultValue={["b"]}>
+            <Accordion.Item key={0} value={""}>
+                <Accordion.ItemTrigger>
+                    <Span flex="1">Categories</Span>
+                    <Accordion.ItemIndicator />
+                </Accordion.ItemTrigger>
+                <Accordion.ItemContent>
+                    <Accordion.ItemBody>
+
+                        {/* Categories */}
+
+                        <Fieldset.Root>
+                            <Fieldset.Legend />
+                            <Fieldset.Content>
+                                <For each={categories}>
+                                    {(category) => (
+                                        <Checkbox.Root key={category.id}
+                                            checked={selectedCategories.includes(category.id)}
+                                            onChange={() => toggleCategory(category.id)}
+                                        >
+                                            <Checkbox.HiddenInput />
+                                            <Checkbox.Control rounded="full" />
+                                            <Checkbox.Label>{category.name}</Checkbox.Label>
+                                        </Checkbox.Root>
+                                    )}
+                                </For>
+                            </Fieldset.Content>
+                        </Fieldset.Root>
+
+                    </Accordion.ItemBody>
+                </Accordion.ItemContent>
+            </Accordion.Item>
+        </Accordion.Root>
+    );
+}
+
 function PriceSelection() {
     const { minPrice, maxPrice, setMinPrice, setMaxPrice } = useProduct()
-    const [ min, setMin ] = useState(1000);
-    const [ max, setMax ] = useState(100_000);
+    const [min, setMin] = useState(1000);
+    const [max, setMax] = useState(100_000);
     const onValueChange = (details: SliderValueChangeDetails) => {
         setMin(details.value[0]);
         setMax(details.value[1]);

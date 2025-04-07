@@ -1,6 +1,6 @@
 import { useCart } from '@/context/cartContext';
 import { CartItem } from '@/models/CartItem';
-import { Box, Card, HStack, IconButton, Image, NumberInput, Text } from '@chakra-ui/react'
+import { Box, Card, HStack, IconButton, Image, NumberInput, Spacer, Text } from '@chakra-ui/react'
 import { FaTrashCan } from 'react-icons/fa6';
 import { CategoryBadge } from './CategoryBadge';
 //import { BiMinus, BiPlus } from 'react-icons/bi';
@@ -17,11 +17,13 @@ export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
     }
 
     return (
-        <Card.Root flexDirection="row" overflow="hidden" maxW="xl">
+        <Card.Root flexDirection="row" overflow="hidden" maxW="2xl">
             <Image
                 objectFit="cover"
                 maxW="200px"
-                src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" />
+                //src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" 
+                src='https://thewholeserving.com/wp-content/uploads/2014/06/Citrus-Cactus-Juice5.jpg' 
+            />
 
             <Box>
                 <Card.Body>
@@ -32,9 +34,9 @@ export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
                         <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
                             {cartItem.price} Ft
                         </Text>
-                        <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
+                        {/*<Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
                             {cartItem.quantity}
-                        </Text>
+                        </Text>*/}
                     </Card.Description>
 
                     {cartItem.categories &&
@@ -51,6 +53,8 @@ export function CartItemHCard({ cartItem }: ProductCardHorizontalProps) {
                     >
                         <FaTrashCan />
                     </IconButton>
+
+                    <Spacer />
 
                     <NumberInput.Root value={cartItem.quantity.toString()} unstyled spinOnPress={false}>
                         <HStack gap="2">

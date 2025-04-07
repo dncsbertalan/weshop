@@ -14,7 +14,7 @@ export function CartMain() {
         navigate(Navigation.checkout);
     };
 
-    const total = cart.cartItems.reduce((acc, item) => acc + item.price, 0);
+    const total = cart.cartItems?.reduce((acc, item) => acc + item.price, 0);
 
     return (
         <Flex
