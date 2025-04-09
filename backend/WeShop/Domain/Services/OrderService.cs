@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Repository;
+using System.Transactions;
 
 namespace Domain.Services;
 
@@ -12,6 +13,8 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
         // 3. Create a new Order
         // 4. Create the new OrderItems from the cart items
         // 5. Remove all items from the cart
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
         var user = await _userRepository.GetUserById(userId);
         if (user is null) return false;
 
@@ -25,6 +28,7 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
 
         await _cartRepository.CreateCart(userId);
 
+        scope.Complete();
         return true;
     }
 }
