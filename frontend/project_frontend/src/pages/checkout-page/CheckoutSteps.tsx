@@ -1,7 +1,7 @@
-import { createOrder } from "@/api/order-api";
+import { useCart } from "@/context/cartContext";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { Navigation } from "@/routes/navigation";
-import { useSteps, Steps, ButtonGroup, Button, Box, Field, Input, VStack, HStack, RadioGroup } from "@chakra-ui/react"
+import { useSteps, Steps, ButtonGroup, Button, Box, Field, Input, VStack, HStack, RadioGroup, Center } from "@chakra-ui/react"
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -48,14 +48,16 @@ export function CheckoutSteps() {
 
                     <Steps.CompletedContent>All steps are complete!</Steps.CompletedContent>
 
-                    <ButtonGroup size="sm">
-                        <Steps.PrevTrigger asChild>
-                            <Button rounded="full" variant="outline">Back</Button>
-                        </Steps.PrevTrigger>
-                        <Steps.NextTrigger asChild>
-                            <Button rounded="full">Next</Button>
-                        </Steps.NextTrigger>
-                    </ButtonGroup>
+                    <Center>
+                        <ButtonGroup >
+                            <Steps.PrevTrigger asChild>
+                                <Button rounded="full" variant="outline">Back</Button>
+                            </Steps.PrevTrigger>
+                            <Steps.NextTrigger asChild>
+                                <Button rounded="full">{steps.value === 2 ? "Confirm" : "Next"}</Button>
+                            </Steps.NextTrigger>
+                        </ButtonGroup>
+                    </Center>
 
                 </Steps.RootProvider>
             </Box>
@@ -189,6 +191,7 @@ function PaymentMethod() {
 function ConfirmationAndPayment() {
     const { handleSubmit } = useFormContext<CheckoutInfoData>();
     const navigate = useNavigate();
+    const {createOrder} = useCart();
     const onSubmit = async (data: CheckoutInfoData) => {
         createOrder(data);
         navigate(Navigation.home);

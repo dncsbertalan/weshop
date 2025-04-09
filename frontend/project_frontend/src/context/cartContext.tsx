@@ -1,16 +1,23 @@
 import { createContext, useContext } from "react";
 import { addProductToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cart-api";
 import { Cart } from "@/models/Cart";
-import { QueryObserverResult, RefetchOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createOrder } from "@/api/order-api";
+import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 
 interface CartContextType {
+    // Cart
     cart: Cart;
     cartIsPending: boolean;
     cartIsError: boolean;
     addItemToCart: (productId: number) => Promise<void>;
     removeItemToCart: (cartItemId: number) => Promise<void>;
     modifyItemToCart: (cartItemId: number, quantity: number) => Promise<void>;
-    refetch: (options: RefetchOptions) => Promise<QueryObserverResult<Cart, Error>>;
+    // Order
+    createOrderIsPending: boolean;
+    createOrderIsSuccess: boolean;
+    createOrderIsError: boolean;
+    createOrder: (checkoutInfo: CheckoutInfoData) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -20,7 +27,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();
 
      // Get the cart items from the server.
-     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError, refetch } = useQuery({
+     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError } = useQuery({
         queryKey: [CART_QUERY_KEY],
         queryFn: getCart,
         staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
@@ -55,6 +62,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         },
     });
 
+    // Checkout
+    const createOrderMutation = useMutation({
+        mutationFn: (checkoutData: CheckoutInfoData) => createOrder(checkoutData),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
+        },
+        onError: (error) => {
+            console.error("Error creating the order:", error);
+        },
+    });
+
     return (
         <CartContext.Provider value={{
             cart,
@@ -63,7 +81,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             addItemToCart: (productId) => addItemMutation.mutateAsync(productId),
             removeItemToCart: (cartItemId) => removeItemMutation.mutateAsync(cartItemId),
             modifyItemToCart: (cartItemId, quantity) => modifyItemMutation.mutateAsync({ cartItemId, quantity }),
-            refetch,
+            
+            createOrderIsPending: createOrderMutation.isPending,
+            createOrderIsSuccess: createOrderMutation.isSuccess,
+            createOrderIsError: createOrderMutation.isError,
+            createOrder: (checkoutData: CheckoutInfoData) => createOrderMutation.mutateAsync(checkoutData),
         }}>
             {children}
         </CartContext.Provider>
