@@ -41,7 +41,7 @@ public class CartsController(CartService _cartService) : ControllerBase
         return Ok(carts);
     }
 
-    [HttpPatch("me/products/{cartItemId}")]
+    [HttpPut("me/products/{cartItemId}")]
     [Authorize]
     public async Task<IActionResult> ModifyCartItem(long cartItemId, [FromBody] CartItemModificationData modificationData)
     {

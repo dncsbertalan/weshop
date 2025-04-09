@@ -18,6 +18,6 @@ export const deleteProductFromCart = async (cartItemId: number) => {
 }
 
 export const modifyProductInCart = async (cartItemId: number, quantity: number) => {
-    const response = await api.patch(`/api/carts/me/products/${cartItemId}`, { quantity: quantity });
+    const response = await api.put(`/api/carts/me/products/${cartItemId}`, { quantity: quantity });
     return await response.data;
 }
