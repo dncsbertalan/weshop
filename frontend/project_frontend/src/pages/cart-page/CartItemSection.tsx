@@ -1,9 +1,9 @@
-import { CartItemHCard } from "@/components/product/CartItemHCard";
 import { useCart } from "@/context/cartContext";
 import { VStack, For, Flex, Button, EmptyState, Spinner } from "@chakra-ui/react";
 import { Navigation } from "@/routes/navigation";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
+import { CartItemCard } from "@/components/product/CartItemCard";
 
 export function CartItemSection() {
     const { cart, cartIsPending, cartIsError } = useCart();
@@ -30,10 +30,10 @@ export function CartItemSection() {
             {cartIsPending && <CartItemSectionLoading />}
 
             {!cartIsPending &&
-                <VStack>
+                <VStack gap="0px">
                     <For each={cart?.cartItems}>
                         {(item) => (
-                            <CartItemHCard cartItem={item} />
+                            <CartItemCard cartItem={item} />
                         )}
                     </For>
                 </VStack>}

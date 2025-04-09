@@ -25,7 +25,7 @@ export function CartMain() {
             <NavBarFiller />
 
             <Center
-                backgroundColor="#EAEAEA"
+                backgroundColor="bg-color"
                 padding={5}
             >
                 <HStack justifyContent="center" alignItems="flex-start" gap={80} width="100%" maxWidth="8xl">
