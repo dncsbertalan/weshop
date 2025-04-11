@@ -9,6 +9,7 @@ import { ProductProvider } from './context/productContext.tsx'
 import AppRoutes from './routes/AppRoutes.tsx'
 import { ChakraProvider } from '@chakra-ui/react'
 import { system } from './theme/theme.ts'
+import { ColorModeProvider } from './components/ui/color-mode.tsx'
 
 const queryClient = new QueryClient();
 
@@ -20,8 +21,9 @@ createRoot(document.getElementById('root')!).render(
           <BrowserRouter>
             <ProductProvider>
               <ChakraProvider value={system}>
-                {/*<RouterProvider router={router} />*/}
-                <AppRoutes />
+                <ColorModeProvider>
+                  <AppRoutes />
+                </ColorModeProvider>
               </ChakraProvider>
             </ProductProvider>
           </BrowserRouter>

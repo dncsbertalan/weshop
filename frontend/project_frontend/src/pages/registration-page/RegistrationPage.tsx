@@ -1,5 +1,5 @@
 import { Button, Field, Flex, Heading, HStack, Input, VStack } from "@chakra-ui/react";
-import { NavigationBar } from "../navigation-bar/NavigationBar";
+import { NavigationBar } from "../page-components/navigation-bar/NavigationBar";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { useForm } from "react-hook-form";
 import { authRegister } from "@/api/auth-api";

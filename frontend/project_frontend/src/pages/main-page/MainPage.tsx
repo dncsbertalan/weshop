@@ -1,8 +1,8 @@
 import { Center, Flex, Spacer } from "@chakra-ui/react";
-import { Footer } from "../footer/Footer";
+import { Footer } from "../page-components/footer/Footer";
 import { FiltersSection } from "./FiltersSection";
-import { NavBarFiller } from "../navigation-bar/NavBarFiller"
-import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller"
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { ProductSection } from "./ProductsSection";
 
 export function MainPage() {

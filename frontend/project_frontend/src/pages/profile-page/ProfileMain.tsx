@@ -1,7 +1,7 @@
 import { Flex, Center, Spacer, Button } from "@chakra-ui/react";
-import { Footer } from "../footer/Footer";
-import { NavBarFiller } from "../navigation-bar/NavBarFiller";
-import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
+import { Footer } from "../page-components/footer/Footer";
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { useAuth } from "@/context/authContext";
 import { useNavigate } from "react-router";
 import { Navigation } from "@/routes/navigation";

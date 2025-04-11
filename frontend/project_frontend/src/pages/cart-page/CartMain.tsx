@@ -1,7 +1,7 @@
 import { Button, Center, Flex, Heading, HStack, Separator, Spacer, VStack } from "@chakra-ui/react";
-import { Footer } from "../footer/Footer";
-import { NavBarFiller } from "../navigation-bar/NavBarFiller";
-import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
+import { Footer } from "../page-components/footer/Footer";
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { CartItemSection } from "./CartItemSection";
 import { useCart } from "@/context/cartContext";
 import { useNavigate } from "react-router";

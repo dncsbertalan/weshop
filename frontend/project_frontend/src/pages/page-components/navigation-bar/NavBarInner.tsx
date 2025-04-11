@@ -1,3 +1,4 @@
+import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAuth } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
 import { Navigation } from "@/routes/navigation";
@@ -36,6 +37,8 @@ export function NavBarInner() {
                 >
                     <LuPlus />
                 </IconButton>*/}
+
+                <ColorModeButton />
 
                 {isAuthenticated && <Link to={Navigation.shoppingCart}>
                     <IconButton

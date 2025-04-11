@@ -1,7 +1,7 @@
 import { Center, Flex, Spacer } from "@chakra-ui/react";
-import { GlobalNavBar } from "../navigation-bar/GlobalNavBar";
-import { NavBarFiller } from "../navigation-bar/NavBarFiller";
-import { Footer } from "../footer/Footer";
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
+import { Footer } from "../page-components/footer/Footer";
 import { CheckoutSteps } from "./CheckoutSteps";
 
 export function CheckoutPage() {

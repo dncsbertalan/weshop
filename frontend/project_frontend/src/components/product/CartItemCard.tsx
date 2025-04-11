@@ -21,6 +21,8 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
             borderBottom="solid 1px rgb(220, 220, 220)"
             paddingY="32px"
             paddingX="5px"
+            //backgroundColor="whiteAlpha.800"
+            //backdropFilter="blur(20px) saturate(180%)"
         >
             <Flex
                 alignItems="center"
