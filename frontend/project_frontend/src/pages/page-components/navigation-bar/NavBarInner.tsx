@@ -19,7 +19,7 @@ export function NavBarInner() {
             width="8xl"
             maxWidth="8xl"
             height="77px"
-            margin="0px 2rem"
+            margin="0px 20px"
         >
             <Link to={Navigation.home}>
                 <Heading size="xl">WeShop</Heading>

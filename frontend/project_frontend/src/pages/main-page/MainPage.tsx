@@ -17,13 +17,13 @@ export function MainPage() {
 
             <Center backgroundColor="#EAEAEA">
                 <Flex
-                    padding="20px 50px"
+                    padding="20px 20px"
                     gap={10}
                     width="100%"
-                    //maxWidth="1440px"
+                    maxWidth="global-max-window-size"
                     height="max"
                 >
-             
+
                     <FiltersSection />
                     <ProductSection />
                 </Flex>

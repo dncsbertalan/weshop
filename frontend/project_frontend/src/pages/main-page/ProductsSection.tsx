@@ -1,12 +1,12 @@
 import { ProductCard } from "@/components/product/ProductCard";
-import { Flex, SimpleGrid, For, Pagination, ButtonGroup, IconButton } from "@chakra-ui/react";
-import { ProductSectionLoading } from "./ProductSectionLoading";
-import { ProductsSectionError } from "./ProductsSectionError";
+import { Flex, SimpleGrid, For, Pagination, ButtonGroup, IconButton, EmptyState, VStack } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect } from "react";
 import { useProduct } from "@/context/productContext";
 import { Reveal } from "@/animations/Reveal";
+import { BiError } from "react-icons/bi";
+import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
 
 export function ProductSection() {
     const { products, productsIsError: isError, productsIsPending: isPending, page, pageSize, setPage } = useProduct();
@@ -87,5 +87,31 @@ export function ProductSection() {
                     </ButtonGroup>
                 </Pagination.Root>}
         </Flex>
+    );
+}
+
+function ProductsSectionError() {
+    return (
+        <EmptyState.Root>
+            <EmptyState.Content>
+                <EmptyState.Indicator>
+                    <BiError />
+                </EmptyState.Indicator>
+                <VStack textAlign="center">
+                    <EmptyState.Title>Something went wrong</EmptyState.Title>
+                    <EmptyState.Description>
+                        We couldn't load the products. Please try again later.
+                    </EmptyState.Description>
+                </VStack>
+            </EmptyState.Content>
+        </EmptyState.Root>
+    );
+}
+
+function ProductSectionLoading() {
+    return (
+        <For each={[1, 2, 3, 4]}>
+            {(id) => <SkeletonProductCard key={id}/>}
+        </For>
     );
 }

@@ -1,7 +1,8 @@
 
 import { useProduct } from "@/context/productContext";
-import { Accordion, Box, Checkbox, Fieldset, Flex, For, HStack, Slider, SliderValueChangeDetails, Span, VStack } from "@chakra-ui/react";
+import { Accordion, Box, Checkbox, Fieldset, Flex, For, HStack, IconButton, Slider, SliderValueChangeDetails, Span, VStack } from "@chakra-ui/react";
 import { useState } from "react";
+import { FaXmark } from "react-icons/fa6";
 
 export function FiltersSection() {
     return (
@@ -20,12 +21,21 @@ export function FiltersSection() {
                 position="sticky"
                 top="97px"
             >
-                <VStack width="100%">
+                <VStack width="100%" alignItems="flex-end">
+                    <CloseButton />
                     <PriceSelection />
                     <CategorySelection />
                 </VStack>
             </Flex>
         </Box>
+    );
+}
+
+function CloseButton() {
+    return (
+        <IconButton size="2xs" rounded="full">
+            <FaXmark />
+        </IconButton>
     );
 }
 
@@ -36,7 +46,7 @@ function CategorySelection() {
         <Accordion.Root multiple defaultValue={["b"]}>
             <Accordion.Item key={0} value={""}>
                 <Accordion.ItemTrigger>
-                    <Span flex="1">Categories</Span>
+                    <Span flex="1">Filter by categories</Span>
                     <Accordion.ItemIndicator />
                 </Accordion.ItemTrigger>
                 <Accordion.ItemContent>
@@ -88,6 +98,7 @@ function PriceSelection() {
             width="100%"
             min={1000}
             max={100_000}
+            //value={[min, max]}
             defaultValue={[minPrice, maxPrice]}
             step={1000}
             minStepsBetweenThumbs={10}
