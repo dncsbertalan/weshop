@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Heading, HStack, Separator, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Button, Center, Flex, Heading, Separator, Spacer, Text, VStack } from "@chakra-ui/react";
 import { Footer } from "../page-components/footer/Footer";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
@@ -50,7 +50,8 @@ function CheckoutSection() {
             borderRadius="10px"
             padding="20px"
             backgroundColor="whiteAlpha.800"
-            shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
+            //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
+            shadow="0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)"
             backdropFilter="saturate(180%) blur(20px)"
             width={{ base: "800px", lg: "300px" }}
             height="min"

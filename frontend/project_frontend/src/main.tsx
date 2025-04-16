@@ -10,6 +10,7 @@ import AppRoutes from './routes/AppRoutes.tsx'
 import { ChakraProvider } from '@chakra-ui/react'
 import { system } from './theme/theme.ts'
 import { ColorModeProvider } from './components/ui/color-mode.tsx'
+import { OrdersProvider } from './context/OrdersContext.tsx'
 
 const queryClient = new QueryClient();
 
@@ -18,15 +19,17 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
-          <BrowserRouter>
-            <ProductProvider>
-              <ChakraProvider value={system}>
-                <ColorModeProvider>
-                  <AppRoutes />
-                </ColorModeProvider>
-              </ChakraProvider>
-            </ProductProvider>
-          </BrowserRouter>
+          <OrdersProvider>
+            <BrowserRouter>
+              <ProductProvider>
+                <ChakraProvider value={system}>
+                  <ColorModeProvider>
+                    <AppRoutes />
+                  </ColorModeProvider>
+                </ChakraProvider>
+              </ProductProvider>
+            </BrowserRouter>
+          </OrdersProvider>
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>

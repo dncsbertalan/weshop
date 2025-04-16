@@ -22,8 +22,8 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
             borderBottom="solid 1px rgb(220, 220, 220)"
             paddingY="32px"
             paddingX="5px"
-            //backgroundColor="whiteAlpha.800"
-            //backdropFilter="blur(20px) saturate(180%)"
+        //backgroundColor="whiteAlpha.800"
+        //backdropFilter="blur(20px) saturate(180%)"
         >
             <Flex
                 alignItems="center"
@@ -37,7 +37,14 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
                 <Flex alignItems="center" justifyContent="space-between" width="690px">
 
-                    <Text fontSize="sm" fontWeight="400px" width="275px">{cartItem.name}</Text>
+                    <Flex flexDirection="column">
+                        <Text lineHeight="16px" fontSize="14px" fontWeight="400px" width="275px">{cartItem.name}</Text>
+                        <Text marginTop="6px" color="rgb(170, 170, 170)"
+                            lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
+                        >
+                            {cartItem.productId}
+                        </Text>
+                    </Flex>
 
                     <Box width="120px">
                         <NumberInput.Root value={cartItem.quantity.toString()} unstyled spinOnPress={false}>
@@ -69,7 +76,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                     </Box>
 
                     <Box width="120px" textAlign="right">
-                        <Text fontSize="md" fontWeight="bold">
+                        <Text lineHeight="24px" fontSize="16px" fontWeight="bold">
                             {formatCurrency(cartItem.price)} Ft
                         </Text>
                     </Box>

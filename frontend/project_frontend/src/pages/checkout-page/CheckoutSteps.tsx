@@ -1,6 +1,7 @@
 import { useCart } from "@/context/cartContext";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { Navigation } from "@/routes/navigation";
+import { sleep } from "@/utils/sleep";
 import { useSteps, Steps, ButtonGroup, Button, Box, Field, Input, VStack, HStack, RadioGroup, Center } from "@chakra-ui/react"
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
@@ -23,6 +24,7 @@ export function CheckoutSteps() {
                 bgColor="whiteAlpha.800"
                 padding="20px"
                 borderRadius="20px"
+                shadow="0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)"
             >
                 <Steps.RootProvider value={steps}>
 
@@ -191,10 +193,13 @@ function PaymentMethod() {
 function ConfirmationAndPayment() {
     const { handleSubmit } = useFormContext<CheckoutInfoData>();
     const navigate = useNavigate();
-    const {createOrder} = useCart();
+    const { createOrder } = useCart();
     const onSubmit = async (data: CheckoutInfoData) => {
-        createOrder(data);
-        navigate(Navigation.home);
+        await createOrder(data)
+            .then(async () => {
+                await sleep(1000 * 2);
+                navigate(Navigation.home);
+            });
     };
 
     return (
