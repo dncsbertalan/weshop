@@ -1,5 +1,8 @@
-﻿using Domain.Models;
+﻿using DataAccess.Mappers;
+using Domain.Dtos;
+using Domain.Models;
 using Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository;
 
@@ -30,5 +33,17 @@ public class OrderRepository(WebshopDbContext _context) : IOrderRepository
         await _context.SaveChangesAsync();
 
         return newOrder.Id;
+    }
+
+    public async Task<OrdersDto> GetOrders(string userId)
+    {
+        var orders = await _context.Orders
+            .Include(order => order.Items)
+            .Where(order => order.UserId == userId)
+            .ToListAsync();
+
+        var orderDtos = OrderMapper.OrdersToDto(orders);
+
+        return orderDtos;
     }
 }

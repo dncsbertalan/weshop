@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 using Domain.Repository;
 using System.Transactions;
 
@@ -28,7 +29,18 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
 
         await _cartRepository.CreateCart(userId);
 
+        Thread.Sleep(1000 * 2); // TEMPORARY
         scope.Complete();
         return true;
+    }
+
+    public async Task<OrdersDto?> GetOrders(string userId)
+    {
+        var user = await _userRepository.GetUserById(userId);
+        if (user is null) return null;
+
+        var orders = await _orderRepository.GetOrders(userId);
+
+        return orders;
     }
 }

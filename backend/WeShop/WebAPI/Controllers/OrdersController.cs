@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,5 +30,25 @@ public class OrdersController(OrderService _orderService) : ControllerBase
 
         return Ok(new { message = "Successfully created order." });
         //return CreatedAtAction(nameof(GetOrderById), new { id = success.Id }, success);
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<OrdersDto>> GetOrders()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var orders = await _orderService.GetOrders(userId);
+
+        if (orders is null)
+        {
+            return BadRequest(new { message = "Something went wrong" });
+        }
+
+        return Ok(orders);
     }
 }
