@@ -1,5 +1,5 @@
 import { useCart } from "@/context/cartContext";
-import { VStack, For, Flex, Button, EmptyState, Spinner } from "@chakra-ui/react";
+import { VStack, For, Flex, Button, EmptyState, Spinner, Box } from "@chakra-ui/react";
 import { Navigation } from "@/routes/navigation";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
@@ -21,22 +21,25 @@ export function CartItemSection() {
 
     return (
         <Flex
-            borderRadius={15}
-            padding="20px"
-            backgroundColor="whiteAlpha.800"
-            shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
-            backdropFilter="saturate(180%) blur(20px)"
+            //borderRadius={15}
+            padding="0px 30px"
+            //backgroundColor="whiteAlpha.800"
+            //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
+            //backdropFilter="saturate(180%) blur(20px)"
         >
             {cartIsPending && <CartItemSectionLoading />}
 
             {!cartIsPending &&
-                <VStack gap="0px">
-                    <For each={cart?.cartItems}>
-                        {(item) => (
-                            <CartItemCard cartItem={item} />
-                        )}
-                    </For>
-                </VStack>}
+                <Box borderTop="1px solid" borderTopColor="separator-color">
+                    <VStack gap="0px">
+                        <For each={cart?.cartItems}>
+                            {(item) => (
+                                <CartItemCard cartItem={item} key={item.id} />
+                            )}
+                        </For>
+                    </VStack>
+                </Box>}
+
         </Flex>
     );
 }

@@ -2,7 +2,7 @@ import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAuth } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
 import { Navigation } from "@/routes/navigation";
-import { Badge, Flex, Float, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
+import { Badge, Flex, Float, Heading, HStack, IconButton, Image, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
@@ -16,14 +16,18 @@ export function NavBarInner() {
         <Flex
             align="center"
             // apple 1024px
-            width="8xl"
-            maxWidth="8xl"
-            height="77px"
+            width="global-max-window-size"
+            maxWidth="global-max-window-size"
+            height="global-navbar-height"
             margin="0px 20px"
         >
             <Link to={Navigation.home}>
                 <Heading size="xl">WeShop</Heading>
             </Link>
+            <Image 
+                src="./src/assets/logo.png"
+                height="200px"
+            />
 
             <Spacer />
 

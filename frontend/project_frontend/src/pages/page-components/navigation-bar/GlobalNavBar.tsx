@@ -7,11 +7,13 @@ export function GlobalNavBar() {
             as="nav"
             justifyContent="center"
             alignItems="center"
-            background="whiteAlpha.800"
+            background="global-navbar-bg-color"
+            //background="rgba(207, 233, 216, 0.8)"
             width="100%"
-            height="77px" // 77     apple 44px
-            zIndex={1_000} //10_000
+            height="global-navbar-height"     // apple 44px
+            zIndex="global-navbar-z-index"
             position="fixed"
+            //padding="0px 20px"
             top={0}
             //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
             backdropFilter="saturate(180%) blur(20px)"

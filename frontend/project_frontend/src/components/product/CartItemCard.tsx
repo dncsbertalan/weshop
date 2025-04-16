@@ -1,5 +1,6 @@
 import { useCart } from '@/context/cartContext';
 import { CartItem } from '@/models/CartItem';
+import { formatCurrency } from '@/utils/currency';
 import { Box, Flex, HStack, IconButton, Image, NumberInput, Text } from '@chakra-ui/react'
 import { FaXmark } from 'react-icons/fa6';
 import { LuMinus, LuPlus } from 'react-icons/lu';
@@ -36,7 +37,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
                 <Flex alignItems="center" justifyContent="space-between" width="690px">
 
-                    <Text fontSize="14px" fontWeight="400px" width="275px">{cartItem.name}</Text>
+                    <Text fontSize="sm" fontWeight="400px" width="275px">{cartItem.name}</Text>
 
                     <Box width="120px">
                         <NumberInput.Root value={cartItem.quantity.toString()} unstyled spinOnPress={false}>
@@ -68,8 +69,8 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                     </Box>
 
                     <Box width="120px" textAlign="right">
-                        <Text fontSize="16px" fontWeight="700px">
-                            {cartItem.price} Ft
+                        <Text fontSize="md" fontWeight="bold">
+                            {formatCurrency(cartItem.price)} Ft
                         </Text>
                     </Box>
 

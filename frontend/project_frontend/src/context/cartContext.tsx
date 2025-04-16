@@ -31,7 +31,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         queryKey: [CART_QUERY_KEY],
         queryFn: getCart,
         staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
-        retry: 1, // retry once if there is a problem
+        //retry: 1, // retry once if there is a problem
     });
 
     // Add item to the cart.

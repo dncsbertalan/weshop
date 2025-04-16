@@ -1,15 +1,77 @@
 import { useCart } from '@/context/cartContext'
 import { Product } from '@/models/Product'
 import { ProductInfoDialog } from '@/pages/product-page/ProductInfoDialog';
-import { Button, Card, Icon, Image, Spacer, Text } from '@chakra-ui/react'
+import { Button, Card, Flex, Icon, Image, Spacer, Text } from '@chakra-ui/react'
 import { MdAddShoppingCart } from 'react-icons/md'
 import { toaster } from '../ui/toaster';
+import { formatCurrency } from '@/utils/currency';
 
 interface ProductCardProps {
     product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+    const { addItemToCart: addItem } = useCart();
+    const add = async () => {
+        addItem(product.id);
+        toaster.create({
+            description: `${product.name} was successfully added to your cart.`,
+            type: "info",
+        })
+    }
+
+    return (
+        <Flex
+            overflow="hidden"
+            width="320px"
+            height="100%"
+            flexDirection="column"
+            borderRadius="20px"
+            backgroundColor="whiteAlpha.800"
+            backdropFilter="blur(20px) saturate(1.8)"
+            boxShadow="0px 0px 10px rgba(0, 0, 0, 0.3)"
+            _hover={{
+                boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)", scale: 1.01
+            }}
+            transition="scale 0.2s ease-in-out"
+        >
+            <Image
+                src='https://www.zoldbolt.hu/img/86246/5999861502127/350x350,r/5999861502127.webp?time=1679576185'
+                height={250}
+                alt={product.pictureAlternative}
+            />
+
+            <Flex flexDirection="column" padding="0px 20px 20px 20px" marginTop="10px" height="100%">
+                <Text fontSize="16px" fontWeight="bold" letterSpacing="tight" lineHeight="22.4px">
+                    {product.name}
+                </Text>
+                <Text fontSize="16px" fontWeight="400" letterSpacing="tight">
+                    {formatCurrency(product.price)} Ft
+                </Text>
+                
+                <Spacer />
+                <Flex marginTop="10px">
+                    <Button
+                        rounded="full"
+                        onClick={add}
+                    >
+                        <Icon>
+                            <MdAddShoppingCart />
+                        </Icon>
+                        Add to cart
+                    </Button>
+
+                    <Spacer />
+                    <ProductInfoDialog product={product} />
+                </Flex>
+            </Flex>
+
+        </Flex>
+    );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function ProductCard_Old({ product }: ProductCardProps) {
     const { addItemToCart: addItem } = useCart();
     const add = async () => {
         addItem(product.id);

@@ -2,21 +2,52 @@ import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
 
 const config = defineConfig({
     theme: {
+        breakpoints: {
+            "max-screen-width": "1440px",
+            "grid-3-col-bp": "1100px",
+        },
         semanticTokens: {
             colors: {
                 primary: { value: { _light: "#0FEE0F", _dark: "#0FEE0F" } },
                 secondary: { value: "#EE0F0F" },
-                "bg-color": { value: { _light: "#EAEAEA", _dark: "purple" } },
+                "bg-color": { value: { _light: "white", _dark: "purple" } },
+                "bg-color-footer": { value: { _light: "rgb(242, 242, 247)", _dark: "purple" } },
+                "global-navbar-bg-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                "backdrop-color": { value: "rgba(22, 22, 23, 0.5)" },
+                
+                "separator-color": { value: { _light: "rgb(220, 220, 220)", _dark: "pink" } },
+                "footer-separator-color": { value: { _light: "rgb(220, 220, 220)", _dark: "pink" } },
+                //"bg-color": { value: { _light: "#EAEAEA", _dark: "purple" } },
             },
             fonts: {
                 body: { value: "system-ui, sans-serif" },
             },
         },
         tokens: {
+            colors: {
+            },
             sizes: {
                 "global-navbar-height": { value: "77px" },
                 "global-max-window-size": { value: "1440px" },
-            }
+            },
+            zIndex: {
+                "global-navbar-z-index": { value: "1000" },
+                "filter-panel-z-index": { value: "1" },
+            },
+            animations: {
+                "bg-animation": { value: "bg-animation 5s infinite alternate" },
+                "filter-checkbox-hover-animation": { value: "filter-checkbox-hover-animation 5s ease-in-out" },
+            },
+        },
+        keyframes: {
+            "bg-animation": {
+                "0%": { backgroundPosition: "left" },
+                "100%": { backgroundPosition: "right" },
+            },
+            "filter-checkbox-hover-animation": {
+                "0%": { backgroundImage: "linear-gradient(135deg, #f4fff6 0%, #e2f5e7 0%, #cfe9d8 0%)" },
+                "100%": { backgroundImage: "linear-gradient(135deg, #f4fff6 0%, #e2f5e7 40%, #cfe9d8 100%)" },
+            },
         },
     },
 })

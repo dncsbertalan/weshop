@@ -3,9 +3,8 @@ import { Card, Skeleton, SkeletonText, Spacer } from '@chakra-ui/react'
 export function SkeletonProductCard() {
     return (
         <Card.Root
-            maxW="sm"
             flex="1"
-            width="100%"
+            width="320px"
             overflow="hidden"
             backgroundColor="white"
             borderRadius={18}

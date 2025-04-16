@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect } from "react";
 import { useProduct } from "@/context/productContext";
-import { Reveal } from "@/animations/Reveal";
 import { BiError } from "react-icons/bi";
 import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
 
@@ -19,21 +18,22 @@ export function ProductSection() {
         <Flex
             flexDirection="column"
             alignItems="center"
-            borderRadius={18}
-            padding="2rem"
-            backgroundColor="whiteAlpha.800"
-            width="100%"
+            borderRadius="30px"
+            padding="20px"
+            //backgroundColor="whiteAlpha.800"
+            width="auto"
             height="100%"
             shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
-            backdropFilter="saturate(180%) blur(20px)"
+        //backdropFilter="saturate(180%) blur(20px)"
         >
             <Toaster />
 
             <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 3 }}
-                gap="1.5rem"
-                width="100%"
+                columns={{ base: 1, md: 2, "grid-3-col-bp": 3 }}
+                gap="20px"
+                //width="960"
                 height="100%"
+                alignItems="stretch"
             >
                 {isError &&
                     <ProductsSectionError />}
@@ -44,10 +44,8 @@ export function ProductSection() {
 
                 {!isPending && (
                     <For each={products?.items}>
-                        {(item) => (
-                            <Reveal>
-                                <ProductCard product={item} key={item.id} />
-                            </Reveal>
+                        {(item, index) => (
+                            <ProductCard product={item} key={index} />
                         )}
                     </For>
                 )}
@@ -111,7 +109,7 @@ function ProductsSectionError() {
 function ProductSectionLoading() {
     return (
         <For each={[1, 2, 3, 4]}>
-            {(id) => <SkeletonProductCard key={id}/>}
+            {(id) => <SkeletonProductCard key={id} />}
         </For>
     );
 }

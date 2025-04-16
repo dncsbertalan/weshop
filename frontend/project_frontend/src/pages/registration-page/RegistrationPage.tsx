@@ -1,24 +1,28 @@
 import { Button, Field, Flex, Heading, HStack, Input, VStack } from "@chakra-ui/react";
-import { NavigationBar } from "../page-components/navigation-bar/NavigationBar";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { useForm } from "react-hook-form";
 import { authRegister } from "@/api/auth-api";
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 
 export function RegistrationPage() {
     const { register, handleSubmit } = useForm<RegistrationDto>();
 
     return (
         <Flex
-            background="gray"
+            backgroundColor="bg-color"
             width="100vw"
             height="100vh"
             padding={10}
             justifyContent="center"
             alignItems="center"
+            flexDirection="column"
         >
-            <NavigationBar />
+            <GlobalNavBar />
 
-            <VStack gap={4} p={6} boxShadow="lg" borderRadius="lg" bg="white" maxW="400px" mx="auto" mt={10}>
+            <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white" 
+                shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px" 
+                maxW="420px" mx="auto" mt={10}
+            >
                 <Heading size="lg">Registration</Heading>
 
                 <HStack>

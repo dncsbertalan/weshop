@@ -1,11 +1,11 @@
 import { Button, Field, Flex, Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { NavigationBar } from "../page-components/navigation-bar/NavigationBar";
 import { LoginDto } from "@/dtos/LoginDto";
 import { Link, useNavigate } from "react-router";
 import { Navigation } from "@/routes/navigation";
 import { useAuth } from "@/context/authContext";
 import { authLogin } from "@/api/auth-api";
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
@@ -19,17 +19,20 @@ export function LoginPage() {
 
     return (
         <Flex
-            background="gray"
+            background="bg-color"
             width="100vw"
             height="100vh"
             padding={10}
             justifyContent="center"
             alignItems="center"
+            flexDirection="column"
         >
-            <NavigationBar />
+            <GlobalNavBar />
 
-            <VStack gap={4} p={6} boxShadow="lg" borderRadius="lg" bg="white" minWidth={300} maxW="400px" mx="auto" mt={10}
-                shadow="3px 3px 10px rgba(0,0,0,0.2)"
+            <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white" 
+                minWidth={320} maxW="400px" mx="auto"
+                //shadow="3px 3px 10px rgba(0,0,0,0.2)"
+                shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
             >
                 <Heading size="lg">Login</Heading>
 
@@ -37,7 +40,7 @@ export function LoginPage() {
                     <Field.Label>
                         E-mail<Field.RequiredIndicator />
                     </Field.Label>
-                    <Input type="email" {...register("email")} placeholder="example@email.com" />
+                    <Input type="email" {...register("email")} placeholder="example@email.com" /> {/* ide 12 px padding */}
                 </Field.Root>
 
                 <Field.Root required>
