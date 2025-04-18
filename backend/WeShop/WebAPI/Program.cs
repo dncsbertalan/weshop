@@ -1,6 +1,6 @@
 using DataAccess;
+using DataAccess.Models;
 using DataAccess.Repository;
-using Domain.Models;
 using Domain.Repository;
 using Domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

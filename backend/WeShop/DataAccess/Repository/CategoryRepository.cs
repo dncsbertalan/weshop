@@ -1,5 +1,5 @@
-﻿using Domain.Dtos;
-using Domain.Models;
+﻿using DataAccess.Models;
+using Domain.Dtos;
 using Domain.Repository;
 
 namespace DataAccess.Repository;

@@ -1,4 +1,5 @@
 ﻿using DataAccess.Mappers;
+using DataAccess.Models;
 using Domain.Dtos;
 using Domain.Models;
 using Domain.Repository;

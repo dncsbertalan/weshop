@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Models;
+namespace DataAccess.Models;
 
 public class User_Data : IdentityUser
 {

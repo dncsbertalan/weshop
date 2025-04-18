@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Domain.Models;
+﻿using DataAccess.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
