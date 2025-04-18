@@ -7,91 +7,91 @@ namespace Domain.Services;
 
 public class CartService(ICartRepository _cartRepository, IUserRepository _userRepository, IProductRepository _productRepository)
 {
-    public async Task<bool> AddProductToCart(string userId, AddProductToCartData productData)
+    public async Task<bool> AddProductToCartAsync(string userId, AddProductToCartData productData)
     {
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return false;
 
-        var cartId = await _cartRepository.GetCartIdFromUserId(userId);
+        var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         // If the user doesn't have a cart create one
         if (cartId is null)
         {
-            cartId = await _cartRepository.CreateCart(userId);
+            cartId = await _cartRepository.CreateCartAsync(userId);
         }
 
-        var product = await _productRepository.GetById(productData.ProductId);
+        var product = await _productRepository.GetByIdAsync(productData.ProductId);
         if (product is null) return false;
 
-        return await _cartRepository.AddProductToCart((long)cartId, productData.ProductId);
+        return await _cartRepository.AddProductToCartAsync((long)cartId, productData.ProductId);
     }
 
-    public async Task<long?> CreateCart(string userId)
+    public async Task<long?> CreateCartAsync(string userId)
     {
         if (await UserIsNotValid(userId)) return null;
 
-        return await _cartRepository.CreateCart(userId);
+        return await _cartRepository.CreateCartAsync(userId);
     }
 
-    public async Task DeleteCart(long cartId)
+    public async Task DeleteCartAsync(long cartId)
     {
         //var user = await _userRepository.GetUserById(cartId);
         //if (user is null) return;
 
-        await _cartRepository.DeleteCart(cartId);
+        await _cartRepository.DeleteCartAsync(cartId);
     }
 
-    public async Task<CartDto?> GetCartById(string userId)
+    public async Task<CartDto?> GetCartByIdAsync(string userId)
     {
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return null;
 
-        var cartId = await _cartRepository.GetCartIdFromUserId(userId);
+        var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         if (cartId is null) return null;
 
-        var cartItems = await _cartRepository.GetCartItems((long)cartId);
+        var cartItems = await _cartRepository.GetCartItemsAsync((long)cartId);
 
         return cartItems;
     }
 
-    public async Task<bool> ModifyCartItem(string userId, long cartItemId, CartItemModificationData modificationData)
+    public async Task<bool> ModifyCartItemAsync(string userId, long cartItemId, CartItemModificationData modificationData)
     {
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return false;
 
-        var cartId = await _cartRepository.GetCartIdFromUserId(userId);
+        var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         if (cartId is null) return false;
 
-        return await _cartRepository.ModifyProductInCart((long)cartId, cartItemId, modificationData);
+        return await _cartRepository.ModifyProductInCartAsync((long)cartId, cartItemId, modificationData);
     }
 
-    public async Task<bool> RemoveItemFromCart(string userId, long cartItemId)
+    public async Task<bool> RemoveItemFromCartAsync(string userId, long cartItemId)
     {
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return false;
 
-        var cartId = await _cartRepository.GetCartIdFromUserId(userId);
+        var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         if (cartId is null) return false;
 
-        return await _cartRepository.DeleteProductFromCart((long)cartId, cartItemId);
+        return await _cartRepository.DeleteProductFromCartAsync((long)cartId, cartItemId);
     }
 
-    public async Task<bool> AddProductToCart_ByCartId(long cartId, string userId, AddProductToCartData productData)
+    public async Task<bool> AddProductToCart_ByCartIdAsync(long cartId, string userId, AddProductToCartData productData)
     {
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return false;
 
-        var cart = await _cartRepository.GetCartById(cartId);
+        var cart = await _cartRepository.GetCartByIdAsync(cartId);
         if (cart is null || cart.UserId != userId) return false;
 
-        var product = await _productRepository.GetById(productData.ProductId);
+        var product = await _productRepository.GetByIdAsync(productData.ProductId);
         if (product is null) return false;
 
-        return await _cartRepository.AddProductToCart(cartId, productData.ProductId);
+        return await _cartRepository.AddProductToCartAsync(cartId, productData.ProductId);
     }
 
     #region Helper methods
 
-    private async Task<bool> UserIsNotValid(string userId) => await _userRepository.GetUserById(userId) is null;
+    private async Task<bool> UserIsNotValid(string userId) => await _userRepository.GetUserByIdAsync(userId) is null;
 
     #endregion
 }

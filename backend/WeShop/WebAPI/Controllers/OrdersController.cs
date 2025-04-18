@@ -21,7 +21,7 @@ public class OrdersController(OrderService _orderService) : ControllerBase
             return Unauthorized();
         }
 
-        var success = await _orderService.CreateOrder(userId, orderData);
+        var success = await _orderService.CreateOrderAsync(userId, orderData);
 
         if (!success)
         {
@@ -42,7 +42,7 @@ public class OrdersController(OrderService _orderService) : ControllerBase
             return Unauthorized();
         }
 
-        var orders = await _orderService.GetOrders(userId);
+        var orders = await _orderService.GetOrdersAsync(userId);
 
         if (orders is null)
         {

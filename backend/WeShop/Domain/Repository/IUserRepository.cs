@@ -4,5 +4,5 @@ namespace Domain.Repository;
 
 public interface IUserRepository
 {
-    Task<UserDto?> GetUserById(string userId);
+    Task<UserDto?> GetUserByIdAsync(string userId);
 }

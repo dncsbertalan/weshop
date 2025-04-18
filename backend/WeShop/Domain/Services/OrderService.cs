@@ -7,7 +7,7 @@ namespace Domain.Services;
 
 public class OrderService(IOrderRepository _orderRepository, IOrderItemRepository _orderItemRepository, IUserRepository _userRepository, ICartRepository _cartRepository)
 {
-    public async Task<bool> CreateOrder(string userId, CreateOrderData orderData)
+    public async Task<bool> CreateOrderAsync(string userId, CreateOrderData orderData)
     {
         // 1. Check whether the user exists
         // 2. Get the cart id of the user's cart
@@ -16,30 +16,30 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
         // 5. Remove all items from the cart
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return false;
 
-        var cartId = await _cartRepository.GetCartIdFromUserId(userId);
+        var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         if (cartId is null) return false;
 
-        var newOrderId = await _orderRepository.CreateOrder(orderData, userId);
-        await _orderItemRepository.CreateOrderItemsFromCartItems(newOrderId, (long)cartId);
+        var newOrderId = await _orderRepository.CreateOrderAsync(orderData, userId);
+        await _orderItemRepository.CreateOrderItemsFromCartItemsAsync(newOrderId, (long)cartId);
 
-        await _cartRepository.DeleteCart((long)cartId);
+        await _cartRepository.DeleteCartAsync((long)cartId);
 
-        await _cartRepository.CreateCart(userId);
+        await _cartRepository.CreateCartAsync(userId);
 
         Thread.Sleep(1000 * 2); // TEMPORARY
         scope.Complete();
         return true;
     }
 
-    public async Task<OrdersDto?> GetOrders(string userId)
+    public async Task<OrdersDto?> GetOrdersAsync(string userId)
     {
-        var user = await _userRepository.GetUserById(userId);
+        var user = await _userRepository.GetUserByIdAsync(userId);
         if (user is null) return null;
 
-        var orders = await _orderRepository.GetOrders(userId);
+        var orders = await _orderRepository.GetOrdersAsync(userId);
 
         return orders;
     }

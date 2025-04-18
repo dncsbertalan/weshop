@@ -19,7 +19,7 @@ public class ProductsController(ProductService _productRepository) : ControllerB
         [FromQuery(Name = "min")] double minPrice = 1000,
         [FromQuery(Name = "max")] double maxPrice = 100_000)
     {
-        var result = await _productRepository.GetProducts(page, pageSize, categoryIds, minPrice, maxPrice);
+        var result = await _productRepository.GetProductsAsync(page, pageSize, categoryIds, minPrice, maxPrice);
         if (result is null)
         {
             return BadRequest(new { message = "Something went wrong" });
@@ -31,7 +31,7 @@ public class ProductsController(ProductService _productRepository) : ControllerB
     [HttpGet("{id}")]
     public ActionResult<ProductDto> Get(long id)
     {
-        var product = _productRepository.GetById(id);
+        var product = _productRepository.GetByIdAsync(id);
         return product != null ? Ok(product): NotFound();
     }
 }

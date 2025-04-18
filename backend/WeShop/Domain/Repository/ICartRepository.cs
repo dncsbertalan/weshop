@@ -5,12 +5,12 @@ namespace Domain.Repository;
 
 public interface ICartRepository
 {
-    Task<long> CreateCart(string userId);
-    Task DeleteCart(long cartId);
-    Task<Cart?> GetCartById(long cartId);
-    Task<long?> GetCartIdFromUserId(string userId);
-    Task<CartDto?> GetCartItems(long cartId);
-    Task<bool> AddProductToCart(long cartId, long productId);
-    Task<bool> DeleteProductFromCart(long cartId, long productId);
-    Task<bool> ModifyProductInCart(long cartId, long cartItemId, CartItemModificationData modificationData);
+    Task<long> CreateCartAsync(string userId);
+    Task DeleteCartAsync(long cartId);
+    Task<Cart?> GetCartByIdAsync(long cartId);
+    Task<long?> GetCartIdFromUserIdAsync(string userId);
+    Task<CartDto?> GetCartItemsAsync(long cartId);
+    Task<bool> AddProductToCartAsync(long cartId, long productId);
+    Task<bool> DeleteProductFromCartAsync(long cartId, long productId);
+    Task<bool> ModifyProductInCartAsync(long cartId, long cartItemId, CartItemModificationData modificationData);
 }

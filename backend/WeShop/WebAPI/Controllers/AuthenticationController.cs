@@ -12,19 +12,8 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController(UserManager<User_Data> _userManager, SignInManager<User_Data> _signInManager, IConfiguration _configuration) : ControllerBase
 {
-    private readonly UserManager<User_Data> _userManager;
-    private readonly SignInManager<User_Data> _signInManager;
-    private readonly IConfiguration _configuration;
-
-    public AuthenticationController(UserManager<User_Data> userManager, SignInManager<User_Data> signInManager, IConfiguration configuration)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _configuration = configuration;
-    }
-
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationDto registrationData)
     {

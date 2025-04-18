@@ -42,7 +42,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         new Product_Data() { Id = 30, Name = "Kisautó szett", Description = "10 darabos fém kisautó készlet.", Price = 6990, AvailableQuantity = 32 }
     ];
 
-    public async Task<ProductDto?> GetById(long id)
+    public async Task<ProductDto?> GetByIdAsync(long id)
     {
         var result = await _context.Products.SingleOrDefaultAsync(product => product.Id == id);
         if (result == null)
@@ -52,7 +52,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         return ProductMapper.ToDto(result);
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProducts(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice)
+    public async Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice)
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 

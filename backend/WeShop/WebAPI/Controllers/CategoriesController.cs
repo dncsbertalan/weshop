@@ -8,15 +8,8 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CategoriesController : ControllerBase
+public class CategoriesController(CategoryService _categoryService) : ControllerBase
 {
-    private readonly CategoryService _categoryService;
-
-    public CategoriesController(CategoryService categoryService)
-    {
-        _categoryService = categoryService;
-    }
-
     [HttpGet]
     public IEnumerable<CategoryDto> GetAll()
     {

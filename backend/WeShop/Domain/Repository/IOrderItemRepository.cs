@@ -2,5 +2,5 @@
 
 public interface IOrderItemRepository
 {
-    Task<bool> CreateOrderItemsFromCartItems(Guid orderId, long cartId);
+    Task<bool> CreateOrderItemsFromCartItemsAsync(Guid orderId, long cartId);
 }

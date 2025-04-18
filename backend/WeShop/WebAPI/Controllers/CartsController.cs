@@ -21,7 +21,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var newCart = await _cartService.CreateCart(userId);
+        var newCart = await _cartService.CreateCartAsync(userId);
 
         return Ok(newCart);
     }
@@ -36,7 +36,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var carts = await _cartService.GetCartById(userId);
+        var carts = await _cartService.GetCartByIdAsync(userId);
 
         return Ok(carts);
     }
@@ -51,7 +51,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.ModifyCartItem(userId, cartItemId, modificationData);
+        var result = await _cartService.ModifyCartItemAsync(userId, cartItemId, modificationData);
 
         if (!result) return BadRequest(new { message = "An error occured modifying the product in cart." });
 
@@ -68,7 +68,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.AddProductToCart(userId, productData);
+        var result = await _cartService.AddProductToCartAsync(userId, productData);
 
         if (!result) return BadRequest("An error occured adding product to cart.");
 
@@ -85,7 +85,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.RemoveItemFromCart(userId, cartItemId);
+        var result = await _cartService.RemoveItemFromCartAsync(userId, cartItemId);
 
         if (!result)
         {

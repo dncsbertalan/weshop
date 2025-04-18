@@ -11,7 +11,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 {
     #region Cart
 
-    public async Task<long> CreateCart(string userId)
+    public async Task<long> CreateCartAsync(string userId)
     {
         var user = await _context.Users.FindAsync(userId);
         var cart = new Cart_Data
@@ -25,7 +25,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart.Id;
     }
 
-    public async Task DeleteCart(long cartId)
+    public async Task DeleteCartAsync(long cartId)
     {
 
         var cart = await _context.Carts
@@ -40,7 +40,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<long?> GetCartIdFromUserId(string userId)
+    public async Task<long?> GetCartIdFromUserIdAsync(string userId)
     {
         var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.User.Id == userId);
         return cart is null ? null : cart.Id;
@@ -50,7 +50,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     #region Cart items
 
-    public async Task<bool> AddProductToCart(long cartId, long productId)
+    public async Task<bool> AddProductToCartAsync(long cartId, long productId)
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
@@ -85,7 +85,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
-    public async Task<bool> DeleteProductFromCart(long cartId, long cartItemId)
+    public async Task<bool> DeleteProductFromCartAsync(long cartId, long cartItemId)
     {
         var deletedCartItems = await _context.CartItems
             .Where(ci => ci.Id == cartItemId && ci.Cart.Id == cartId)
@@ -94,7 +94,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return deletedCartItems > 0;
     }
 
-    public async Task<CartDto?> GetCartItems(long cartId)
+    public async Task<CartDto?> GetCartItemsAsync(long cartId)
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
@@ -105,7 +105,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart is null ? null : CartMapper.Map(cart);
     }
 
-    public async Task<bool> ModifyProductInCart(long cartId, long cartItemId, CartItemModificationData modificationData)
+    public async Task<bool> ModifyProductInCartAsync(long cartId, long cartItemId, CartItemModificationData modificationData)
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
@@ -137,7 +137,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
-    public async Task<Cart?> GetCartById(long cartId)
+    public async Task<Cart?> GetCartByIdAsync(long cartId)
     {
         throw new NotImplementedException();
         //return await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);

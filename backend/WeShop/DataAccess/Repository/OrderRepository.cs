@@ -9,7 +9,7 @@ namespace DataAccess.Repository;
 
 public class OrderRepository(WebshopDbContext _context) : IOrderRepository
 {
-    public async Task<Guid> CreateOrder(CreateOrderData orderData, string userId)
+    public async Task<Guid> CreateOrderAsync(CreateOrderData orderData, string userId)
     {
         var newAddress = new Address_Data
         {
@@ -36,7 +36,7 @@ public class OrderRepository(WebshopDbContext _context) : IOrderRepository
         return newOrder.Id;
     }
 
-    public async Task<OrdersDto> GetOrders(string userId)
+    public async Task<OrdersDto> GetOrdersAsync(string userId)
     {
         var orders = await _context.Orders
             .Include(order => order.Items)

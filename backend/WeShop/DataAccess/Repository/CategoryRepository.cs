@@ -27,7 +27,7 @@ public class CategoryRepository : ICategoryRepository
         new Category_Data() { Id = 10, Name = "Művészeti és kreatív játékok", Description = "Kifestők, gyurma szettek, rajzkészletek és egyéb kreatív játékok." }
     ];
 
-    public IReadOnlyCollection<CategoryDto> List()
+    public IReadOnlyCollection<CategoryDto> GetCategories()
     {
         var resultList = new List<CategoryDto>();
         foreach (var category in _context.Categories.ToList())

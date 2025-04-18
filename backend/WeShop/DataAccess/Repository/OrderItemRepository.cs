@@ -6,7 +6,7 @@ namespace DataAccess.Repository;
 
 public class OrderItemRepository(WebshopDbContext _context) : IOrderItemRepository
 {
-    public async Task<bool> CreateOrderItemsFromCartItems(Guid orderId, long cartId)
+    public async Task<bool> CreateOrderItemsFromCartItemsAsync(Guid orderId, long cartId)
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)

@@ -4,5 +4,5 @@ namespace Domain.Repository;
 
 public interface ICategoryRepository
 {
-    IReadOnlyCollection<CategoryDto> List();
+    IReadOnlyCollection<CategoryDto> GetCategories();
 }

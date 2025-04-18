@@ -15,6 +15,6 @@ public class CategoryService
 
     public IReadOnlyCollection<CategoryDto> List()
     {
-        return _repository.List();
+        return _repository.GetCategories();
     }
 }

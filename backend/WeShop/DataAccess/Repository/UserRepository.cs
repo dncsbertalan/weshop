@@ -6,7 +6,7 @@ namespace DataAccess.Repository;
 
 public class UserRepository(WebshopDbContext _context) : IUserRepository
 {
-    public async Task<UserDto?> GetUserById(string userId)
+    public async Task<UserDto?> GetUserByIdAsync(string userId)
     {
         var user = await _context.Users.FindAsync(userId);
 
