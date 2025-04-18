@@ -15,6 +15,7 @@ public class Order_Data
     [ForeignKey("UserId")]
     public User_Data User { get; set; }
 
+    public long AddressId { get; set; }
     [ForeignKey("AddressId")]
     public Address_Data Address { get; set; }
 

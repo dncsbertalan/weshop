@@ -20,7 +20,7 @@ public class OrderItemRepository(WebshopDbContext _context) : IOrderItemReposito
             ProductName = cartItem.Product.Name,
             Price = cartItem.Product.Price,
             Quantity = cartItem.Quantity,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         });
 
         _context.AddRange(orderItems);

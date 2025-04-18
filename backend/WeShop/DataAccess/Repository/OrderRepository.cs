@@ -43,8 +43,6 @@ public class OrderRepository(WebshopDbContext _context) : IOrderRepository
             .Where(order => order.UserId == userId)
             .ToListAsync();
 
-        var orderDtos = OrderMapper.OrdersToDto(orders);
-
-        return orderDtos;
+        return OrderMapper.OrdersToDto(orders);
     }
 }

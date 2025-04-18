@@ -13,6 +13,6 @@ public class Category_Data
 
     [Required]
     public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public List<Product_Data> Products { get; set; } = [];
+    public string? Description { get; set; }
+    public virtual List<Product_Data> Products { get; set; } = [];
 }

@@ -11,9 +11,11 @@ public class CartItem_Data
     [Key]
     public long Id { get; set; }
 
+    public long CartId { get; set; }
     [ForeignKey("CartId")]
     public Cart_Data Cart { get; set; }
 
+    public long ProductId { get; set; }
     [ForeignKey("ProductId")]
     public Product_Data Product { get; set; }
     public int Quantity { get; set; }

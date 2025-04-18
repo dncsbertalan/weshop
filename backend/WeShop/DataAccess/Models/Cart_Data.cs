@@ -11,6 +11,7 @@ public class Cart_Data
     [Key]
     public long Id { get; set; }
 
+    public string UserId { get; set; }
     [ForeignKey("UserId")]
     public User_Data User { get; set; }
 

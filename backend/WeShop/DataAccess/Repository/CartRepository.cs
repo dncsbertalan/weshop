@@ -13,13 +13,12 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     public async Task<long> CreateCartAsync(string userId)
     {
-        var user = await _context.Users.FindAsync(userId);
         var cart = new Cart_Data
         {
-            User = user!
+            UserId = userId,
         };
 
-        await _context.Carts.AddAsync(cart);
+        _context.Carts.Add(cart);
         await _context.SaveChangesAsync();
 
         return cart.Id;
@@ -40,10 +39,16 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<long?> GetCartIdFromCartItemIdAsync(long cartItemId)
+    {
+        var cartItem = await _context.CartItems.FindAsync(cartItemId);
+        return cartItem?.CartId;
+    }
+
     public async Task<long?> GetCartIdFromUserIdAsync(string userId)
     {
         var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.User.Id == userId);
-        return cart is null ? null : cart.Id;
+        return cart?.Id;
     }
 
     #endregion
@@ -54,14 +59,13 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
-            .ThenInclude(cartItem => cartItem.Product)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
         if (cart is null) return false;
 
         var product = await _context.Products.FindAsync(productId);
         if (product is null) return false;
 
-        var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Product.Id == productId);
+        var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
         // If the cart already contains the product, increase the quantity.
         if (cartItem is not null)
         {
@@ -77,7 +81,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
                 Quantity = 1,
             };
 
-            await _context.CartItems.AddAsync(newCartItem);
+            _context.CartItems.Add(newCartItem);
         }
 
         await _context.SaveChangesAsync();
@@ -88,10 +92,16 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     public async Task<bool> DeleteProductFromCartAsync(long cartId, long cartItemId)
     {
         var deletedCartItems = await _context.CartItems
-            .Where(ci => ci.Id == cartItemId && ci.Cart.Id == cartId)
+            .Where(ci => ci.Id == cartItemId && ci.CartId == cartId)
             .ExecuteDeleteAsync();
 
         return deletedCartItems > 0;
+    }
+
+    public async Task<CartItemDto?> GetCartItemByIdAsync(long cartItemId)
+    {
+        var cartItem = await _context.CartItems.FindAsync(cartItemId);
+        return cartItem is null ? null : CartItemMapper.Map(cartItem);
     }
 
     public async Task<CartDto?> GetCartItemsAsync(long cartId)
@@ -105,14 +115,9 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart is null ? null : CartMapper.Map(cart);
     }
 
-    public async Task<bool> ModifyProductInCartAsync(long cartId, long cartItemId, CartItemModificationData modificationData)
+    public async Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationData modificationData)
     {
-        var cart = await _context.Carts
-            .Include(cart => cart.CartItems)
-            .FirstOrDefaultAsync(cart => cart.Id == cartId);
-        if (cart is null) return false;
-
-        var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+        var cartItem = await _context.CartItems.FindAsync(cartItemId);
         if (cartItem is null) return false;
 
         cartItem.Quantity = modificationData.Quantity;

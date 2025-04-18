@@ -24,6 +24,6 @@ public static partial class CartItemMapper
         Description = data.Product.Description,
         Price = data.Product.Price,
         AvailableQuantity = data.Product.AvailableQuantity,
-        Categories = data.Product.Categories.Select(CategoryMapper.ToDto).ToList()
+        Categories = [.. data.Product.Categories.Select(CategoryMapper.ToDto)],
     };
 }

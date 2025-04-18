@@ -61,7 +61,7 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         if (cartId is null) return false;
 
-        return await _cartRepository.ModifyProductInCartAsync((long)cartId, cartItemId, modificationData);
+        return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationData);
     }
 
     public async Task<bool> RemoveItemFromCartAsync(string userId, long cartItemId)
@@ -71,6 +71,9 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
 
         var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
         if (cartId is null) return false;
+
+        var cartIdFromCartItem = await _cartRepository.GetCartIdFromCartItemIdAsync(cartItemId);
+        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
 
         return await _cartRepository.DeleteProductFromCartAsync((long)cartId, cartItemId);
     }
