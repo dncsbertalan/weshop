@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.Repository;
 using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers;
 
@@ -11,8 +12,8 @@ namespace WebAPI.Controllers;
 public class CategoriesController(CategoryService _categoryService) : ControllerBase
 {
     [HttpGet]
-    public IEnumerable<CategoryDto> GetAll()
+    public async Task<ActionResult<List<CategoryDto>>> GetCategories()
     {
-        return _categoryService.List();
+        return await _categoryService.GetCategoriesAsync();
     }
 }

@@ -4,17 +4,10 @@ using Domain.Repository;
 
 namespace Domain.Services;
 
-public class CategoryService
+public class CategoryService(ICategoryRepository _repository)
 {
-    private readonly ICategoryRepository _repository;
-
-    public CategoryService(ICategoryRepository repository)
+    public async Task<List<CategoryDto>> GetCategoriesAsync()
     {
-        _repository = repository;
-    }
-
-    public IReadOnlyCollection<CategoryDto> List()
-    {
-        return _repository.GetCategories();
+        return await _repository.GetCategoriesAsync();
     }
 }
