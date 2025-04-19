@@ -14,6 +14,9 @@ public class OrderItemRepository(WebshopDbContext _context) : IOrderItemReposito
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
         if (cart == null || cart.CartItems == null || cart.CartItems.Count == 0) return false;
 
+        var quantityCheck = cart.CartItems.All(cartItem => cartItem.Quantity <= cartItem.Product.AvailableQuantity);
+        if (!quantityCheck) return false;
+
         var orderItems = cart.CartItems.Select(cartItem => new OrderItem_Data
         {
             OrderId = orderId,
@@ -22,6 +25,8 @@ public class OrderItemRepository(WebshopDbContext _context) : IOrderItemReposito
             Quantity = cartItem.Quantity,
             CreatedAt = DateTime.UtcNow,
         });
+
+        cart.CartItems.ForEach(cartItem => cartItem.Product.AvailableQuantity -= cartItem.Quantity);
 
         _context.AddRange(orderItems);
         await _context.SaveChangesAsync();

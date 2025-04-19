@@ -8,6 +8,13 @@ namespace DataAccess.Repository;
 
 public class ProductRepository(WebshopDbContext _context) : IProductRepository
 {
+    public async Task<int?> GetAvailableQuantityAsync(long productId)
+    {
+        var result = await _context.Products.FindAsync(productId);
+
+        return result is null ? null : result.AvailableQuantity;
+    }
+
     public async Task<ProductDto?> GetByIdAsync(long id)
     {
         var result = await _context.Products.FindAsync(id);
