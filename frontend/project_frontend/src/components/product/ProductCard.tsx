@@ -32,7 +32,8 @@ export function ProductCard({ product }: ProductCardProps) {
             backdropFilter="blur(20px) saturate(1.8)"
             boxShadow="0px 0px 10px rgba(0, 0, 0, 0.3)"
             _hover={{
-                boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)", scale: 1.01
+                boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
+                //scale: 1.01
             }}
             transition="scale 0.2s ease-in-out"
         >
@@ -66,8 +67,11 @@ export function ProductCard({ product }: ProductCardProps) {
                 <Spacer />
                 <Flex marginTop="10px">
                     <Button
-                        rounded="full"
+                        rounded="full" backgroundColor="button-color-primary"
                         onClick={add}
+                        _hover={{
+                            backgroundColor: "button-color-primary-hover",
+                        }}
                     >
                         <Icon>
                             <MdAddShoppingCart />

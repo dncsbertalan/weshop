@@ -14,7 +14,7 @@ const config = defineConfig({
                 "bg-color-footer": { value: { _light: "rgb(242, 242, 247)", _dark: "purple" } },
                 "global-navbar-bg-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
                 "backdrop-color": { value: "rgba(22, 22, 23, 0.5)" },
-                
+
                 "separator-color": { value: { _light: "rgb(220, 220, 220)", _dark: "pink" } },
                 "footer-separator-color": { value: { _light: "rgb(220, 220, 220)", _dark: "pink" } },
                 //"bg-color": { value: { _light: "#EAEAEA", _dark: "purple" } },
@@ -25,6 +25,10 @@ const config = defineConfig({
         },
         tokens: {
             colors: {
+                "button-color-primary": { value: "#0071e3;" },
+                "button-color-primary-hover": { value: "#2997ff;" },
+                "button-color-secondary": { value: "pink" },
+                "button-color-tetriary": { value: "#2997ff" },
             },
             sizes: {
                 "global-navbar-height": { value: "77px" },
@@ -49,6 +53,11 @@ const config = defineConfig({
                 "100%": { backgroundImage: "linear-gradient(135deg, #f4fff6 0%, #e2f5e7 40%, #cfe9d8 100%)" },
             },
         },
+    },
+    globalCss: {
+        ":root": {
+            fontFamily: `"Comic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+        }
     },
 })
 
