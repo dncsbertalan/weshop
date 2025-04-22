@@ -81,11 +81,16 @@ namespace DataAccess.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CartItem");
                 });
@@ -97,6 +102,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -232,7 +240,36 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "Price" }, "IX_Price");
+
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CartId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CartUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("JoinedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("CartUserId");
+
+                    b.ToTable("SharedCart");
                 });
 
             modelBuilder.Entity("DataAccess.Models.User_Data", b =>
@@ -473,6 +510,12 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DataAccess.Models.User_Data", "AddedBy")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("AddedBy");
+
                     b.Navigation("Cart");
 
                     b.Navigation("Product");
@@ -525,6 +568,25 @@ namespace DataAccess.Migrations
                     b.Navigation("PaymentMethod");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
+                {
+                    b.HasOne("DataAccess.Models.Cart_Data", "Cart")
+                        .WithMany("Participants")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.User_Data", "CartUser")
+                        .WithMany()
+                        .HasForeignKey("CartUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("CartUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -581,6 +643,8 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
                     b.Navigation("CartItems");
+
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>

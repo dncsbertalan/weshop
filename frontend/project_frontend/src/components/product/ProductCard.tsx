@@ -35,7 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
                 //scale: 1.01
             }}
-            transition="scale 0.2s ease-in-out"
+            transition="scale 0.2s ease-in-out, box-shadow 0.2s ease-in-out"
         >
             <Image
                 src='https://www.zoldbolt.hu/img/86246/5999861502127/350x350,r/5999861502127.webp?time=1679576185'

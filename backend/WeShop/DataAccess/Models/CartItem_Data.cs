@@ -19,4 +19,8 @@ public class CartItem_Data
     [ForeignKey("ProductId")]
     public Product_Data Product { get; set; }
     public int Quantity { get; set; }
+
+    public string? UserId { get; set; }
+    [ForeignKey("UserId")]
+    public User_Data? AddedBy { get; set; }
 }

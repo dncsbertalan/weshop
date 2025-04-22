@@ -1,10 +1,12 @@
 ﻿using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Models;
 
 [Table("Product")]
+[Index(nameof(Price), Name = "IX_Price")]
 public class Product_Data
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
