@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Models;
 
@@ -15,4 +14,7 @@ public class User_Data : IdentityUser
     [Required]
     [DataType(DataType.Date)]
     public DateTime BirthDate { get; set; }
+
+    public virtual Cart_Data Cart { get; set; }
+    public List<SharedCart_Data> SharedCarts { get; set; } = [];
 }

@@ -26,9 +26,9 @@ public class CartsController(CartService _cartService) : ControllerBase
         return Ok(newCart);
     }
 
-    [HttpGet("me")]
+    [HttpGet("{cartId}")]
     [Authorize]
-    public async Task<ActionResult<CartDto>> GetCart()
+    public async Task<ActionResult<CartDto>> GetCart(long cartId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -36,14 +36,14 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var carts = await _cartService.GetCartByIdAsync(userId);
+        var carts = await _cartService.GetCartByIdAsync(userId, cartId);
 
         return Ok(carts);
     }
 
-    [HttpPut("me/products/{cartItemId}")]
+    [HttpPut("{cartId}/products/{cartItemId}")]
     [Authorize]
-    public async Task<IActionResult> ModifyCartItem(long cartItemId, [FromBody] CartItemModificationData modificationData)
+    public async Task<IActionResult> ModifyCartItem(long cartId, long cartItemId, [FromBody] CartItemModificationData modificationData)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -51,16 +51,16 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.ModifyCartItemAsync(userId, cartItemId, modificationData);
+        var result = await _cartService.ModifyCartItemAsync(userId, cartId, cartItemId, modificationData);
 
         if (!result) return BadRequest(new { message = "An error occured modifying the product in cart." });
 
         return Ok(new { message = "Product successfully modifyed in cart." });
     }
 
-    [HttpPost("me/products")]
+    [HttpPost("{cartId}/products")]
     [Authorize]
-    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartData productData)
+    public async Task<IActionResult> AddProductToCart(long cartId, [FromBody] AddProductToCartData productData)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -68,16 +68,16 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.AddProductToCartAsync(userId, productData);
+        var result = await _cartService.AddProductToCartAsync(userId, cartId, productData);
 
         if (!result) return BadRequest("An error occured adding product to cart.");
 
         return Ok("Product successfully added to cart.");
     }
 
-    [HttpDelete("me/products/{cartItemId}")]
+    [HttpDelete("{cartId}/products/{cartItemId}")]
     [Authorize]
-    public async Task<IActionResult> DeleteProductFromCart(long cartItemId)
+    public async Task<IActionResult> DeleteProductFromCart(long cartId, long cartItemId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -85,7 +85,7 @@ public class CartsController(CartService _cartService) : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _cartService.RemoveItemFromCartAsync(userId, cartItemId);
+        var result = await _cartService.RemoveItemFromCartAsync(userId, cartId, cartItemId);
 
         if (!result)
         {

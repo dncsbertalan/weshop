@@ -4,15 +4,16 @@ import { Cart } from "@/models/Cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOrder } from "@/api/order-api";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
+import { useUser } from "@/hooks/use-user";
 
 interface CartContextType {
     // Cart
     cart: Cart;
     cartIsPending: boolean;
     cartIsError: boolean;
-    addItemToCart: (productId: number) => Promise<void>;
-    removeItemToCart: (cartItemId: number) => Promise<void>;
-    modifyItemToCart: (cartItemId: number, quantity: number) => Promise<void>;
+    addItemToCart: (cartId: number, productId: number) => Promise<void>;
+    removeItemToCart: (cartId: number, cartItemId: number) => Promise<void>;
+    modifyItemToCart: (cartId: number, cartItemId: number, quantity: number) => Promise<void>;
     // Order
     createOrderIsPending: boolean;
     createOrderIsSuccess: boolean;
@@ -25,18 +26,20 @@ const CART_QUERY_KEY = "cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();
+    const user = useUser();
 
-     // Get the cart items from the server.
-     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError } = useQuery({
+    // Get the cart items from the server.
+    const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError } = useQuery({
         queryKey: [CART_QUERY_KEY],
-        queryFn: getCart,
+        queryFn: () => getCart(user.data!.cartId),
         staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
         //retry: 1, // retry once if there is a problem
     });
 
     // Add item to the cart.
     const addItemMutation = useMutation({
-        mutationFn: addProductToCart,
+        mutationFn: ({ cartId, productId }: { cartId: number; productId: number }) =>
+            addProductToCart(cartId, productId),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
         },
@@ -47,16 +50,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Remove item from the cart.
     const removeItemMutation = useMutation({
-        mutationFn: deleteProductFromCart,
+        mutationFn: ({ cartId, cartItemId }: { cartId: number; cartItemId: number }) =>
+            deleteProductFromCart(cartId, cartItemId),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
         },
     });
-    
+
     // Modify the quantity of an item in the cart.
     const modifyItemMutation = useMutation({
-        mutationFn: ({ cartItemId, quantity }: { cartItemId: number; quantity: number }) =>
-            modifyProductInCart(cartItemId, quantity),
+        mutationFn: ({ cartId, cartItemId, quantity }: { cartId: number; cartItemId: number; quantity: number }) =>
+            modifyProductInCart(cartId, cartItemId, quantity),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] });
         },
@@ -78,10 +82,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             cart,
             cartIsPending,
             cartIsError,
-            addItemToCart: (productId) => addItemMutation.mutateAsync(productId),
-            removeItemToCart: (cartItemId) => removeItemMutation.mutateAsync(cartItemId),
-            modifyItemToCart: (cartItemId, quantity) => modifyItemMutation.mutateAsync({ cartItemId, quantity }),
-            
+            addItemToCart: (cartId, productId) => addItemMutation.mutateAsync({ cartId, productId }),
+            removeItemToCart: (cartId, cartItemId) => removeItemMutation.mutateAsync({ cartId, cartItemId }),
+            modifyItemToCart: (cartId, cartItemId, quantity) => modifyItemMutation.mutateAsync({ cartId, cartItemId, quantity }),
+
             createOrderIsPending: createOrderMutation.isPending,
             createOrderIsSuccess: createOrderMutation.isSuccess,
             createOrderIsError: createOrderMutation.isError,

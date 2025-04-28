@@ -1,6 +1,6 @@
-﻿namespace Domain.Dtos;
+﻿namespace Domain.Models;
 
-public class RegistrationDto
+public class RegistrationData
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

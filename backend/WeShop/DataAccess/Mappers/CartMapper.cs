@@ -13,4 +13,17 @@ public static partial class CartMapper
     {
         CartItems = data.CartItems.Select(CartItemMapper.Map).ToList()
     };
+
+    public static CartWithParticipantsDto MapToCartWithParticipantsDto(Cart_Data data) => new CartWithParticipantsDto
+    {
+        UserId = data.UserId,
+        Participants = [.. data.Participants.Select(user => user.CartUserId)],
+    };
+
+    public static CartInfoDto MapToCartInfoDto(SharedCart_Data data) => new()
+    {
+        CartId = data.CartId,
+        OwnerFirstName = data.Cart.User.FirstName,
+        OwnerLastName = data.Cart.User.LastName,
+    };
 }

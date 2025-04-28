@@ -7,14 +7,16 @@ import { toaster } from '../ui/toaster';
 import { formatCurrency } from '@/utils/currency';
 import { IoCheckmarkCircleOutline } from 'react-icons/io5';
 import { FaRegCircleXmark } from 'react-icons/fa6';
+import { useUser } from '@/hooks/use-user';
 interface ProductCardProps {
     product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
     const { addItemToCart: addItem } = useCart();
+    const user = useUser();
     const add = async () => {
-        addItem(product.id);
+        addItem(user.data!.cartId, product.id);
         toaster.create({
             description: `${product.name} was successfully added to your cart.`,
             type: "info",
@@ -117,8 +119,9 @@ function getQuantityColor(quantity: number) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function ProductCard_Old({ product }: ProductCardProps) {
     const { addItemToCart: addItem } = useCart();
+    const user = useUser();
     const add = async () => {
-        addItem(product.id);
+        addItem(user.data!.cartId, product.id);
         toaster.create({
             description: `${product.name} was successfully added to your cart.`,
             type: "info",

@@ -1,4 +1,5 @@
 import { useCart } from '@/context/cartContext';
+import { useUser } from '@/hooks/use-user';
 import { CartItem } from '@/models/CartItem';
 import { formatCurrency } from '@/utils/currency';
 import { Box, Flex, HStack, IconButton, Image, NumberInput, Text } from '@chakra-ui/react'
@@ -11,8 +12,9 @@ type CartItemCardProps = {
 
 export function CartItemCard({ cartItem }: CartItemCardProps) {
     const { removeItemToCart: removeItem, modifyItemToCart: modifyItem } = useCart();
+    const user = useUser();
     const remove = async () => {
-        removeItem(cartItem.id);
+        removeItem(user.data!.cartId, cartItem.id);
     }
 
     return (
@@ -53,7 +55,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                                 <NumberInput.DecrementTrigger
                                     asChild
                                     disabled={cartItem.quantity < 2}
-                                    onClick={() => modifyItem(cartItem.id, cartItem.quantity - 1)}
+                                    onClick={() => modifyItem(user.data!.cartId, cartItem.id, cartItem.quantity - 1)}
                                 >
                                     <IconButton variant="outline" size="sm">
                                         <LuMinus />
@@ -64,7 +66,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
                                 <NumberInput.IncrementTrigger
                                     asChild
-                                    onClick={() => modifyItem(cartItem.id, cartItem.quantity + 1)}
+                                    onClick={() => modifyItem(user.data!.cartId, cartItem.id, cartItem.quantity + 1)}
                                 >
                                     <IconButton variant="outline" size="sm">
                                         <LuPlus />

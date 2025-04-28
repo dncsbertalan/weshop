@@ -11,6 +11,22 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 {
     #region Cart
 
+    public async Task<CartWithParticipantsDto?> GetCartParticipantsAsync(long cartId)
+    {
+        return await _context.Carts
+            .AsNoTracking()
+            .Where(cart => cart.Id == cartId)
+            .Select(cart => new CartWithParticipantsDto
+            {
+                CartId = cart.Id,
+                UserId = cart.UserId,
+                Participants = cart.Participants
+                    .Select(p => p.CartUserId)
+                    .ToList(),
+            })
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<long> CreateCartAsync(string userId)
     {
         var cart = new Cart_Data
@@ -53,9 +69,41 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     #endregion
 
+    #region Shared cart
+
+    public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
+    {
+        var newData = new SharedCart_Data
+        {
+            CartId = cartId,
+            CartUserId = userId,
+            JoinedDate = DateTime.UtcNow,
+        };
+
+        _context.SharedCarts.Add(newData);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<List<CartInfoDto>> GetUserCartInfoAsync(string userId)
+    {
+        return await _context.SharedCarts
+            .Where(sharedCart => sharedCart.CartUserId == userId)
+            .Select(sharedCart => new CartInfoDto
+            {
+                CartId = sharedCart.CartId,
+                OwnerFirstName = sharedCart.CartUser.FirstName,
+                OwnerLastName = sharedCart.CartUser.LastName,
+            })
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    #endregion
+
     #region Cart items
 
-    public async Task<bool> AddProductToCartAsync(long cartId, long productId)
+    public async Task<bool> AddProductToCartAsync(long cartId, long productId, string userId)
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
@@ -79,6 +127,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
                 Product = product,
                 Cart = cart,
                 Quantity = 1,
+                UserId = userId,
             };
 
             _context.CartItems.Add(newCartItem);
@@ -140,11 +189,5 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
         await _context.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<Cart?> GetCartByIdAsync(long cartId)
-    {
-        throw new NotImplementedException();
-        //return await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);
     }
 }

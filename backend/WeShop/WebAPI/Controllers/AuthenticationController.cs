@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
-using Domain.Dtos;
+using Domain.Models;
+using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController(UserManager<User_Data> _userManager, SignInManager<User_Data> _signInManager, IConfiguration _configuration) : ControllerBase
+public class AuthenticationController(UserManager<User_Data> _userManager, IConfiguration _configuration, CartService _cartService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegistrationDto registrationData)
+    public async Task<IActionResult> Register([FromBody] RegistrationData registrationData)
     {
         var user = new User_Data
         {
@@ -30,11 +31,14 @@ public class AuthenticationController(UserManager<User_Data> _userManager, SignI
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 
+        // TODO: New cart for the new user.
+        await _cartService.CreateCartAsync(user.Id);
+
         return Ok(user.Id);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login([FromBody] LoginDto loginData)
+    public async Task<ActionResult<string>> Login([FromBody] LoginData loginData)
     {
         var user = await _userManager.FindByEmailAsync(loginData.Email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, loginData.Password))
