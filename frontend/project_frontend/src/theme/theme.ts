@@ -37,6 +37,7 @@ const config = defineConfig({
             zIndex: {
                 "global-navbar-z-index": { value: "1000" },
                 "filter-panel-z-index": { value: "1" },
+                "scrool-to-top-button-z-index": { value: "10" },
             },
             animations: {
                 "bg-animation": { value: "bg-animation 5s infinite alternate" },

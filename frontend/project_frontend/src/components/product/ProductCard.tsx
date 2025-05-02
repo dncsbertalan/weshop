@@ -69,7 +69,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 <Spacer />
                 <Flex marginTop="10px">
                     <Button
-                        rounded="full" backgroundColor="button-color-primary"
+                        rounded="full" //backgroundColor="button-color-primary"
                         onClick={add}
                         _hover={{
                             backgroundColor: "button-color-primary-hover",

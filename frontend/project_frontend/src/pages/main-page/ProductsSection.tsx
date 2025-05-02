@@ -21,7 +21,7 @@ export function ProductSection() {
             borderRadius="30px"
             padding="20px"
             //backgroundColor="whiteAlpha.800"
-            width="auto"
+            width="fit-content"
             height="100%"
             shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
         //backdropFilter="saturate(180%) blur(20px)"
@@ -31,8 +31,7 @@ export function ProductSection() {
             <SimpleGrid
                 columns={{ base: 1, md: 2, "grid-3-col-bp": 3 }}
                 gap="20px"
-                //width="960"
-                height="100%"
+                height="100%" 
                 alignItems="stretch"
             >
                 {isError &&

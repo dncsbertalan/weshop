@@ -44,7 +44,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
     } = useQuery({
         queryKey: [PRODUCT_CACHE_KEY, page, pageSize, minPrice, maxPrice, selectedCategories],
         queryFn: () => getProducts(page, pageSize, selectedCategories.join(","), minPrice, maxPrice),
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 60,
     });
 
     const setPageSafe = (newPage: number) => {
@@ -82,6 +82,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
     const setMinPriceSafe = (value: number) => {
         setPage(1);
         setMinPrice(value);
+        console.log("szia");
     };
 
     //#endregion
@@ -109,6 +110,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useProduct = () => {
     const context = useContext(ProductContext);
     if (!context) throw new Error("useProduct must be used within a ProductProvider");

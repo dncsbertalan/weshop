@@ -32,8 +32,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: cart = { cartItems: [] }, isPending: cartIsPending, isError: cartIsError } = useQuery({
         queryKey: [CART_QUERY_KEY],
         queryFn: () => getCart(user.data!.cartId),
-        staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
-        //retry: 1, // retry once if there is a problem
+        staleTime: 1000 * 60 * 60, // data counts as fresh for an hour
     });
 
     // Add item to the cart.
@@ -96,7 +95,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-// Hook a context használatához
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
     const context = useContext(CartContext);
     if (!context) throw new Error("useCart must be used within a CartProvider");

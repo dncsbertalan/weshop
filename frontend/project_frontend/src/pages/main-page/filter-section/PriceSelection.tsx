@@ -17,7 +17,7 @@ export function PriceSelection() {
     //const {value,  } = useSlider({});
     return (
         <Slider.Root
-            maxW="md"
+            maxWidth="350px"
             width="100%"
             min={1000}
             max={100000}

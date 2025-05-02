@@ -1,17 +1,14 @@
-import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAuth } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
 import { Navigation } from "@/routes/navigation";
 import { Badge, Flex, Float, Heading, HStack, IconButton, Image, Spacer } from "@chakra-ui/react";
+import { PropsWithChildren } from "react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-export function NavBarInner() {
-    const { isAuthenticated } = useAuth();
-    const { cart } = useCart();
-
+export function NavBarInner({ children }: PropsWithChildren) {
     return (
         <Flex
             align="center"
@@ -24,8 +21,8 @@ export function NavBarInner() {
             <Link to={Navigation.home}>
                 <Heading size="xl">WeShop</Heading>
             </Link>
-            <Image 
-                src="./src/assets/logo.png"
+            <Image
+                //src="./src/assets/logo.png"
                 height="200px"
             />
 
@@ -42,50 +39,8 @@ export function NavBarInner() {
                     <LuPlus />
                 </IconButton>*/}
 
-                <ColorModeButton />
 
-                {isAuthenticated && <Link to={Navigation.shoppingCart}>
-                    <IconButton
-                        aria-label="Shopping cart"
-                        variant="ghost"
-                        rounded="full"
-                        size="md"
-                        padding={2}
-                    >
-                        <MdOutlineShoppingCart />
-                        Cart
-                        {cart.cartItems && <Float offsetY="4px" offsetX="4px">
-                            <Badge backgroundColor="red" color="white" rounded="full">
-                                {cart.cartItems.length}
-                            </Badge>
-                        </Float>}
-                    </IconButton>
-                </Link>}
-
-                {isAuthenticated && <Link to={Navigation.profile}>
-                    <IconButton
-                        aria-label="Profil"
-                        variant="ghost"
-                        rounded="full"
-                        size="md"
-                        padding={2}
-                    >
-                        <FaUser />
-                        Profil
-                    </IconButton>
-                </Link>}
-
-                {!isAuthenticated && <Link to={Navigation.login}>
-                    <IconButton
-                        aria-label="Login"
-                        variant="ghost"
-                        rounded="full"
-                        size="md"
-                    >
-                        <FaRightToBracket />
-                        Login
-                    </IconButton>
-                </Link>}
+                {children}
 
                 {/*<Link to={Navigation.registration}>
                     <IconButton
@@ -101,3 +56,102 @@ export function NavBarInner() {
         </Flex>
     );
 }
+
+export function NavLoginButton() {
+    const { isAuthenticated } = useAuth();
+    if (isAuthenticated) {
+        return null;
+    }
+
+    return (
+        <Link to={Navigation.login}>
+            <IconButton
+                aria-label="Login"
+                variant="ghost"
+                rounded="full"
+                size="md"
+            >
+                <FaRightToBracket />
+                Login
+            </IconButton>
+        </Link>
+    );
+};
+
+export function NavLogoutButton() {
+    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
+    if (!isAuthenticated) {
+        return null;
+    }
+
+    return (
+        <Link to={Navigation.login}>
+            <IconButton
+                aria-label="Login"
+                variant="ghost"
+                rounded="full"
+                size="md"
+                onClick={() => {
+                    logout();
+                    navigate(Navigation.home);
+                }}
+            >
+                <FaRightToBracket />
+                Logout
+            </IconButton>
+        </Link>
+    );
+};
+
+export function NavProfilButton() {
+    const { isAuthenticated } = useAuth();
+    if (isAuthenticated) {
+        return (
+            <Link to={Navigation.profile}>
+                <IconButton
+                    aria-label="Profil"
+                    variant="ghost"
+                    rounded="full"
+                    size="md"
+                    padding={2}
+                >
+                    <FaUser />
+                    Profil
+                </IconButton>
+            </Link>
+        );
+    }
+
+    return null;
+};
+
+export function NavCartButton() {
+    const { isAuthenticated } = useAuth();
+    const { cart } = useCart();
+
+    if (isAuthenticated) {
+        return (
+            <Link to={Navigation.shoppingCart}>
+                <IconButton
+                    aria-label="Shopping cart"
+                    variant="ghost"
+                    rounded="full"
+                    size="md"
+                    padding={2}
+                >
+                    <MdOutlineShoppingCart />
+                    Cart
+                    {cart.cartItems.length > 0 && <Float offsetY="4px" offsetX="4px">
+                        <Badge backgroundColor="red" color="white" rounded="full">
+                            {cart.cartItems.length}
+                        </Badge>
+                    </Float>}
+                </IconButton>
+            </Link>
+        );
+    }
+
+    return null;
+};

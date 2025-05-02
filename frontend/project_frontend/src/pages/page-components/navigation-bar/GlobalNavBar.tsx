@@ -1,7 +1,31 @@
 import { Flex } from "@chakra-ui/react";
-import { NavBarInner } from "./NavBarInner";
+import { NavBarInner, NavCartButton, NavLoginButton, NavLogoutButton, NavProfilButton } from "./NavBarInner";
+import { PropsWithChildren } from "react";
 
 export function GlobalNavBar() {
+    return (
+        <Nav>
+            <NavBarInner>
+                <NavCartButton />
+                <NavProfilButton />
+                <NavLoginButton />
+            </NavBarInner>
+        </Nav>
+    );
+}
+
+export function GlobalNavBarProfil() {
+    return (
+        <Nav>
+            <NavBarInner>
+                <NavCartButton />
+                <NavLogoutButton />
+            </NavBarInner>
+        </Nav>
+    );
+}
+
+function Nav({ children }: PropsWithChildren) {
     return (
         <Flex
             as="nav"
@@ -18,7 +42,7 @@ export function GlobalNavBar() {
             //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
             backdropFilter="saturate(180%) blur(20px)"
         >
-            <NavBarInner />
+            {children}
         </Flex>
     );
-}
+};

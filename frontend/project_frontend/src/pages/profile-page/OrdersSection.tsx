@@ -1,9 +1,7 @@
 import { useOrders } from "@/context/OrdersContext";
-import { Order, OrderItem, Orders } from "@/models/orders";
+import { OrderItem, Orders } from "@/models/orders";
 import { formatCurrency } from "@/utils/currency";
-import { Accordion, Box, Flex, HStack, IconButton, Image, NumberInput, Span, Text, VStack } from "@chakra-ui/react";
-import { FaXmark } from "react-icons/fa6";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { Accordion, Box, Flex, Image, Span, Text, VStack } from "@chakra-ui/react";
 
 export function OrdersSection() {
     const { orders, ordersIsPending, ordersIsError } = useOrders();
@@ -34,7 +32,7 @@ export function OrdersSection() {
 function OrderSec({ orders }: { orders: Orders }) {
     return (
         <VStack alignItems="flex-start">
-            <Text fontSize="16px" fontWeight="bold">Your previous orders</Text>
+            {orders.orders.length > 0 && <Text fontSize="16px" fontWeight="bold">Your previous orders</Text>}
             <Accordion.Root width="780px" collapsible>
                 {orders.orders.map((item, index) => (
                     <Accordion.Item key={index} value={index.toString()}>
