@@ -16,12 +16,13 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return await _cartRepository.AddProductToCartAsync(cartId, productData.ProductId, userId);
     }
 
-    public async Task<bool> AddUserToCartAsync(string ownerId, string userId, long cartId)
+    public async Task<bool> AddUserToCartAsync(string ownerId, AddUserToCartData data, long cartId)
     {
         if (!await UserIsCartOwnerAsync(ownerId, cartId)) return false;
 
-        var user = await _userRepository.GetUserByIdAsync(userId);
-        if (user is null) return false;
+        var userId = await _userRepository.GetUserByEmailAsync(data.Email);
+        // If the user is already added to the cart then don't add them again.
+        if (userId is null || await UserHasCartAccesAsync(userId, cartId)) return false;
 
         var result = await _cartRepository.AddUserToSharedCartAsync(userId, cartId);
 

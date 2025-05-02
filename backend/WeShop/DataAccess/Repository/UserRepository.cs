@@ -18,6 +18,14 @@ public class UserRepository(WebshopDbContext _context) : IUserRepository
             .FirstOrDefaultAsync(user => user.UserId == userId);
     }
 
+    public async Task<string?> GetUserByEmailAsync(string email)
+    {
+        var user = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(user => user.Email == email);
+        return user?.Id;
+    }
+
     public async Task<UserDto?> GetUserByIdAsync(string userId)
     {
         //var user = await _context.Users.FindAsync(userId);
