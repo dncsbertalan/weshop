@@ -1,4 +1,4 @@
-
+import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
 import api from "./axios-instance"
 import { Cart } from "@/models/Cart";
 
@@ -19,5 +19,12 @@ export const deleteProductFromCart = async (cartId: number, cartItemId: number) 
 
 export const modifyProductInCart = async (cartId: number, cartItemId: number, quantity: number) => {
     const response = await api.put(`/api/carts/${cartId}/products/${cartItemId}`, { quantity: quantity });
+    return await response.data;
+}
+
+export const addUserToCart = async (cartId: number, dto: AddUserToCartDto) => {
+    const response = await api.post(`api/sharedcarts/${cartId}`, {
+        email: dto.email,
+    });
     return await response.data;
 }

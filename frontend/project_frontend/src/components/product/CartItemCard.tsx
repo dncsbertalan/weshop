@@ -1,4 +1,4 @@
-import { useCart } from '@/context/cartContext';
+import { useCart } from '@/context/CartContext';
 import { useUser } from '@/hooks/use-user';
 import { CartItem } from '@/models/CartItem';
 import { formatCurrency } from '@/utils/currency';

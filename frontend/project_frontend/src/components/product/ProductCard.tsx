@@ -1,4 +1,4 @@
-import { useCart } from '@/context/cartContext'
+import { useCart } from '@/context/CartContext'
 import { Product } from '@/models/Product'
 import { ProductInfoDialog } from '@/pages/product-page/ProductInfoDialog';
 import { Button, Card, Flex, Icon, Image, Spacer, Text } from '@chakra-ui/react'

@@ -1,4 +1,4 @@
-import { useProduct } from "@/context/productContext";
+import { useProduct } from "@/context/ProductContext";
 import { Checkbox, Flex, For } from "@chakra-ui/react";
 
 export function CategorySelection() {

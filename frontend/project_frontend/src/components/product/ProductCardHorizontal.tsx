@@ -1,4 +1,4 @@
-import { useCart } from '@/context/cartContext';
+import { useCart } from '@/context/CartContext';
 import { Product } from '@/models/Product'
 import { Badge, Box, Card, HStack, IconButton, Image, Text } from '@chakra-ui/react'
 import { FaTrashCan } from 'react-icons/fa6';

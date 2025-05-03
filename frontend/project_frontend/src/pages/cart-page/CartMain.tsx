@@ -1,14 +1,19 @@
-import { Button, Center, Flex, Heading, Separator, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Button, Flex, Heading, Separator, Spacer, Text, VStack } from "@chakra-ui/react";
 import { Footer } from "../page-components/footer/Footer";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
-import { CartItemSection } from "./CartItemSection";
-import { useCart } from "@/context/cartContext";
+import { CartItemsSection } from "./CartItemsSection";
+import { useCart } from "@/context/CartContext";
 import { useNavigate } from "react-router";
 import { Navigation } from "@/routes/navigation";
 import { formatCurrency } from "@/utils/currency";
+import { InviteUserToCart } from "./InviteUserToCart";
+import { useUser } from "@/context/UserContext";
 
 export function CartMain() {
+    const { user, activeCartId } = useUser();
+    const isOwnCart = user?.cartId === activeCartId;
+
     return (
         <Flex
             flexDirection="column"
@@ -17,19 +22,25 @@ export function CartMain() {
             <GlobalNavBar />
             <NavBarFiller />
 
-            <Center
+            <Flex
                 backgroundColor="bg-color"
-                padding={5}
+                padding="20px"
+                justifyContent="center"
             >
                 <Flex
                     width="100%" maxWidth="global-max-window-size"
                     justifyContent={{ base: "center", lg: "space-around" }} flexDirection={{ base: "column", lg: "row" }}
                 >
-                    <CartItemSection />
+                    <Flex flexDirection="column" gap="20px">
+                        <CartItemsSection />
+                    </Flex>
 
-                    <CheckoutSection />
+                    <Flex flexDirection="column" gap="20px">
+                        <CheckoutSection />
+                        {isOwnCart && <InviteUserToCart />}
+                    </Flex>
                 </Flex>
-            </Center>
+            </Flex>
 
             <Spacer />
             <Footer />
@@ -44,13 +55,12 @@ function CheckoutSection() {
         navigate(Navigation.checkout);
     };
 
-    const total = cart.cartItems?.reduce((acc, item) => acc + item.price, 0);
+    const total = cart.cartItems.reduce((acc, item) => acc + item.price, 0);
     return (
         <Flex
             borderRadius="10px"
             padding="20px"
             backgroundColor="whiteAlpha.800"
-            //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
             shadow="0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)"
             backdropFilter="saturate(180%) blur(20px)"
             width={{ base: "800px", lg: "300px" }}

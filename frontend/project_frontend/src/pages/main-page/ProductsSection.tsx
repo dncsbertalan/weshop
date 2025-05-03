@@ -3,7 +3,7 @@ import { Flex, SimpleGrid, For, Pagination, ButtonGroup, IconButton, EmptyState,
 import { Toaster } from "@/components/ui/toaster";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect } from "react";
-import { useProduct } from "@/context/productContext";
+import { useProduct } from "@/context/ProductContext";
 import { BiError } from "react-icons/bi";
 import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
 

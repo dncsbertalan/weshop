@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { LoginDto } from "@/dtos/LoginDto";
 import { Link, useNavigate } from "react-router";
 import { Navigation } from "@/routes/navigation";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/AuthContext";
 import { authLogin } from "@/api/auth-api";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 

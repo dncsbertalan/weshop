@@ -1,5 +1,5 @@
-import { useAuth } from "@/context/authContext";
-import { useCart } from "@/context/cartContext";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 import { Navigation } from "@/routes/navigation";
 import { Badge, Flex, Float, Heading, HStack, IconButton, Image, Spacer } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";

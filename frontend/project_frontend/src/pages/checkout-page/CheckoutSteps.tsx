@@ -1,4 +1,4 @@
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { Navigation } from "@/routes/navigation";
 import { sleep } from "@/utils/sleep";

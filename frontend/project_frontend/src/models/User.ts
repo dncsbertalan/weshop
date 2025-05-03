@@ -1,4 +1,4 @@
-import { CartInfo } from "./cart.-info";
+import { CartInfo } from "./cart-info";
 
 export type User = {
     id: string;

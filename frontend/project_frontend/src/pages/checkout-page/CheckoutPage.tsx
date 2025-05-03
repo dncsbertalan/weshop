@@ -3,7 +3,7 @@ import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { Footer } from "../page-components/footer/Footer";
 import { CheckoutSteps } from "./CheckoutSteps";
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 
 export function CheckoutPage() {
     const { createOrderIsPending, createOrderIsSuccess } = useCart();
