@@ -1,6 +1,6 @@
 import { CategoryBadge } from "@/components/product/CategoryBadge";
 import { useCart } from "@/context/CartContext";
-import { Product } from "@/models/Product";
+import { Product } from "@/models/product";
 import { Dialog, Button, Portal, CloseButton, Flex, Image, VStack, Box, Icon, Spacer, HStack, Heading, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { MdAddShoppingCart } from "react-icons/md";

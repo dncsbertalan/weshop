@@ -1,6 +1,6 @@
 
 import api from "./axios-instance"
-import { PagedProducts } from "@/models/PagedProducts";
+import { PagedProducts } from "@/models/product";
 
 export enum ProductFilterKeys {
     page = "page",

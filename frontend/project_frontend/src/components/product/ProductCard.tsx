@@ -1,5 +1,5 @@
 import { useCart } from '@/context/CartContext'
-import { Product } from '@/models/Product'
+import { Product } from '@/models/product'
 import { ProductInfoDialog } from '@/pages/product-page/ProductInfoDialog';
 import { Button, Card, Flex, Icon, Image, Spacer, Text } from '@chakra-ui/react'
 import { MdAddShoppingCart } from 'react-icons/md'
@@ -7,7 +7,7 @@ import { toaster } from '../ui/toaster';
 import { formatCurrency } from '@/utils/currency';
 import { IoCheckmarkCircleOutline } from 'react-icons/io5';
 import { FaRegCircleXmark } from 'react-icons/fa6';
-import { useUser } from '@/hooks/use-user';
+import { useUser } from '@/context/UserContext';
 interface ProductCardProps {
     product: Product;
 }
@@ -16,7 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const { addItemToCart: addItem } = useCart();
     const user = useUser();
     const add = async () => {
-        addItem(user.data!.cartId, product.id);
+        addItem(user.activeCartId!, product.id);
         toaster.create({
             description: `${product.name} was successfully added to your cart.`,
             type: "info",
@@ -121,7 +121,7 @@ function ProductCard_Old({ product }: ProductCardProps) {
     const { addItemToCart: addItem } = useCart();
     const user = useUser();
     const add = async () => {
-        addItem(user.data!.cartId, product.id);
+        addItem(user.activeCartId!, product.id);
         toaster.create({
             description: `${product.name} was successfully added to your cart.`,
             type: "info",

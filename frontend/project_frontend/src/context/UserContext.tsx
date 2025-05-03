@@ -1,5 +1,5 @@
 import { getUser } from "@/api/user-api";
-import { User } from "@/models/User";
+import { User } from "@/models/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 

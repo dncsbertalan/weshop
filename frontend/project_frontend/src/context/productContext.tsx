@@ -1,8 +1,8 @@
 import { getCategories } from "@/api/category-api";
 import { getProducts } from "@/api/product-api";
 import useProductFilters from "@/hooks/use-product-filters";
-import { Category } from "@/models/Category";
-import { PagedProducts } from "@/models/PagedProducts";
+import { Category } from "@/models/category";
+import { PagedProducts } from "@/models/product";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect } from "react";
 

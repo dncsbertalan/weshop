@@ -5,6 +5,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
 import { CartItemCard } from "@/components/product/CartItemCard";
 import { useUser } from "@/context/UserContext";
+import { CartInfo } from "@/models/cart";
 
 export function CartItemsSection() {
     const { cart, cartIsPending, cartIsError } = useCart();
@@ -12,11 +13,6 @@ export function CartItemsSection() {
     if (cartIsError) {
         return (
             <CartItemSectionError />
-        );
-    }
-    else if (!cartIsPending && (cart.cartItems?.length === 0 || cart.cartItems === undefined)) {
-        return (
-            <CartItemSectionEmpty />
         );
     }
 
@@ -28,19 +24,23 @@ export function CartItemsSection() {
 
             {!cartIsPending &&
                 <Box>
-                    <HStack gap="20px">
-                        <CartInfo />
+                    <HStack gap="30px">
+                        <CartInfoSec />
                         <ChangeCart />
                     </HStack>
-                    <Box borderTop="1px solid" borderTopColor="separator-color">
-                        <VStack gap="0px">
-                            <For each={cart?.cartItems}>
-                                {(item) => (
-                                    <CartItemCard cartItem={item} key={item.id} />
-                                )}
-                            </For>
-                        </VStack>
-                    </Box>
+                    {cart.cartItems?.length === 0 ? (
+                        <CartItemSectionEmpty />
+                    ) : (
+                        <Box borderTop="1px solid" borderTopColor="separator-color">
+                            <VStack gap="0px">
+                                <For each={cart?.cartItems}>
+                                    {(item) => (
+                                        <CartItemCard cartItem={item} key={item.id} />
+                                    )}
+                                </For>
+                            </VStack>
+                        </Box>
+                    )}
                 </Box>
             }
 
@@ -50,7 +50,7 @@ export function CartItemsSection() {
 
 function ChangeCart() {
     const { user, switchCart } = useUser();
-    
+
     if (!user?.carts.length) return null;
 
     return (
@@ -64,17 +64,17 @@ function ChangeCart() {
                     <Menu.Content>
                         <Menu.ItemGroup>
                             <Menu.ItemGroupLabel>Your cart</Menu.ItemGroupLabel>
-                            <Menu.Item value="ownCart" onClick={()=>{switchCart(user.cartId)}}>
+                            <Menu.Item value="ownCart" onClick={() => { switchCart(user.cartId) }}>
                                 {user?.firstName} {user?.lastName}
                             </Menu.Item>
                         </Menu.ItemGroup>
                         <Menu.Separator />
                         <Menu.ItemGroup>
                             <Menu.ItemGroupLabel>Shared with you</Menu.ItemGroupLabel>
-                            {user?.carts.map((cartItem) => {
+                            {user?.carts.map((cartItem, index) => {
                                 return (
-                                    <Menu.Item value={cartItem.ownerFirstName} key={cartItem.cartId} onClick={()=>{switchCart(cartItem.cartId)}}>
-                                        {cartItem.ownerFirstName} {cartItem.ownerLastName}
+                                    <Menu.Item value={index.toString()} key={index} onClick={() => { switchCart(cartItem.cartId) }}>
+                                        {cartItem.ownerFirstName} {cartItem.ownerLastName} {cartItem.cartId}
                                     </Menu.Item>
                                 );
                             })}
@@ -86,12 +86,20 @@ function ChangeCart() {
     );
 }
 
-function CartInfo() {
+function CartInfoSec() {
+    const user = useUser();
+    const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
+    const ownCartInfo: CartInfo | undefined = (cartInfo === undefined && user.activeCartId == user.user?.cartId) ? {
+        cartId: user.activeCartId!,
+        ownerFirstName: user.user!.firstName!,
+        ownerLastName: user.user!.lastName
+    } : undefined;
+
     return (
         <Flex flexDirection="column" gap="6px" marginBottom="10px">
             <Text lineHeight="25px" fontSize="21px" fontWeight="500">Cart summary</Text>
             <Text color="rgb(130, 130, 130)" lineHeight="16px" fontSize="12px" fontWeight="400px">
-                Owner: Dancs Bertalan
+                Owner: {cartInfo?.ownerFirstName} {cartInfo?.ownerLastName} {ownCartInfo?.ownerFirstName} {ownCartInfo?.ownerLastName}
             </Text>
         </Flex>
     );

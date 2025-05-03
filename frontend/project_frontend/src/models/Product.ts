@@ -1,4 +1,4 @@
-import { Category } from "./Category";
+import { Category } from "./category";
 
 export type Product = {
     id: number;
@@ -9,4 +9,11 @@ export type Product = {
     pictureAlternative: string;
     availableQuantity: number;
     categories: Category[];
+};
+
+export type PagedProducts = {
+    items: Product[];
+    totalItems: number;
+    totalPages: number;
+    currentsPages: number;
 };

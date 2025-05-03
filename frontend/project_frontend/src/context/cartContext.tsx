@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { addProductToCart, addUserToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cart-api";
-import { Cart } from "@/models/Cart";
+import { Cart } from "@/models/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOrder } from "@/api/order-api";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";

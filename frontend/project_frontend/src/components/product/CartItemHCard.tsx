@@ -1,5 +1,5 @@
 import { useCart } from '@/context/CartContext';
-import { CartItem } from '@/models/CartItem';
+import { CartItem } from "@/models/cart";
 import { Box, Card, HStack, IconButton, Image, NumberInput, Spacer, Text } from '@chakra-ui/react'
 import { FaTrashCan } from 'react-icons/fa6';
 import { CategoryBadge } from './CategoryBadge';

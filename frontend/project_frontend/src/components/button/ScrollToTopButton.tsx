@@ -1,3 +1,4 @@
+import { scrollToTopSmooth } from "@/utils/scroll";
 import { IconButton } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { BsArrowUp } from "react-icons/bs";
@@ -14,10 +15,6 @@ export function ScrollToTopButton() {
         return () => window.removeEventListener("scroll", toggleVisibility);
     }, []);
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
     if (!isVisible) return null;
 
     return (
@@ -29,7 +26,7 @@ export function ScrollToTopButton() {
             _hover={{
                 boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.3)"
             }}
-            onClick={scrollToTop}
+            onClick={scrollToTopSmooth}
         >
             <BsArrowUp color="black" />
         </IconButton>

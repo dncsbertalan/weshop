@@ -1,6 +1,6 @@
 import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
 import api from "./axios-instance"
-import { Cart } from "@/models/Cart";
+import { Cart } from "@/models/cart";
 
 export const getCart = async (cartId: number) => {
     const response = await api.get(`/api/carts/${cartId}`);

@@ -1,6 +1,6 @@
 import { useCart } from '@/context/CartContext';
-import { useUser } from '@/hooks/use-user';
-import { CartItem } from '@/models/CartItem';
+import { useUser } from '@/context/UserContext';
+import { CartItem } from "@/models/cart";
 import { formatCurrency } from '@/utils/currency';
 import { Box, Flex, HStack, IconButton, Image, NumberInput, Text } from '@chakra-ui/react'
 import { FaXmark } from 'react-icons/fa6';
@@ -14,7 +14,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
     const { removeItemToCart: removeItem, modifyItemToCart: modifyItem } = useCart();
     const user = useUser();
     const remove = async () => {
-        removeItem(user.data!.cartId, cartItem.id);
+        removeItem(user.activeCartId!, cartItem.id);
     }
 
     return (
@@ -55,7 +55,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                                 <NumberInput.DecrementTrigger
                                     asChild
                                     disabled={cartItem.quantity < 2}
-                                    onClick={() => modifyItem(user.data!.cartId, cartItem.id, cartItem.quantity - 1)}
+                                    onClick={() => modifyItem(user.activeCartId!, cartItem.id, cartItem.quantity - 1)}
                                 >
                                     <IconButton variant="outline" size="sm">
                                         <LuMinus />
@@ -66,7 +66,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
                                 <NumberInput.IncrementTrigger
                                     asChild
-                                    onClick={() => modifyItem(user.data!.cartId, cartItem.id, cartItem.quantity + 1)}
+                                    onClick={() => modifyItem(user.activeCartId!, cartItem.id, cartItem.quantity + 1)}
                                 >
                                     <IconButton variant="outline" size="sm">
                                         <LuPlus />
