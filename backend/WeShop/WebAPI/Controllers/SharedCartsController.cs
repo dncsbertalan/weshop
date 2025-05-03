@@ -10,9 +10,9 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class SharedCartsController(CartService _cartService) : ControllerBase
 {
-    [HttpPost("cartId")]
+    [HttpPost("{cartId}")]
     [Authorize]
-    public async Task<IActionResult> AddUserToSharedCart([FromQuery]long cartId, [FromBody]AddUserToCartData data)
+    public async Task<IActionResult> AddUserToSharedCart(long cartId, [FromBody]AddUserToCartData data)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))

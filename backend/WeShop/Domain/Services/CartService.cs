@@ -19,6 +19,7 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
     public async Task<bool> AddUserToCartAsync(string ownerId, AddUserToCartData data, long cartId)
     {
         if (!await UserIsCartOwnerAsync(ownerId, cartId)) return false;
+        Console.WriteLine("oksika");
 
         var userId = await _userRepository.GetUserByEmailAsync(data.Email);
         // If the user is already added to the cart then don't add them again.
