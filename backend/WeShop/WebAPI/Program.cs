@@ -8,10 +8,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebAPI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS probléma
+// SignalR
+builder.Services.AddSignalR();
+
+// CORS problem
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
@@ -61,7 +65,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-// JWT konfiguráció
+// JWT configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
 
@@ -81,11 +85,31 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true
     };
+    /*options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // Ha a kérés SignalR WebSocket, akkor az access token-t innen vegye
+            var accessToken = context.Request.Query["access_token"];
+
+            // Csak ha a SignalR path-on vagyunk
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                path.StartsWithSegments("/hubs/shared-cart"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
+    };*/
 });
 
 builder.Services.AddAuthorization();
 
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -96,7 +120,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS probléma
+// SignalR
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapHub<SharedCartHub>("/hubs/shared-cart");
+
+// CORS problem
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();

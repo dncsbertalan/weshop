@@ -3,13 +3,15 @@ using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using WebAPI.Hubs;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CartsController(CartService _cartService) : ControllerBase
+public class CartsController(CartService _cartService, IHubContext<SharedCartHub> _cartHub) : ControllerBase
 {
     [HttpPost]
     [Authorize]
@@ -55,6 +57,8 @@ public class CartsController(CartService _cartService) : ControllerBase
 
         if (!result) return BadRequest(new { message = "An error occured modifying the product in cart." });
 
+        await NotifyCartChange(cartId);
+
         return Ok(new { message = "Product successfully modifyed in cart." });
     }
 
@@ -71,6 +75,8 @@ public class CartsController(CartService _cartService) : ControllerBase
         var result = await _cartService.AddProductToCartAsync(userId, cartId, productData);
 
         if (!result) return BadRequest("An error occured adding product to cart.");
+
+        await NotifyCartChange(cartId);
 
         return Ok("Product successfully added to cart.");
     }
@@ -92,7 +98,17 @@ public class CartsController(CartService _cartService) : ControllerBase
             return NotFound(new { message = "Cart or product not found in the cart." });
         }
 
+        await NotifyCartChange(cartId);
+
         return Ok();
         //return NoContent();
     }
+
+    private async Task NotifyCartChange(long cartId) => await _cartHub
+            .Clients
+            .Group(cartId.ToString())
+            .SendAsync("ProductAdded", new
+            {
+                cartId,
+            });
 }
