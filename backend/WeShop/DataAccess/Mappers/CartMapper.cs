@@ -10,12 +10,14 @@ public static partial class CartMapper
 {
     public static partial CartDto ToDto(Cart_Data cart);
 
-    public static CartDto Map(Cart_Data data) => new CartDto
+    public static CartDto Map(Cart_Data data) => new()
     {
-        CartItems = data.CartItems.Select(CartItemMapper.Map).ToList()
+        Id = data.Id,
+        IsShared = data.IsShared,
+        CartItems = [.. data.CartItems.Select(CartItemMapper.Map)]
     };
 
-    public static CartWithParticipantsDto MapToCartWithParticipantsDto(Cart_Data data) => new CartWithParticipantsDto
+    public static CartWithParticipantsDto MapToCartWithParticipantsDto(Cart_Data data) => new()
     {
         UserId = data.UserId,
         Participants = [.. data.Participants.Select(user => user.CartUserId)],

@@ -14,5 +14,6 @@ public class CartItemDto
     public List<CategoryDto> Categories { get; set; } = [];
 
     // Shared cart
-    public string AddedBy { get; set; } = string.Empty;
+    public string AddedByFirstName { get; set; } = string.Empty;
+    public string AddedByLastName { get; set; } = string.Empty;
 }

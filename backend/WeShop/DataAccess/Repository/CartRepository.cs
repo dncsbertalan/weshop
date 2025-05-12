@@ -74,6 +74,12 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
     {
+        var cart = await _context.Carts.FindAsync(cartId);
+        if (cart!.IsShared)
+        {
+            cart.IsShared = true;
+        }
+
         var newData = new SharedCart_Data
         {
             CartId = cartId,
@@ -158,8 +164,10 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
-            .ThenInclude(cartItem => cartItem.Product)
-            .ThenInclude(product => product.Categories)
+                .ThenInclude(cartItem => cartItem.Product)
+                    .ThenInclude(product => product.Categories)
+            .Include(cart => cart.CartItems)
+                .ThenInclude(cartItem => cartItem.AddedBy)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
         
         return cart is null ? null : CartMapper.Map(cart);

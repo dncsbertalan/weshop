@@ -2,7 +2,8 @@ import { Category } from "./category";
 
 
 export type Cart = {
-    //cartInfo: CartInfo;
+    cartId: number;
+    isShared: boolean;
     cartItems: CartItem[];
 };
 
@@ -21,5 +22,7 @@ export type CartItem = {
     price: number;
     availableQuantity: number;
     categories: Category[];
+    addedByFirstName: string;
+    addedByLastName: string;
 };
 

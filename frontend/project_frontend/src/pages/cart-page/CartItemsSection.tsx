@@ -25,7 +25,7 @@ export function CartItemsSection() {
             {!cartIsPending &&
                 <Box>
                     <HStack gap="30px" marginBottom="10px">
-                        <CartInfoSec />
+                        <CartInfoSec isShared={cart.isShared} />
                         <ChangeCart />
                     </HStack>
                     {cart.cartItems?.length === 0 ? (
@@ -86,22 +86,36 @@ function ChangeCart() {
     );
 }
 
-function CartInfoSec() {
+function CartInfoSec({ isShared }: { isShared: boolean }) {
     const user = useUser();
 
     if (user.activeCartId == user.user?.cartId) {
         return (
-            <Flex flexDirection="column" gap="6px">
-                <Text lineHeight="25px" fontSize="21px" fontWeight="500">Your cart</Text>
-            </Flex>
+            <Box>
+                <Flex flexDirection="column" gap="6px">
+                    <Text lineHeight="25px" fontSize="21px" fontWeight="500">Your cart</Text>
+                </Flex>
+                {isShared && <Text marginTop="6px" color="rgb(170, 170, 170)"
+                    lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
+                >
+                    Shared
+                </Text>}
+            </Box>
         );
     }
 
     const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
     return (
-        <Flex flexDirection="column" gap="6px">
-            <Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>
-        </Flex>
+        <Box>
+            <Flex flexDirection="column" gap="6px">
+                <Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>
+            </Flex>
+            {isShared && <Text marginTop="6px" color="rgb(170, 170, 170)"
+                lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
+            >
+                Shared
+            </Text>}
+        </Box>
     );
 
     const ownCartInfo: CartInfo | undefined = (cartInfo === undefined && user.activeCartId == user.user?.cartId) ? {

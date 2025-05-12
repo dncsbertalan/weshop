@@ -46,6 +46,11 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                         >
                             {cartItem.productId}
                         </Text>
+                        <Text marginTop="6px" //color="rgb(170, 170, 170)"
+                            lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
+                        >
+                            Added by {cartItem.addedByFirstName} {cartItem.addedByLastName}
+                        </Text>
                     </Flex>
 
                     <Box width="120px">
