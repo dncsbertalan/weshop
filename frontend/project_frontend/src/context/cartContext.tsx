@@ -6,6 +6,8 @@ import { createOrder } from "@/api/order-api";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { useUser } from "./UserContext";
 import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
+import { useAuth } from "./AuthContext";
+import { useCartHub } from "@/hooks/use-cart-hub";
 
 interface CartContextType {
     // Cart
@@ -29,6 +31,16 @@ const CART_QUERY_KEY = "cart";
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();
     const { activeCartId } = useUser();
+    const { token } = useAuth();
+
+    //#region SignalR handling the shared cart
+
+    useCartHub(activeCartId, token, async () => {
+        await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+    })
+
+    //#endregion
+
 
     // Get the cart items from the server.
     const {

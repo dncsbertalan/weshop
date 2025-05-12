@@ -24,7 +24,7 @@ export function CartItemsSection() {
 
             {!cartIsPending &&
                 <Box>
-                    <HStack gap="30px">
+                    <HStack gap="30px" marginBottom="10px">
                         <CartInfoSec />
                         <ChangeCart />
                     </HStack>
@@ -74,7 +74,7 @@ function ChangeCart() {
                             {user?.carts.map((cartItem, index) => {
                                 return (
                                     <Menu.Item value={index.toString()} key={index} onClick={() => { switchCart(cartItem.cartId) }}>
-                                        {cartItem.ownerFirstName} {cartItem.ownerLastName} {cartItem.cartId}
+                                        {cartItem.ownerFirstName} {cartItem.ownerLastName}
                                     </Menu.Item>
                                 );
                             })}
@@ -88,7 +88,22 @@ function ChangeCart() {
 
 function CartInfoSec() {
     const user = useUser();
+
+    if (user.activeCartId == user.user?.cartId) {
+        return (
+            <Flex flexDirection="column" gap="6px">
+                <Text lineHeight="25px" fontSize="21px" fontWeight="500">Your cart</Text>
+            </Flex>
+        );
+    }
+
     const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
+    return (
+        <Flex flexDirection="column" gap="6px">
+            <Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>
+        </Flex>
+    );
+
     const ownCartInfo: CartInfo | undefined = (cartInfo === undefined && user.activeCartId == user.user?.cartId) ? {
         cartId: user.activeCartId!,
         ownerFirstName: user.user!.firstName!,
