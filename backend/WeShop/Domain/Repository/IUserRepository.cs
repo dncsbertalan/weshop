@@ -1,4 +1,5 @@
-﻿using Domain.Dtos;
+﻿using Domain.Dtos.Api;
+using Domain.Dtos.Data;
 
 namespace Domain.Repository;
 

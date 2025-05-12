@@ -1,5 +1,5 @@
 ﻿using DataAccess.Models;
-using Domain.Dtos;
+using Domain.Dtos.Api;
 
 namespace DataAccess.Mappers;
 

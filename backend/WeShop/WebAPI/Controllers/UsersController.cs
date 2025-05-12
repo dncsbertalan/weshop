@@ -1,4 +1,4 @@
-﻿using Domain.Dtos;
+﻿using Domain.Dtos.Api;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

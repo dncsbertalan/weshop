@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
-using Domain.Dtos;
+using Domain.Dtos.Api;
+using Domain.Dtos.Data;
 using Riok.Mapperly.Abstractions;
 
 namespace DataAccess.Mappers;

@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos;
+﻿namespace Domain.Dtos.Api;
 
 public class PagedResult<T>(List<T> items, int totalItems, int totalPages, int currentPage)
 {

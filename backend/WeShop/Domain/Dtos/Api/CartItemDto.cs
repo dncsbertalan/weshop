@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace Domain.Dtos;
+﻿namespace Domain.Dtos.Api;
 
 public class CartItemDto
 {
@@ -14,4 +12,7 @@ public class CartItemDto
     public double Price { get; set; }
     public int AvailableQuantity { get; set; }
     public List<CategoryDto> Categories { get; set; } = [];
+
+    // Shared cart
+    public string AddedBy { get; set; } = string.Empty;
 }

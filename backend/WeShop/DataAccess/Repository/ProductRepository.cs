@@ -1,6 +1,6 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
-using Domain.Dtos;
+using Domain.Dtos.Api;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
