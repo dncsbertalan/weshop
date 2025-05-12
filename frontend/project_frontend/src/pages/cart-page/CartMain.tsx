@@ -9,6 +9,7 @@ import { Navigation } from "@/routes/navigation";
 import { formatCurrency } from "@/utils/currency";
 import { InviteUserToCart } from "./InviteUserToCart";
 import { useUser } from "@/context/UserContext";
+import { Toaster } from "@/components/ui/toaster";
 
 export function CartMain() {
     const { user, activeCartId } = useUser();
@@ -21,6 +22,7 @@ export function CartMain() {
         >
             <GlobalNavBar />
             <NavBarFiller />
+            <Toaster />
 
             <Flex
                 backgroundColor="bg-color"

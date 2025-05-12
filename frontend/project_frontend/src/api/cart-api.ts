@@ -23,7 +23,7 @@ export const modifyProductInCart = async (cartId: number, cartItemId: number, qu
 }
 
 export const addUserToCart = async (cartId: number, dto: AddUserToCartDto) => {
-    const response = await api.post(`api/sharedcarts/${cartId}`, {
+    const response = await api.post(`api/carts/${cartId}/users`, {
         email: dto.email,
     });
     return await response.data;

@@ -8,6 +8,7 @@ import { useUser } from "./UserContext";
 import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
 import { useAuth } from "./AuthContext";
 import { useCartHub } from "@/hooks/use-cart-hub";
+import { toaster } from "@/components/ui/toaster";
 
 interface CartContextType {
     // Cart
@@ -37,6 +38,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     useCartHub(activeCartId, token, async () => {
         await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+        toaster.create({
+            description: `${cart.cartItems} was successfully added to your cart.`,
+            type: "info",
+        })
     })
 
     //#endregion
