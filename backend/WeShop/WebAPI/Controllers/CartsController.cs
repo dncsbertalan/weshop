@@ -104,6 +104,29 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
         //return NoContent();
     }
 
+    [HttpPost("{cartId}/users")]
+    [Authorize]
+    public async Task<IActionResult> AddUserToSharedCart(long cartId, [FromBody] AddUserToCartData data)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _cartService.AddUserToCartAsync(userId, data, cartId);
+
+        if (!result)
+        {
+            return BadRequest("An error occured adding the user to the cart.");
+        }
+
+        return Ok();
+    }
+
+
+    #region Helper methods
+
     private async Task NotifyCartChange(long cartId) => await _cartHub
             .Clients
             .Group(cartId.ToString())
@@ -111,4 +134,6 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
             {
                 cartId,
             });
+
+    #endregion
 }
