@@ -36,9 +36,6 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
 
     public async Task<OrdersDto?> GetOrdersAsync(string userId)
     {
-        var user = await _userRepository.GetUserByIdAsync(userId);
-        if (user is null) return null;
-
         var orders = await _orderRepository.GetOrdersAsync(userId);
 
         return orders;
