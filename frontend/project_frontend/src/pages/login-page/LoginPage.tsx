@@ -10,7 +10,7 @@ import { Footer } from "../page-components/footer/Footer";
 import { PasswordInput } from "@/components/ui/password-input";
 
 export function LoginPage() {
-    const { register, handleSubmit } = useForm<LoginDto>();
+    const { register, handleSubmit, formState: {errors} } = useForm<LoginDto>();
     const { login, token } = useAuth();
     const navigate = useNavigate();
     const onSubmit = async (data: LoginDto) => {
@@ -29,25 +29,41 @@ export function LoginPage() {
 
             <Flex minHeight="100vh" alignItems="center">
                 <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white"
-                    minWidth={320} maxW="400px" mx="auto"
+                    minWidth="320px" maxW="400px" mx="auto"
                     //shadow="3px 3px 10px rgba(0,0,0,0.2)"
                     shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
                     height="fit-content"
                 >
                     <Heading size="2xl" marginBottom="20px">Login</Heading>
 
-                    <Field.Root required>
+                    <Field.Root required invalid={!!errors.email}>
                         <Field.Label>
                             E-mail
                         </Field.Label>
-                        <Input type="email" {...register("email")} placeholder="example@email.com" /> {/* ide 12 px padding */}
+                        <Input type="email" {...register("email", {
+                            required: "E-mail is required",
+                            pattern: {
+                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "Invalid email format",
+                            },
+                        })} placeholder="example@email.com" /> {/* ide 12 px padding */}
                     </Field.Root>
 
-                    <Field.Root required>
+                    <Field.Root required invalid={!!errors.password}>
                         <Field.Label>
                             Password
                         </Field.Label>
-                        <PasswordInput {...register("password")} />
+                        <PasswordInput {...register("password", {
+                            required: "Password is required",
+                            minLength: {
+                                value: 8,
+                                message: "Password must be at least 8 characters"
+                            },
+                            validate: {
+                                hasNumber: (v) => /\d/.test(v) || "Must contain a number",
+                                hasUppercase: (v) => /[A-Z]/.test(v) || "Must contain an uppercase letter"
+                            },
+                        })} />
                     </Field.Root>
 
                     <Button width="full" onClick={handleSubmit(onSubmit)}>
@@ -58,7 +74,7 @@ export function LoginPage() {
                             Doesn't have an account yet?
                         </Text>
                         <Link to={Navigation.registration}>
-                            <Text fontSize="16px" _hover={{textDecoration: "underline"}}>
+                            <Text fontSize="14px" _hover={{ textDecoration: "underline" }}>
                                 Create one
                             </Text>
                         </Link>
