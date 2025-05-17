@@ -1,12 +1,12 @@
 import { LoginDto } from "@/dtos/LoginDto";
-import { authApi_login, authApi_register, authToken } from "./api-constants";
+import { authToken } from "./api-constants";
 import api from "./axios-instance";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 
 export const authLogin = async (loginData: LoginDto) => {
-
+    
     try {
-        const response = await api.post(authApi_login, {
+        const response = await api.post("/api/authentication/login", {
             email: loginData.email,
             password: loginData.password
         });
@@ -27,7 +27,7 @@ export const authLogin = async (loginData: LoginDto) => {
 
 export const authRegister = async (registerData: RegistrationDto) => {
     try {
-        const response = await api.post(authApi_register, {
+        const response = await api.post("api/authentication/register", {
             firstName: registerData.firstName,
             lastName: registerData.lastName,
             email: registerData.email,
