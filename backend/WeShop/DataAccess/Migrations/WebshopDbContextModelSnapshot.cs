@@ -241,6 +241,8 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "AvailableQuantity" }, "IX_AvailableQuantity");
+
                     b.HasIndex(new[] { "Price" }, "IX_Price");
 
                     b.ToTable("Product");

@@ -7,6 +7,7 @@ namespace DataAccess.Models;
 
 [Table("Product")]
 [Index(nameof(Price), Name = "IX_Price")]
+[Index(nameof(AvailableQuantity), Name = "IX_AvailableQuantity")]
 public class Product_Data
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

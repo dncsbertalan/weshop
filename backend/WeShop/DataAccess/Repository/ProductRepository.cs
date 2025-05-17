@@ -26,7 +26,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 
-        query = query.Where(product => product.Price >= minPrice && product.Price <= maxPrice);
+        query = query.Where(product => product.Price >= minPrice && product.Price <= maxPrice && product.AvailableQuantity > 0);
 
         // Filtering by categories
         if (!string.IsNullOrEmpty(categoryIds))
