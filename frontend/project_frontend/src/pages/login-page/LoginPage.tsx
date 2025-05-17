@@ -34,18 +34,18 @@ export function LoginPage() {
                     shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
                     height="fit-content"
                 >
-                    <Heading size="lg">Login</Heading>
+                    <Heading size="2xl" marginBottom="20px">Login</Heading>
 
                     <Field.Root required>
                         <Field.Label>
-                            E-mail<Field.RequiredIndicator />
+                            E-mail
                         </Field.Label>
                         <Input type="email" {...register("email")} placeholder="example@email.com" /> {/* ide 12 px padding */}
                     </Field.Root>
 
                     <Field.Root required>
                         <Field.Label>
-                            Password <Field.RequiredIndicator />
+                            Password
                         </Field.Label>
                         <PasswordInput {...register("password")} />
                     </Field.Root>
@@ -53,14 +53,16 @@ export function LoginPage() {
                     <Button width="full" onClick={handleSubmit(onSubmit)}>
                         Login
                     </Button>
-                    <Text>
-                        Doesn't have an account yet?
-                    </Text>
-                    <Link to={Navigation.registration}>
-                        <Text>
-                            Create one
+                    <Flex flexDirection="column" alignItems="center" width="100%" marginTop="10px">
+                        <Text fontSize="14px">
+                            Doesn't have an account yet?
                         </Text>
-                    </Link>
+                        <Link to={Navigation.registration}>
+                            <Text fontSize="16px" _hover={{textDecoration: "underline"}}>
+                                Create one
+                            </Text>
+                        </Link>
+                    </Flex>
                 </VStack>
             </Flex>
 

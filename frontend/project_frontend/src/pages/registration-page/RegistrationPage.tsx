@@ -22,18 +22,18 @@ export function RegistrationPage() {
                     shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
                     maxW="420px" mx="auto" mt={10}
                 >
-                    <Heading size="lg">Registration</Heading>
+                    <Heading size="2xl" marginBottom="20px">Registration</Heading>
 
                     <HStack>
                         <Field.Root required>
                             <Field.Label>
-                                First name <Field.RequiredIndicator />
+                                First name
                             </Field.Label>
                             <Input {...register("firstName")} placeholder="First name" />
                         </Field.Root>
                         <Field.Root required>
                             <Field.Label>
-                                Last name <Field.RequiredIndicator />
+                                Last name
                             </Field.Label>
                             <Input {...register("lastName")} placeholder="Last name" />
                         </Field.Root>
@@ -42,21 +42,21 @@ export function RegistrationPage() {
 
                     <Field.Root required>
                         <Field.Label>
-                            E-mail<Field.RequiredIndicator />
+                            E-mail
                         </Field.Label>
                         <Input type="email" {...register("email")} placeholder="pelda@email.com" />
                     </Field.Root>
 
                     <Field.Root required>
                         <Field.Label>
-                            Date of birth <Field.RequiredIndicator />
+                            Date of birth
                         </Field.Label>
                         <Input type="date" {...register("dob")} />
                     </Field.Root>
 
                     <Field.Root required>
                         <Field.Label>
-                            Password <Field.RequiredIndicator />
+                            Password
                         </Field.Label>
                         <PasswordInput {...register("password")} />
                     </Field.Root>
