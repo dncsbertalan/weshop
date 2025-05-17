@@ -3,6 +3,7 @@ import { Category } from "./category";
 
 export type Cart = {
     cartId: number;
+    ownerId: string;
     isShared: boolean;
     cartItems: CartItem[];
 };

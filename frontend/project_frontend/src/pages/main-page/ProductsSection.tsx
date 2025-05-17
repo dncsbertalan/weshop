@@ -1,17 +1,17 @@
 import { ProductCard } from "@/components/product/ProductCard";
 import { Flex, SimpleGrid, For, Pagination, ButtonGroup, IconButton, EmptyState, VStack } from "@chakra-ui/react";
-import { Toaster } from "@/components/ui/toaster";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect } from "react";
 import { useProduct } from "@/context/ProductContext";
 import { BiError } from "react-icons/bi";
 import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
+import { scrollToTopSmooth } from "@/utils/scroll";
 
 export function ProductSection() {
     const { products, productsIsError: isError, productsIsPending: isPending, page, pageSize, setPage } = useProduct();
 
     useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        scrollToTopSmooth();
     }, [page]);
 
     return (
@@ -26,12 +26,10 @@ export function ProductSection() {
             shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
         //backdropFilter="saturate(180%) blur(20px)"
         >
-            <Toaster />
-
             <SimpleGrid
                 columns={{ base: 1, md: 2, "grid-3-col-bp": 3 }}
                 gap="20px"
-                height="100%" 
+                height="100%"
                 alignItems="stretch"
             >
                 {isError &&

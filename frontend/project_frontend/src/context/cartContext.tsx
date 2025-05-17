@@ -49,7 +49,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Get the cart items from the server.
     const {
-        data: cart = { cartItems: [], cartId: -1, isShared: false },
+        data: cart = { cartItems: [], cartId: -1, isShared: false, ownerId: "" },
         isPending: cartIsPending,
         isError: cartIsError,
     } = useQuery({

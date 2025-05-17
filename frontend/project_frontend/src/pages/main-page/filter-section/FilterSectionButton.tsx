@@ -1,7 +1,4 @@
-import { CategoryBadge } from "@/components/product/CategoryBadge";
-import { Box, Flex, VStack, HStack, Text, Button, CloseButton, Dialog, Heading, Icon, Portal, Spacer, useDisclosure, IconButton } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { MdAddShoppingCart } from "react-icons/md";
+import { Box, Flex, VStack, Text, Portal, useDisclosure, IconButton } from "@chakra-ui/react";
 import { CategorySelection } from "./CategorySelection";
 import { PriceSelection } from "./PriceSelection";
 import { BsSliders } from "react-icons/bs";

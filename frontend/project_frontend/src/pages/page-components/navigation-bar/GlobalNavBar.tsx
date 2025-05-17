@@ -41,6 +41,9 @@ function Nav({ children }: PropsWithChildren) {
             top={0}
             //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
             backdropFilter="saturate(180%) blur(20px)"
+
+            // New addition
+            borderBottom="1px solid rgb(0, 0, 0, .16)"
         >
             {children}
         </Flex>

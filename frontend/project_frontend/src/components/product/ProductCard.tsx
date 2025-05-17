@@ -30,8 +30,8 @@ export function ProductCard({ product }: ProductCardProps) {
             height="100%"
             flexDirection="column"
             borderRadius="20px"
-            backgroundColor="whiteAlpha.800"
-            backdropFilter="blur(20px) saturate(1.8)"
+            //backgroundColor="whiteAlpha.800"
+            backgroundColor="bg-color-product-card"
             boxShadow="0px 0px 10px rgba(0, 0, 0, 0.3)"
             _hover={{
                 boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
@@ -40,7 +40,8 @@ export function ProductCard({ product }: ProductCardProps) {
             transition="scale 0.2s ease-in-out, box-shadow 0.2s ease-in-out"
         >
             <Image
-                src='https://www.zoldbolt.hu/img/86246/5999861502127/350x350,r/5999861502127.webp?time=1679576185'
+                //src='https://www.zoldbolt.hu/img/86246/5999861502127/350x350,r/5999861502127.webp?time=1679576185'
+                src='https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-skyblue-select-202503?wid=904&hei=840&fmt=jpeg&qlt=90&.v=M2RyY09CWXlTQUp1KzEveHR6VXNxcTQ1bzN1SitYTU83Mm9wbk1xa1lWNC9UNzNvY2N5NXJTTDQ2YkVYYmVXakJkRlpCNVhYU3AwTldRQldlSnpRa0lIV0Fmdk9rUlVsZ3hnNXZ3K3lEVlk'
                 height={250}
                 alt={product.pictureAlternative}
             />

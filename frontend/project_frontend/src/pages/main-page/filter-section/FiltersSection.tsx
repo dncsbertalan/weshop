@@ -30,6 +30,31 @@ export function FiltersSection() {
     );
 }
 
+export function FiltersSection2() {
+
+    return (
+        <Box position="relative" hideBelow="lg">
+            <Flex
+                background="whiteAlpha.500"
+                padding={3}
+                borderRadius={10}
+                width="250px"
+                height="min"
+                shadow="2px 2px 10px 3px rgba(0, 0, 0, 0.2);"
+                backdropFilter="blur(10px)"
+                alignItems="center"
+            >
+                <VStack width="100%" alignItems="flex-start" gap="16px">
+                    <Text fontWeight="bold">Price range</Text>
+                    <PriceSelection />
+                    <Text fontWeight="bold">Category</Text>
+                    <CategorySelection />
+                </VStack>
+            </Flex>
+        </Box>
+    );
+}
+
 function CloseButton({ onClick }: { onClick: () => void }) {
     return (
         <IconButton variant="ghost" size="2xs" rounded="full" onClick={(e) => { onClick(); e.stopPropagation(); }}>

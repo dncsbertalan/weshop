@@ -12,7 +12,11 @@ const config = defineConfig({
                 secondary: { value: "#EE0F0F" },
                 "bg-color": { value: { _light: "white", _dark: "purple" } },
                 "bg-color-footer": { value: { _light: "rgb(242, 242, 247)", _dark: "purple" } },
-                "global-navbar-bg-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                //"global-navbar-bg-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                "global-navbar-bg-color": { value: { _light: "rgba(250, 250, 252, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                "global-navbar-bottom-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                //"bg-color-product-card": { value: { _light: "rgb(245, 245, 247)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                "bg-color-product-card": { value: { _light: "white", _dark: "rgba(22, 22, 23, 0.8)" } },
                 "backdrop-color": { value: "rgba(22, 22, 23, 0.5)" },
 
                 "separator-color": { value: { _light: "rgb(220, 220, 220)", _dark: "pink" } },
@@ -31,7 +35,7 @@ const config = defineConfig({
                 "button-color-tetriary": { value: "#2997ff" },
             },
             sizes: {
-                "global-navbar-height": { value: "77px" },
+                "global-navbar-height": { value: "60px" },
                 "global-max-window-size": { value: "1440px" },
             },
             zIndex: {

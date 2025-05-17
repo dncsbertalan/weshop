@@ -35,6 +35,38 @@ export function FilterFullScreen() {
     );
 }
 
+export function FilterFullScreen2() {
+    return (
+        <Dialog.Root size="full">
+
+            <Dialog.Trigger asChild>
+                <Button size="md" rounded="full" marginBottom="15px" hideFrom="lg">
+                    <Icon><FiFilter /></Icon>
+                    Filters
+                </Button>
+            </Dialog.Trigger>
+
+            <Portal>
+                <Dialog.Positioner>
+                    <Dialog.Content
+                        backgroundColor="backdrop-color"
+                    >
+                        <Flex
+                            justifyContent="center"
+                        >
+                            <FiltersSec />
+                        </Flex>
+
+                        <Dialog.CloseTrigger asChild>
+                            <CloseButton rounded="full" size="sm" />
+                        </Dialog.CloseTrigger>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
+    );
+}
+
 function FiltersSec() {
     return (
         <Flex
