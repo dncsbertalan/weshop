@@ -8,11 +8,10 @@ namespace DataAccess.Mappers;
 [Mapper]
 public static partial class CartMapper
 {
-    public static partial CartDto ToDto(Cart_Data cart);
-
     public static CartDto Map(Cart_Data data) => new()
     {
         Id = data.Id,
+        OwnerId = data.UserId,
         IsShared = data.IsShared,
         CartItems = [.. data.CartItems.Select(CartItemMapper.Map)]
     };
