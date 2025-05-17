@@ -10,6 +10,7 @@ import { formatCurrency } from "@/utils/currency";
 import { InviteUserToCart } from "./InviteUserToCart";
 import { useUser } from "@/context/UserContext";
 import { Toaster } from "@/components/ui/toaster";
+import { useEffect, useState } from "react";
 
 export function CartMain() {
     const { user, activeCartId } = useUser();
@@ -56,8 +57,14 @@ function CheckoutSection() {
     const checkout = () => {
         navigate(Navigation.checkout);
     };
+    const [total, setTotal] = useState(0);
 
-    const total = cart.cartItems.reduce((acc, item) => acc + item.price, 0);
+    useEffect(() => {
+        if (cart) {
+            setTotal(cart.cartItems.reduce((acc, item) => acc + item.price, 0));
+        }
+    }, [cart])
+
     return (
         <Flex
             borderRadius="10px"

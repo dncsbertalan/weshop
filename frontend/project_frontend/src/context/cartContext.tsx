@@ -12,7 +12,7 @@ import { toaster } from "@/components/ui/toaster";
 
 interface CartContextType {
     // Cart
-    cart: Cart;
+    cart: Cart | undefined;
     cartIsPending: boolean;
     cartIsError: boolean;
     addItemToCart: (cartId: number, productId: number) => Promise<void>;
@@ -39,7 +39,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     useCartHub(activeCartId, token, async () => {
         await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
         toaster.create({
-            description: `${cart.cartItems} was successfully added to your cart.`,
+            description: `${cart?.cartItems} was successfully added to your cart.`,
             type: "info",
         })
     })
@@ -49,7 +49,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Get the cart items from the server.
     const {
-        data: cart = { cartItems: [], cartId: -1, isShared: false, ownerId: "" },
+        data: cart,
         isPending: cartIsPending,
         isError: cartIsError,
     } = useQuery({
@@ -112,7 +112,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Checkout
     const createOrderMutation = useMutation({
-        mutationFn: (checkoutData: CheckoutInfoData) => createOrder(checkoutData),
+        mutationFn: (checkoutData: CheckoutInfoData) => createOrder(activeCartId!, checkoutData),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
         },

@@ -26,10 +26,10 @@ export function CartItemsSection() {
             {!cartIsPending &&
                 <Box>
                     <HStack gap="30px" marginBottom="10px">
-                        <CartInfoSec isShared={cart.isShared} />
+                        <CartInfoSec isShared={cart!.isShared} />
                         <ChangeCart />
                     </HStack>
-                    {cart.cartItems?.length === 0 ? (
+                    {cart!.cartItems?.length === 0 ? (
                         <CartItemSectionEmpty />
                     ) : (
                         <Box borderTop="1px solid" borderTopColor="separator-color">
@@ -148,12 +148,7 @@ function CartItemSectionLoading() {
 function CartItemSectionEmpty() {
     return (
         <EmptyState.Root
-            size="lg"
-            backgroundColor="whiteAlpha.800"
-            backdropFilter="saturate(180%) blur(20px)"
-            borderRadius={18}
-            width="500px"
-            shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
+            size="lg" width="500px"
         >
             <EmptyState.Content>
                 <EmptyState.Indicator>

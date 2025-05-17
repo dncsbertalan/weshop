@@ -143,9 +143,9 @@ export function NavCartButton() {
                 >
                     <MdOutlineShoppingCart />
                     Cart
-                    {cart.cartItems.length > 0 && <Float offsetY="4px" offsetX="4px">
+                    {cart && cart.cartItems.length > 0 && <Float offsetY="4px" offsetX="4px">
                         <Badge backgroundColor="red" color="white" rounded="full">
-                            {cart.cartItems.length}
+                            {cart?.cartItems.length}
                         </Badge>
                     </Float>}
                 </IconButton>
