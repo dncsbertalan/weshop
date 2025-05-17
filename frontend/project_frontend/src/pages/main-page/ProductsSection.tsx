@@ -18,35 +18,29 @@ export function ProductSection() {
         <Flex
             flexDirection="column"
             alignItems="center"
-            borderRadius="30px"
-            padding="20px"
-            //backgroundColor="whiteAlpha.800"
-            width="fit-content"
-            height="100%"
-            shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
-        //backdropFilter="saturate(180%) blur(20px)"
+            width="100%" height="100%"
         >
-            <SimpleGrid
-                columns={{ base: 1, md: 2, "grid-3-col-bp": 3 }}
-                gap="20px"
-                height="100%"
-                alignItems="stretch"
-            >
-                {isError &&
-                    <ProductsSectionError />}
+            {isError &&
+                <ProductsSectionError />}
 
-                {isPending &&
-                    <ProductSectionLoading />
-                }
+            {isPending &&
+                <ProductSectionLoading />
+            }
 
-                {!isPending && (
+            {!isPending &&
+                <SimpleGrid
+                    columns={{ base: 1, sm: 2, lg: 3 }}
+                    gap="20px"
+                    //height="100%" 
+                    width="100%"
+                //alignItems="stretch"
+                >
                     <For each={products?.items}>
                         {(item, index) => (
                             <ProductCard product={item} key={index} />
                         )}
                     </For>
-                )}
-            </SimpleGrid>
+                </SimpleGrid>}
 
             {!isPending && !isError &&
                 <Pagination.Root
@@ -55,7 +49,7 @@ export function ProductSection() {
                     defaultPage={1}
                     page={page}
                     onPageChange={(details) => { setPage(details.page) }}
-                    marginTop={5}
+                    marginTop="40px"
                 >
                     <ButtonGroup variant="ghost" size="sm" rounded="full">
 
@@ -105,8 +99,15 @@ function ProductsSectionError() {
 
 function ProductSectionLoading() {
     return (
-        <For each={[1, 2, 3, 4]}>
-            {(id) => <SkeletonProductCard key={id} />}
-        </For>
+        <SimpleGrid
+            columns={{ base: 1, sm: 2, lg: 3 }}
+            gap="20px"
+            width="100%"
+        >
+            <For each={[1, 2, 3, 4]}>
+                {(id) => <SkeletonProductCard key={id} />}
+            </For>
+        </SimpleGrid>
+
     );
 }

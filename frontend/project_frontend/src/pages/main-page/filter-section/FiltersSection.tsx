@@ -6,19 +6,17 @@ import { CategorySelection } from "./CategorySelection";
 import { PriceSelection } from "./PriceSelection";
 
 export function FiltersSection() {
-
+    
     return (
-        <Box position="relative" hideBelow="max-screen-width">
+        <Box position="relative" hideBelow="md">
             <Flex
                 background="whiteAlpha.500"
-                padding={3}
-                borderRadius={10}
-                width="250px"
+                padding="12px" borderRadius="16px"
+                width={{ base: "2500px", md: "220px", lg: "220px", xl: "230px" }}
                 height="min"
                 shadow="2px 2px 10px 3px rgba(0, 0, 0, 0.2);"
                 backdropFilter="blur(10px)"
-                alignItems="center"
-            >
+                >
                 <VStack width="100%" alignItems="flex-start" gap="16px">
                     <Text fontWeight="bold">Price range</Text>
                     <PriceSelection />
@@ -33,7 +31,7 @@ export function FiltersSection() {
 export function FiltersSection2() {
 
     return (
-        <Box position="relative" hideBelow="lg">
+        <Box position="relative" hideBelow="max-screen-width">
             <Flex
                 background="whiteAlpha.500"
                 padding={3}

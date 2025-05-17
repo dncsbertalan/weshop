@@ -1,11 +1,11 @@
 import { Center, Flex, Grid, GridItem, Spacer } from "@chakra-ui/react";
 import { Footer } from "../page-components/footer/Footer";
-import { FiltersSection, FiltersSection2 } from "./filter-section/FiltersSection";
+import { FiltersSection } from "./filter-section/FiltersSection";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller"
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { ProductSection } from "./ProductsSection";
 import { ScrollToTopButton } from "@/components/button/ScrollToTopButton";
-import { FilterFullScreen, FilterFullScreen2 } from "./filter-section/FilterFullScreen";
+import { FilterFullScreen } from "./filter-section/FilterFullScreen";
 import { Toaster } from "@/components/ui/toaster";
 
 export function MainPage() {
@@ -30,31 +30,17 @@ export function MainPage() {
                 bgAttachment="fixed"
                 flexDirection="column"
             >
-                {/*<FiltersSectionButton />*/}
-                <Flex
-                    position="relative"
-                    padding="20px 0px"
-                    justifyContent="space-evenly"
-                    alignItems={{ base: "center", "max-screen-width": "flex-start" }}
-                    width="100%"
-                    maxWidth="global-max-window-size"
-                    margin="0px 20px"
-                    height="max"
-                    flexDirection={{ base: "column", "max-screen-width": "row" }}
+                <ScrollToTopButton />
+                <Grid templateColumns={{ base: "1fr", md: "220px 1fr", lg: "220px 1fr", xl: "250px 1fr" }}
+                    //bgColor="red.300"
+                    width="100%" maxWidth="global-max-window-size" padding="20px 20px" 
+                    gap={{md: "15px", lg: "10px", xl: "20px"}}
                 >
-
-                    <ScrollToTopButton />
-                    <FilterFullScreen />
-                    <FiltersSection />
-                    <ProductSection />
-                </Flex>
-                <Grid templateColumns={{base: "1fr", lg: "300px 1fr"}} width="100%" gap="20px" padding="0px 20px">
-                    <GridItem colSpan={1} textAlign="center">
-                        <FilterFullScreen2 />
-                        <FiltersSection2 />
+                    <GridItem colSpan={1} marginX="auto" width="fit-content">
+                        <FilterFullScreen />
+                        <FiltersSection />
                     </GridItem>
-                    <GridItem colSpan={1} alignItems="center" textAlign="center">
-                        {/*<ProductSection />*/}
+                    <GridItem colSpan={1} marginX="auto" width="fit-content">
                         <ProductSection />
                     </GridItem>
                 </Grid>

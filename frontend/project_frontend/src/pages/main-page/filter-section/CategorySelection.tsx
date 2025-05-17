@@ -12,7 +12,8 @@ export function CategorySelection() {
                         checked={selectedCategories.includes(category.id)}
                         onChange={() => toggleCategory(category.id)}
                         backgroundImage={selectedCategories.includes(category.id) ? "linear-gradient(135deg, #f4fff6 0%, #e2f5e7 40%, #cfe9d8 100%)" : ""}
-                        rounded="full" padding="4px 4px" border={selectedCategories.includes(category.id) ? "1px solid #cfe9d8" : ""}
+                        rounded="full" padding="4px 10px 4px 4px" border={selectedCategories.includes(category.id) ? "1px solid #cfe9d8" : ""}
+                        width="fit-content"
                     >
                         <Checkbox.HiddenInput />
                         <Checkbox.Control rounded="full" />

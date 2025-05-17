@@ -1,8 +1,11 @@
 import { CategoryBadge } from "@/components/product/CategoryBadge";
+import { toaster } from "@/components/ui/toaster";
 import { useCart } from "@/context/CartContext";
+import { useUser } from "@/context/UserContext";
 import { Product } from "@/models/product";
-import { Dialog, Button, Portal, CloseButton, Flex, Image, VStack, Box, Icon, Spacer, HStack, Heading, Text } from "@chakra-ui/react";
+import { Dialog, Button, Portal, CloseButton, Flex, Image, VStack, Box, Icon, Spacer, HStack, Heading, Text, IconButton } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { MdAddShoppingCart } from "react-icons/md";
 
 interface ProductInfoDialogProps {
@@ -11,17 +14,22 @@ interface ProductInfoDialogProps {
 
 export function ProductInfoDialog({ product }: ProductInfoDialogProps) {
     const { addItemToCart: addItem } = useCart();
-    const add = () => {
-        addItem(product.id);
-    }
+        const user = useUser();
+        const add = async () => {
+            addItem(user.activeCartId!, product.id);
+            toaster.create({
+                description: `${product.name} was successfully added to your cart.`,
+                type: "info",
+            })
+        }
 
     return (
         <Dialog.Root size="full" motionPreset="none" /*motionPreset="slide-in-bottom"*/>
 
             <Dialog.Trigger asChild>
-                <Button variant="outline" size="sm" rounded="full">
-                    More information...
-                </Button>
+                <IconButton variant="outline" size="sm" rounded="full">
+                    <BiDotsHorizontalRounded />
+                </IconButton>
             </Dialog.Trigger>
 
             <Portal>
