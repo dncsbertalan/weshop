@@ -6,6 +6,7 @@ import { Navigation } from "@/routes/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { authLogin } from "@/api/auth-api";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
+import { Footer } from "../page-components/footer/Footer";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
@@ -20,48 +21,49 @@ export function LoginPage() {
     return (
         <Flex
             background="bg-color"
-            width="100vw"
             height="100vh"
-            padding={10}
-            justifyContent="center"
-            alignItems="center"
             flexDirection="column"
         >
             <GlobalNavBar />
 
-            <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white" 
-                minWidth={320} maxW="400px" mx="auto"
-                //shadow="3px 3px 10px rgba(0,0,0,0.2)"
-                shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
-            >
-                <Heading size="lg">Login</Heading>
+            <Flex minHeight="100vh" alignItems="center">
+                <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white"
+                    minWidth={320} maxW="400px" mx="auto"
+                    //shadow="3px 3px 10px rgba(0,0,0,0.2)"
+                    shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
+                    height="fit-content"
+                >
+                    <Heading size="lg">Login</Heading>
 
-                <Field.Root required>
-                    <Field.Label>
-                        E-mail<Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input type="email" {...register("email")} placeholder="example@email.com" /> {/* ide 12 px padding */}
-                </Field.Root>
+                    <Field.Root required>
+                        <Field.Label>
+                            E-mail<Field.RequiredIndicator />
+                        </Field.Label>
+                        <Input type="email" {...register("email")} placeholder="example@email.com" /> {/* ide 12 px padding */}
+                    </Field.Root>
 
-                <Field.Root required>
-                    <Field.Label>
-                        Password <Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input type="password" {...register("password")} placeholder="********" />
-                </Field.Root>
+                    <Field.Root required>
+                        <Field.Label>
+                            Password <Field.RequiredIndicator />
+                        </Field.Label>
+                        <Input type="password" {...register("password")} placeholder="********" />
+                    </Field.Root>
 
-                <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
-                    Login
-                </Button>
-                <Text>
-                    Doesn't have an account yet?
-                </Text>
-                <Link to={Navigation.registration}>
+                    <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
+                        Login
+                    </Button>
                     <Text>
-                        Create one
+                        Doesn't have an account yet?
                     </Text>
-                </Link>
-            </VStack>
+                    <Link to={Navigation.registration}>
+                        <Text>
+                            Create one
+                        </Text>
+                    </Link>
+                </VStack>
+            </Flex>
+
+            <Footer />
         </Flex >
     );
 };
