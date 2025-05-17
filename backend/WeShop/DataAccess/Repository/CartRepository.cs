@@ -68,6 +68,12 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart?.Id;
     }
 
+    public async Task<string?> GetCartOwnerIdAsync(long cartId)
+    {
+        var cart = await _context.Carts.FindAsync(cartId);
+        return cart?.UserId;
+    }
+
     #endregion
 
     #region Shared cart
@@ -75,7 +81,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
     {
         var cart = await _context.Carts.FindAsync(cartId);
-        if (cart!.IsShared)
+        if (!cart!.IsShared)
         {
             cart.IsShared = true;
         }

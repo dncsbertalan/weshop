@@ -9,27 +9,28 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
 {
     public async Task<bool> CreateOrderAsync(string userId, CreateOrderData orderData)
     {
-        // 1. Check whether the user exists
-        // 2. Get the cart id of the user's cart
-        // 3. Create a new Order
-        // 4. Create the new OrderItems from the cart items
-        // 5. Remove all items from the cart
+        // Everything happens in a transaction
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-        var user = await _userRepository.GetUserByIdAsync(userId);
-        if (user is null) return false;
+        // 1. Check whether the user has access to the cart
+        if (!await UserHasCartAccesAsync(userId, orderData.CartId)) return false;
 
-        var cartId = await _cartRepository.GetCartIdFromUserIdAsync(userId);
-        if (cartId is null) return false;
-
+        // 2. Create a new Order
         var newOrderId = await _orderRepository.CreateOrderAsync(orderData, userId);
-        await _orderItemRepository.CreateOrderItemsFromCartItemsAsync(newOrderId, (long)cartId);
+        // 3. Create the new OrderItems from the cart items
+        // 4. Remove all items from the cart
+        var validItems = await _orderItemRepository.CreateOrderItemsFromCartItemsAsync(newOrderId, orderData.CartId);
+        if (!validItems) return false;
 
-        await _cartRepository.DeleteCartAsync((long)cartId);
+        var cartOwner = await _cartRepository.GetCartOwnerIdAsync(orderData.CartId);
+        if (cartOwner is null) return false;
+        // 5. Delete the cart. This results in deleting the associated Shared Cart.
+        await _cartRepository.DeleteCartAsync(orderData.CartId);
 
-        await _cartRepository.CreateCartAsync(userId);
+        // 6. Create a new cart for the cart's owner
+        await _cartRepository.CreateCartAsync(cartOwner);
 
-        Thread.Sleep(1000 * 2); // TEMPORARY
+        Thread.Sleep(1000 * 2); // Temporary simulation of a longer process
         scope.Complete();
         return true;
     }
@@ -40,4 +41,20 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
 
         return orders;
     }
+
+    #region Helper methods
+
+    private async Task<bool> UserHasCartAccesAsync(string userId, long cartId)
+    {
+        var cart = await _cartRepository.GetCartParticipantsAsync(cartId);
+        if (cart is null) return false;
+
+        if (cart.UserId == userId) return true;
+
+        if (cart.Participants.Contains(userId)) return true;
+
+        return false;
+    }
+
+    #endregion
 }

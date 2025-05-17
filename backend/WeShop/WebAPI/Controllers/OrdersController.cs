@@ -11,7 +11,7 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class OrdersController(OrderService _orderService) : ControllerBase
 {
-    [HttpPost("me/create")]
+    [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateOrderFromCart([FromBody] CreateOrderData orderData)
     {

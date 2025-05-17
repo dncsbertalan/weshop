@@ -112,7 +112,8 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Cart");
                 });
@@ -524,8 +525,8 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
                     b.HasOne("DataAccess.Models.User_Data", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Cart")
+                        .HasForeignKey("DataAccess.Models.Cart_Data", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -579,7 +580,7 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("DataAccess.Models.User_Data", "CartUser")
-                        .WithMany()
+                        .WithMany("SharedCarts")
                         .HasForeignKey("CartUserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -650,6 +651,14 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.User_Data", b =>
+                {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
+                    b.Navigation("SharedCarts");
                 });
 #pragma warning restore 612, 618
         }

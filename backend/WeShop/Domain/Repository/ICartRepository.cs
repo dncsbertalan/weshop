@@ -13,6 +13,7 @@ public interface ICartRepository
     Task DeleteCartAsync(long cartId);
     Task<long?> GetCartIdFromCartItemIdAsync(long cartItemId);
     Task<long?> GetCartIdFromUserIdAsync(string userId);
+    Task<string?> GetCartOwnerIdAsync(long cartId);
 
     #endregion
 
