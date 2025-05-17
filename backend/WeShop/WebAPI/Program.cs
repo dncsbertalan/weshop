@@ -15,16 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 // SignalR
 builder.Services.AddSignalR();
 
-// CORS problem
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
-                      {
-                          policy.WithOrigins("http://localhost:5173");
-                      });
-});
-
 // Adding services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<CartService>();
@@ -124,9 +114,6 @@ app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.MapHub<SharedCartHub>("/hubs/shared-cart");
-
-// CORS problem
-app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
