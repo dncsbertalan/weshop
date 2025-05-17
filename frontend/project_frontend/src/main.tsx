@@ -18,11 +18,11 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <UserProvider>
-          <CartProvider>
-            <OrdersProvider>
-              <BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>
+          <UserProvider>
+            <CartProvider>
+              <OrdersProvider>
                 <ProductProvider>
                   <ChakraProvider value={system}>
                     <ColorModeProvider>
@@ -30,11 +30,11 @@ createRoot(document.getElementById('root')!).render(
                     </ColorModeProvider>
                   </ChakraProvider>
                 </ProductProvider>
-              </BrowserRouter>
-            </OrdersProvider>
-          </CartProvider>
-        </UserProvider>
-      </AuthProvider>
+              </OrdersProvider>
+            </CartProvider>
+          </UserProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,
-)
+);

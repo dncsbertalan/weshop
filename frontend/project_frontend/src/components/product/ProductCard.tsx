@@ -68,11 +68,8 @@ export function ProductCard({ product }: ProductCardProps) {
                 <Spacer />
                 <Flex marginTop="10px">
                     <Button
-                        rounded="full" //backgroundColor="button-color-primary"
+                        rounded="full"
                         onClick={add}
-                        _hover={{
-                            backgroundColor: "button-color-primary-hover",
-                        }}
                     >
                         <Icon>
                             <MdAddShoppingCart />
