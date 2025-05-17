@@ -18,7 +18,8 @@ export function CartItemsSection() {
 
     return (
         <Flex
-            padding="0px 30px"
+            padding={{ lg: "0px 10px", xl: "0px 30px" }}
+            marginBottom={{ base: "30px", md:"30px", lg: 0}}
         >
             {cartIsPending && <CartItemSectionLoading />}
 

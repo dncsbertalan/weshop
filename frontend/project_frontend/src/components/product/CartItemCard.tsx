@@ -19,13 +19,10 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
     return (
         <Box
-            width="780px"
-            height="135px"
+            width={{ sm: "520px", md: "700px", lg: "620px", xl: "780px" }}
+            height="fit-content" marginX="auto"
             borderBottom="solid 1px rgb(220, 220, 220)"
-            paddingY="32px"
-            paddingX="5px"
-        //backgroundColor="whiteAlpha.800"
-        //backdropFilter="blur(20px) saturate(180%)"
+            padding={{ base: "20px 5px", md: "32px 5px" }}
         >
             <Flex
                 alignItems="center"
@@ -33,27 +30,30 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
             >
                 <Image
                     objectFit="cover"
-                    maxHeight="70px"
+                    maxHeight={{ base: "60px", md: "70px" }}
                     src='https://thewholeserving.com/wp-content/uploads/2014/06/Citrus-Cactus-Juice5.jpg'
                 />
 
-                <Flex alignItems="center" justifyContent="space-between" width="690px">
+                <Flex alignItems="center" justifyContent="space-between"
+                    width={{ sm: "450px", md: "610px", lg: "530px", xl: "690px" }}
+                    flexWrap={{ base: "wrap", sm: "nowrap" }}
+                >
 
-                    <Flex flexDirection="column">
-                        <Text lineHeight="16px" fontSize="14px" fontWeight="400px" width="275px">{cartItem.name}</Text>
+                    <Flex flexDirection="column" width={{ base: "150px", md: "235px", lg: "195px", xl: "275px" }}>
+                        <Text lineHeight="16px" fontSize="14px" fontWeight="400px" >{cartItem.name}</Text>
                         <Text marginTop="6px" color="rgb(170, 170, 170)"
-                            lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
+                            lineHeight="16px" fontSize="12px" fontWeight="400px"
                         >
                             {cartItem.productId}
                         </Text>
                         <Text marginTop="6px" //color="rgb(170, 170, 170)"
-                            lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
+                            lineHeight="16px" fontSize="12px" fontWeight="400px"
                         >
                             Added by {cartItem.addedByFirstName} {cartItem.addedByLastName}
                         </Text>
                     </Flex>
 
-                    <Box width="120px">
+                    <Box width={{ base: "100px", md: "120px" }}>
                         <NumberInput.Root value={cartItem.quantity.toString()} unstyled spinOnPress={false}>
                             <HStack gap="2">
 
@@ -82,8 +82,8 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                         </NumberInput.Root>
                     </Box>
 
-                    <Box width="120px" textAlign="right">
-                        <Text lineHeight="24px" fontSize="16px" fontWeight="bold">
+                    <Box width={{ base: "100px", md: "120px" }} textAlign="right">
+                        <Text lineHeight={{ base: "21px", md: "24px" }} fontSize={{ base: "14px", md: "16px" }} fontWeight="bold">
                             {formatCurrency(cartItem.price)} Ft
                         </Text>
                     </Box>

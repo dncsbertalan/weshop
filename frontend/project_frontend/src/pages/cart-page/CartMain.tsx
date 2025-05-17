@@ -33,11 +33,11 @@ export function CartMain() {
                     width="100%" maxWidth="global-max-window-size"
                     justifyContent={{ base: "center", lg: "space-around" }} flexDirection={{ base: "column", lg: "row" }}
                 >
-                    <Flex flexDirection="column" gap="20px">
+                    <Flex flexDirection="column" alignItems="center">
                         <CartItemsSection />
                     </Flex>
 
-                    <Flex flexDirection="column" gap="20px">
+                    <Flex flexDirection="column" gap="30px" alignItems="center">
                         <CheckoutSection />
                         {isOwnCart && <InviteUserToCart />}
                     </Flex>
@@ -65,7 +65,7 @@ function CheckoutSection() {
             backgroundColor="whiteAlpha.800"
             shadow="0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)"
             backdropFilter="saturate(180%) blur(20px)"
-            width={{ base: "800px", lg: "300px" }}
+            width={{ base: "100%", sm: "520px", md: "700px", lg: "285px", xl: "300px" }}
             height="min"
         >
             <VStack alignItems={"flex-start"} width="100%">

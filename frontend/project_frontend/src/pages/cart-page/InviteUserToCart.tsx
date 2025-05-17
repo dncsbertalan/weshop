@@ -25,7 +25,7 @@ export function InviteUserToCart() {
             //shadow="3px 3px 10px 3px rgba(0, 0, 0, 0.2);"
             shadow="0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)"
             backdropFilter="saturate(180%) blur(20px)"
-            width={{ base: "800px", lg: "300px" }}
+            width={{ base: "100%", sm: "520px", md: "700px", lg: "285px", xl: "300px" }}
             height="min"
         >
             <VStack alignItems={"flex-start"} width="100%">
