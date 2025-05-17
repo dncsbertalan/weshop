@@ -3,6 +3,7 @@ import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { useForm } from "react-hook-form";
 import { authRegister } from "@/api/auth-api";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
+import { Footer } from "../page-components/footer/Footer";
 
 export function RegistrationPage() {
     const { register, handleSubmit } = useForm<RegistrationDto>();
@@ -10,62 +11,62 @@ export function RegistrationPage() {
     return (
         <Flex
             backgroundColor="bg-color"
-            width="100vw"
             height="100vh"
-            padding={10}
-            justifyContent="center"
-            alignItems="center"
             flexDirection="column"
         >
             <GlobalNavBar />
 
-            <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white" 
-                shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px" 
-                maxW="420px" mx="auto" mt={10}
-            >
-                <Heading size="lg">Registration</Heading>
+            <Flex minHeight="100vh" alignItems="center">
+                <VStack gap={4} padding="34px" borderRadius="34px" backgroundColor="white"
+                    shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
+                    maxW="420px" mx="auto" mt={10}
+                >
+                    <Heading size="lg">Registration</Heading>
 
-                <HStack>
+                    <HStack>
+                        <Field.Root required>
+                            <Field.Label>
+                                First name <Field.RequiredIndicator />
+                            </Field.Label>
+                            <Input {...register("firstName")} placeholder="First name" />
+                        </Field.Root>
+                        <Field.Root required>
+                            <Field.Label>
+                                Last name <Field.RequiredIndicator />
+                            </Field.Label>
+                            <Input {...register("lastName")} placeholder="Last name" />
+                        </Field.Root>
+
+                    </HStack>
+
                     <Field.Root required>
                         <Field.Label>
-                            First name <Field.RequiredIndicator />
+                            E-mail<Field.RequiredIndicator />
                         </Field.Label>
-                        <Input {...register("firstName")} placeholder="First name" />
+                        <Input type="email" {...register("email")} placeholder="pelda@email.com" />
                     </Field.Root>
+
                     <Field.Root required>
                         <Field.Label>
-                            Last name <Field.RequiredIndicator />
+                            Date of birth <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input {...register("lastName")} placeholder="Last name" />
+                        <Input type="date" {...register("dob")} />
                     </Field.Root>
 
-                </HStack>
+                    <Field.Root required>
+                        <Field.Label>
+                            Password <Field.RequiredIndicator />
+                        </Field.Label>
+                        <Input type="password" {...register("password")} placeholder="********" />
+                    </Field.Root>
 
-                <Field.Root required>
-                    <Field.Label>
-                        E-mail<Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input type="email" {...register("email")} placeholder="pelda@email.com" />
-                </Field.Root>
+                    <Button colorScheme="blue" w="full" onClick={handleSubmit(authRegister)}>
+                        Register
+                    </Button>
+                </VStack>
+            </Flex>
 
-                <Field.Root required>
-                    <Field.Label>
-                        Date of birth <Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input type="date" {...register("dob")} />
-                </Field.Root>
-
-                <Field.Root required>
-                    <Field.Label>
-                        Password <Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input type="password" {...register("password")} placeholder="********" />
-                </Field.Root>
-
-                <Button colorScheme="blue" w="full" onClick={handleSubmit(authRegister)}>
-                    Register
-                </Button>
-            </VStack>
+            <Footer />
         </Flex >
     );
 }
