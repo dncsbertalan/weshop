@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { authLogin } from "@/api/auth-api";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { Footer } from "../page-components/footer/Footer";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function LoginPage() {
     const { register, handleSubmit } = useForm<LoginDto>();
@@ -46,10 +47,10 @@ export function LoginPage() {
                         <Field.Label>
                             Password <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input type="password" {...register("password")} placeholder="********" />
+                        <PasswordInput {...register("password")} />
                     </Field.Root>
 
-                    <Button colorScheme="blue" w="full" onClick={handleSubmit(onSubmit)}>
+                    <Button width="full" onClick={handleSubmit(onSubmit)}>
                         Login
                     </Button>
                     <Text>

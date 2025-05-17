@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { authRegister } from "@/api/auth-api";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { Footer } from "../page-components/footer/Footer";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function RegistrationPage() {
     const { register, handleSubmit } = useForm<RegistrationDto>();
@@ -57,10 +58,10 @@ export function RegistrationPage() {
                         <Field.Label>
                             Password <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input type="password" {...register("password")} placeholder="********" />
+                        <PasswordInput {...register("password")} />
                     </Field.Root>
 
-                    <Button colorScheme="blue" w="full" onClick={handleSubmit(authRegister)}>
+                    <Button width="full" onClick={handleSubmit(authRegister)}>
                         Register
                     </Button>
                 </VStack>
