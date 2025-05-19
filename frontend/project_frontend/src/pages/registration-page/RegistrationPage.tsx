@@ -1,12 +1,13 @@
 import { Button, Field, Flex, Heading, HStack, Input, VStack } from "@chakra-ui/react";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { useForm } from "react-hook-form";
-import { authRegister } from "@/api/auth-api";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { Footer } from "../page-components/footer/Footer";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useAuth } from "@/context/AuthContext";
 
 export function RegistrationPage() {
+    const { register: reg } = useAuth();
     const { register, handleSubmit, formState: { errors } } = useForm<RegistrationDto>();
 
     return (
@@ -88,7 +89,7 @@ export function RegistrationPage() {
                         <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
                     </Field.Root>
 
-                    <Button width="full" onClick={handleSubmit(authRegister)}>
+                    <Button width="full" onClick={handleSubmit(reg)}>
                         Register
                     </Button>
                 </VStack>

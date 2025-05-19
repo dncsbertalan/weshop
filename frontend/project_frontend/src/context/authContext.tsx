@@ -1,14 +1,21 @@
 import { authToken } from "@/api/api-constants";
+import { authLogin, authRegister } from "@/api/auth-api";
+import { LoginDto } from "@/dtos/LoginDto";
+import { RegistrationDto } from "@/dtos/RegistrationDto";
 import { Navigation } from "@/routes/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 interface AuthContextType {
     isAuthenticated: boolean;
     token: string | null;
-    login: (token: string) => void;
-    logout: () => void;
+    loginIsPending: boolean;
+    loginIsError : boolean;
+    registerIsPending: boolean;
+    login: (credentials: LoginDto) => Promise<void>;
+    logout: () => Promise<void>;
+    register: (data: RegistrationDto) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,10 +26,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const login = async (newToken: string) => {
-        localStorage.setItem(authToken, newToken);
-        setToken(newToken);
-        setIsAuthenticated(true);
+    const {
+        isPending: isLoggingIn,
+        isError: loginIsError,
+        mutateAsync: loginMutate,
+    } = useMutation({
+        mutationFn: authLogin,
+        onSuccess: (token) => {
+            localStorage.setItem(authToken, token);
+            setToken(token);
+            setIsAuthenticated(true);
+            queryClient.clear();
+            navigate(Navigation.home);
+        },
+    });
+
+    const {
+        isPending: isRegistering,
+        mutateAsync: registerMutate,
+    } = useMutation({
+        mutationFn: authRegister,
+        onSuccess: (token) => {
+            localStorage.setItem(authToken, token);
+            setToken(token);
+            setIsAuthenticated(true);
+            queryClient.clear();
+            navigate(Navigation.home);
+        },
+    });
+
+    const login = async (credentials: LoginDto) => {
+        await loginMutate(credentials);
+    };
+
+    const register = async (data: RegistrationDto) => {
+        await registerMutate(data);
     };
 
     const logout = async () => {
@@ -45,12 +83,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, token, login, logout }}>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            token,
+            loginIsPending: isLoggingIn,
+            loginIsError,
+            registerIsPending: isRegistering,
+            login,
+            logout,
+            register,
+        }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) throw new Error("useAuth must be used within an AuthProvider");

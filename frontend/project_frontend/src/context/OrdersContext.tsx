@@ -18,8 +18,7 @@ export const OrdersProvider = ({ children }: PropsWithChildren) => {
      const { data: orders = { orders: [] }, isPending: ordersIsPending, isError: ordersIsError } = useQuery({
         queryKey: [ORDERS_QUERY_KEY],
         queryFn: getOrders,
-        staleTime: 1000 * 60 * 5, // data counts as fresh for 5 minutes
-        //retry: 1, // retry once if there is a problem
+        staleTime: 1000 * 60 * 60,
     });
 
     return (
