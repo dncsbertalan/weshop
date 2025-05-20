@@ -61,7 +61,7 @@ function CheckoutSection() {
 
     useEffect(() => {
         if (cart) {
-            setTotal(cart.cartItems.reduce((acc, item) => acc + item.price, 0));
+            setTotal(cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0));
         }
     }, [cart])
 

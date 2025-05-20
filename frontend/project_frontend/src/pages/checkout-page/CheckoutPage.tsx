@@ -18,9 +18,8 @@ export function CheckoutPage() {
             <NavBarFiller />
 
             <Center
-                backgroundColor="#EAEAEA"
-                padding={5}
-                minHeight="100%"
+                backgroundColor="bg-color"
+                padding="20px"
             >
                 {createOrderIsPending &&
                     <Flex>

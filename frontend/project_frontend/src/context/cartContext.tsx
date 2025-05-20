@@ -9,6 +9,7 @@ import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
 import { useAuth } from "./AuthContext";
 import { useCartHub } from "@/hooks/use-cart-hub";
 import { toaster } from "@/components/ui/toaster";
+import { ORDER_REFETCH_KEY } from "@/api/api-constants";
 
 interface CartContextType {
     // Cart
@@ -53,7 +54,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         isPending: cartIsPending,
         isError: cartIsError,
     } = useQuery({
-        queryKey: [CART_QUERY_KEY, activeCartId],
+        queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId],
         queryFn: () => getCart(activeCartId!),
         staleTime: 1000 * 60 * 60, // data counts as fresh for an hour
         enabled: !!activeCartId,
@@ -67,7 +68,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         mutationFn: ({ cartId, productId }: { cartId: number; productId: number }) =>
             addProductToCart(cartId, productId),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
         },
         onError: (error) => {
             console.error("Error adding item to cart:", error);
@@ -79,7 +80,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         mutationFn: ({ cartId, cartItemId }: { cartId: number; cartItemId: number }) =>
             deleteProductFromCart(cartId, cartItemId),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
         },
     });
 
@@ -88,7 +89,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         mutationFn: ({ cartId, cartItemId, quantity }: { cartId: number; cartItemId: number; quantity: number }) =>
             modifyProductInCart(cartId, cartItemId, quantity),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
         },
     });
 
@@ -100,7 +101,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const addUserToCartMutation = useMutation({
         mutationFn: ({ cartId, userData }: { cartId: number; userData: AddUserToCartDto; }) => addUserToCart(cartId, userData),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
         },
         onError: (error) => {
             console.error("Error adding user to cart:", error);
@@ -114,7 +115,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const createOrderMutation = useMutation({
         mutationFn: (checkoutData: CheckoutInfoData) => createOrder(activeCartId!, checkoutData),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+            //await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+           await queryClient.invalidateQueries({ predicate: query => query.queryKey[0] === ORDER_REFETCH_KEY });
         },
         onError: (error) => {
             console.error("Error creating the order:", error);

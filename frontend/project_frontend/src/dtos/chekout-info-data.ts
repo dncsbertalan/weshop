@@ -7,4 +7,7 @@ export type CheckoutInfoData = {
     streetName: string;
     houseNumber: number;
     paymentMethod: string;
+    cardNumber?: string;
+    expiryDate?: string;
+    cvc?: string;
 }

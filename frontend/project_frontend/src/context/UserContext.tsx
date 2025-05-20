@@ -1,3 +1,4 @@
+import { ORDER_REFETCH_KEY } from "@/api/api-constants";
 import { getUser } from "@/api/user-api";
 import { User } from "@/models/user";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +17,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
     // Fetching the user's data
     const { data, isPending, isError } = useQuery<User>({
-        queryKey: ["my-user"],
+        queryKey: [ORDER_REFETCH_KEY, "my-user"],
         queryFn: getUser,
         staleTime: 1000 * 60 * 60,
     });
@@ -26,7 +27,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
     // Initializing the data from backend
     useEffect(() => {
-        if (data && !activeCartId) {
+        if (data) {
             setActiveCartId(data.cartId ?? data.carts[0]?.cartId);
             console.log("TEMPORARY!\nUser data changed somehow. It should not happen.\nTODO: Remove this later.");
         }

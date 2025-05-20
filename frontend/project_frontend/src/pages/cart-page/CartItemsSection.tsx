@@ -5,7 +5,6 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
 import { CartItemCard } from "@/components/product/CartItemCard";
 import { useUser } from "@/context/UserContext";
-import { CartInfo } from "@/models/cart";
 
 export function CartItemsSection() {
     const { cart, cartIsPending, cartIsError } = useCart();
@@ -105,11 +104,15 @@ function CartInfoSec({ isShared }: { isShared: boolean }) {
         );
     }
 
-    const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
+    //const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
     return (
         <Box>
             <Flex flexDirection="column" gap="6px">
-                <Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>
+                {/*<Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>*/}
+                <Text lineHeight="25px" fontSize="21px" fontWeight="500">
+                    {user.user?.carts.find(cart => cart.cartId == user.activeCartId)?.ownerFirstName} 
+                    {user.user?.carts.find(cart => cart.cartId == user.activeCartId)?.ownerLastName}'s cart
+                </Text>
             </Flex>
             {isShared && <Text marginTop="6px" color="rgb(170, 170, 170)"
                 lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
@@ -117,21 +120,6 @@ function CartInfoSec({ isShared }: { isShared: boolean }) {
                 Shared
             </Text>}
         </Box>
-    );
-
-    const ownCartInfo: CartInfo | undefined = (cartInfo === undefined && user.activeCartId == user.user?.cartId) ? {
-        cartId: user.activeCartId!,
-        ownerFirstName: user.user!.firstName!,
-        ownerLastName: user.user!.lastName
-    } : undefined;
-
-    return (
-        <Flex flexDirection="column" gap="6px" marginBottom="10px">
-            <Text lineHeight="25px" fontSize="21px" fontWeight="500">Cart summary</Text>
-            <Text color="rgb(130, 130, 130)" lineHeight="16px" fontSize="12px" fontWeight="400px">
-                Owner: {cartInfo?.ownerFirstName} {cartInfo?.ownerLastName} {ownCartInfo?.ownerFirstName} {ownCartInfo?.ownerLastName}
-            </Text>
-        </Flex>
     );
 };
 

@@ -2,8 +2,7 @@ import { useCart } from "@/context/CartContext";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { Navigation } from "@/routes/navigation";
 import { sleep } from "@/utils/sleep";
-import { useSteps, Steps, ButtonGroup, Button, Box, Field, Input, VStack, HStack, RadioGroup, Center } from "@chakra-ui/react"
-import { useState } from "react";
+import { useSteps, Steps, ButtonGroup, Button, Box, Field, Input, VStack, HStack, RadioGroup, Center, Heading, Text, Separator, Stack } from "@chakra-ui/react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router";
 
@@ -13,7 +12,11 @@ export function CheckoutSteps() {
         count: checkoutSteps.length,
     })
 
-    const checkoutForm = useForm<CheckoutInfoData>();
+    const checkoutForm = useForm<CheckoutInfoData>({
+        defaultValues: {
+            paymentMethod: "2",
+        }
+    });
 
     return (
         <FormProvider {...checkoutForm}>
@@ -55,9 +58,11 @@ export function CheckoutSteps() {
                             <Steps.PrevTrigger asChild>
                                 <Button rounded="full" variant="outline">Back</Button>
                             </Steps.PrevTrigger>
-                            <Steps.NextTrigger asChild>
-                                <Button rounded="full">{steps.value === 2 ? "Confirm" : "Next"}</Button>
-                            </Steps.NextTrigger>
+                            {steps.value !== 2 &&
+                                <Steps.NextTrigger asChild>
+                                    <Button rounded="full">Next</Button>
+                                </Steps.NextTrigger>
+                            }
                         </ButtonGroup>
                     </Center>
 
@@ -154,44 +159,122 @@ function CustomerInfoAndShipping() {
 }
 
 const paymentMethods = [
-    { label: "Cash on delivery", value: "1" },
-    { label: "Credit or debit card", value: "2" },
+    { label: "Credit or debit card", value: "1" },
+    { label: "Cash on delivery", value: "2" },
 ]
 
 function PaymentMethod() {
-    const { setValue } = useFormContext();
-    const [paymentMethod, setPaymentMethod] = useState("1");
-    setValue("paymentMethod", paymentMethod);
+    const { setValue, register, watch, formState: { errors } } = useFormContext<CheckoutInfoData>();
+    const selectedPaymentMethod = watch("paymentMethod");
+
+    const handlePaymentMethodChange = (newValue: string) => {
+        setValue("paymentMethod", newValue, { shouldValidate: true, shouldDirty: true });
+        if (newValue !== "card") {
+            setValue("cardNumber", undefined);
+            setValue("expiryDate", undefined);
+            setValue("cvc", undefined);
+        }
+    };
 
     return (
-        <Box>
-            <VStack gap={4} p={6} mx="auto" mt={10} maxWidth="700px" alignItems="flex-start">
-
-                <RadioGroup.Root defaultValue="1" value={paymentMethod}>
-                    <VStack gap="6" alignItems="flex-start">
+        <Box p={{ base: 2, md: 6 }}>
+            <VStack gap={8} mx="auto" mt={{ base: 4, md: 10 }} maxWidth="700px" alignItems="flex-start">
+                <Heading size="md" mb={0}>Select Payment Method</Heading>
+                <RadioGroup.Root
+                    value={selectedPaymentMethod || "2"}
+                    name="paymentMethod"
+                >
+                    <Stack direction={{ base: "column", md: "row" }} gap={{ base: 4, md: 6 }}>
                         {paymentMethods.map((item) => (
-                            <RadioGroup.Item key={item.value} value={item.value}
-                                onChange={() => {
-                                    setPaymentMethod(item.value);
-                                    setValue("paymentMethod", item.value);
-                                }}
+                            <RadioGroup.Item
+                                key={item.value}
+                                value={item.value}
+                                //onClick={() => handlePaymentMethodChange(item.value)}
+                                onChange={() => handlePaymentMethodChange(item.value)}
+                            //style={{border: '1px solid lightgray', padding: '10px', borderRadius: '5px', cursor: 'pointer'}}
                             >
                                 <RadioGroup.ItemHiddenInput />
                                 <RadioGroup.ItemIndicator />
-                                <RadioGroup.ItemText>{item.label}</RadioGroup.ItemText>
+                                <RadioGroup.ItemText fontWeight="medium" ml={2}>{item.label}</RadioGroup.ItemText>
                             </RadioGroup.Item>
                         ))}
-                    </VStack>
+                    </Stack>
                 </RadioGroup.Root>
 
+                {selectedPaymentMethod === "1" && (
+                    <VStack gap={4} w="100%" mt={6} borderWidth="1px" borderRadius="md" p={5} shadow="sm">
+                        <Heading size="sm" alignSelf="flex-start">Enter Card Details</Heading>
 
+                        <Field.Root
+                            required={selectedPaymentMethod === "1"}
+
+                            invalid={!!errors.cardNumber}
+                        >
+                            <Field.Label>
+                                Card Number <Field.RequiredIndicator />
+                            </Field.Label>
+                            <Input
+                                {...register("cardNumber", {
+                                    required: selectedPaymentMethod === "1" ? "Card number is required" : false,
+                                    pattern: { value: /^[0-9]{13,19}$/, message: "Invalid card number" } // Egyszerű validáció
+                                })}
+                                placeholder="0000 0000 0000 0000"
+                            />
+                            {errors.cardNumber && <Field.HelperText color="red.500">{errors.cardNumber.message}</Field.HelperText>}
+                        </Field.Root>
+
+                        <HStack gap={4} w="100%" alignItems="flex-start">
+                            <Field.Root
+                                required={selectedPaymentMethod === "1"}
+
+                                invalid={!!errors.expiryDate}
+                                width="100%"
+                            >
+                                <Field.Label>
+                                    Expiry Date (MM/YY) <Field.RequiredIndicator />
+                                </Field.Label>
+                                <Input
+                                    {...register("expiryDate", {
+                                        required: selectedPaymentMethod === "1" ? "Expiry date is required" : false,
+                                        pattern: { value: /^(0[1-9]|1[0-2])\/?([0-9]{2})$/, message: "Invalid format (MM/YY)" }
+                                    })}
+                                    placeholder="MM/YY"
+                                />
+                                {errors.expiryDate && <Field.HelperText color="red.500">{errors.expiryDate.message}</Field.HelperText>}
+                            </Field.Root>
+
+                            <Field.Root
+                                required={selectedPaymentMethod === "1"}
+
+                                invalid={!!errors.cvc}
+                                width="100%"
+                            >
+                                <Field.Label>
+                                    CVC <Field.RequiredIndicator />
+                                </Field.Label>
+                                <Input
+                                    {...register("cvc", {
+                                        required: selectedPaymentMethod === "1" ? "CVC is required" : false,
+                                        pattern: { value: /^[0-9]{3,4}$/, message: "Invalid CVC" }
+                                    })}
+                                    placeholder="123"
+                                />
+                                {errors.cvc && <Field.HelperText color="red.500">{errors.cvc.message}</Field.HelperText>}
+                            </Field.Root>
+                        </HStack>
+                        <Text fontSize="xs" color="gray.500" mt={2}>
+                            Your payment information is processed securely. We do not store your full card details.
+                        </Text>
+                    </VStack>
+                )}
             </VStack>
         </Box>
     );
 }
 
 function ConfirmationAndPayment() {
-    const { handleSubmit } = useFormContext<CheckoutInfoData>();
+    const { handleSubmit, getValues } = useFormContext<CheckoutInfoData>();
+    const allFormData = getValues();
     const navigate = useNavigate();
     const { createOrder } = useCart();
     const onSubmit = async (data: CheckoutInfoData) => {
@@ -201,12 +284,61 @@ function ConfirmationAndPayment() {
                 navigate(Navigation.home);
             });
     };
+    const { cart } = useCart();
+
+    const paymentMethodLabel = paymentMethods.find(pm => pm.value === allFormData.paymentMethod)?.label || allFormData.paymentMethod;
+
 
     return (
-        <Box>
-            <VStack>
-                <Button rounded="full" onClick={handleSubmit(onSubmit)}>
-                    Confirm order
+        <Box p={{ base: 2, md: 6 }}>
+            <VStack gap={6} mx="auto" mt={{ base: 4, md: 10 }} maxWidth="700px">
+                <Heading size="lg" mb={4}>Confirm Your Order</Heading>
+
+                <VStack gap={3} align="stretch" w="100%" borderWidth="1px" borderRadius="md" p={5} shadow="sm">
+                    <Heading size="md" mb={3}>Shipping Information</Heading>
+                    <HStack justifyContent="space-between">
+                        <Text fontWeight="bold">Name:</Text>
+                        <Text>{allFormData.firstName} {allFormData.lastName}</Text>
+                    </HStack>
+                    <HStack justifyContent="space-between">
+                        <Text fontWeight="bold">Phone:</Text>
+                        <Text>{allFormData.phoneNumber}</Text>
+                    </HStack>
+                    <HStack justifyContent="space-between">
+                        <Text fontWeight="bold">Address:</Text>
+                        <Text>{allFormData.postCode} {allFormData.cityName}, {allFormData.streetName} {allFormData.houseNumber}</Text>
+                    </HStack>
+                </VStack>
+
+                <VStack gap={3} align="stretch" w="100%" borderWidth="1px" borderRadius="md" p={5} shadow="sm">
+                    <Heading size="md" mb={3}>Payment Method</Heading>
+                    <HStack justifyContent="space-between">
+                        <Text fontWeight="bold">Method:</Text>
+                        <Text>{paymentMethodLabel}</Text>
+                    </HStack>
+                </VStack>
+
+                <VStack gap={3} align="stretch" w="100%" borderWidth="1px" borderRadius="md" p={5} shadow="sm">
+                    <Heading size="md" mb={3}>Order Summary</Heading>
+                    {cart && cart.cartItems.map(item => (
+                        <Text key={item.id}>{item.name} - {item.quantity} x {item.price}</Text>
+                    ))}
+                    <Separator />
+                    <Text fontWeight="bold">Total: {cart && cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}</Text>
+                </VStack>
+
+
+                <Button
+                    rounded="full"
+                    colorScheme="blue"
+                    onClick={handleSubmit(onSubmit)}
+                    //isLoading={isSubmitting}
+                    loadingText="Processing..."
+                    size="lg"
+                    mt={6}
+                    w="100%"
+                >
+                    Confirm and Place Order
                 </Button>
             </VStack>
         </Box>
