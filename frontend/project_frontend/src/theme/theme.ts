@@ -18,6 +18,7 @@ const config = defineConfig({
                 //"global-navbar-bg-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
                 "global-navbar-bg-color": { value: { _light: "rgba(250, 250, 252, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
                 "global-navbar-bottom-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
+                "global-navbar-button-hover": { value: { _light: "rgba(0, 0, 0, .16)", _dark: "rgba(22, 22, 23, 0.8)" } },
                 //"bg-color-product-card": { value: { _light: "rgb(245, 245, 247)", _dark: "rgba(22, 22, 23, 0.8)" } },
                 "bg-color-product-card": { value: { _light: "white", _dark: "rgba(22, 22, 23, 0.8)" } },
                 "backdrop-color": { value: "rgba(22, 22, 23, 0.5)" },

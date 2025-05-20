@@ -43,7 +43,7 @@ function Nav({ children }: PropsWithChildren) {
             backdropFilter="saturate(180%) blur(20px)"
 
             // New addition
-            borderBottom="1px solid rgb(0, 0, 0, .16)"
+            borderBottom="1px solid rgba(0, 0, 0, .16)"
         >
             {children}
         </Flex>
