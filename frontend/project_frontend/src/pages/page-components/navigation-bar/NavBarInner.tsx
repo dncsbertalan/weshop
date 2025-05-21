@@ -25,7 +25,11 @@ export function NavBarInner({ children }: PropsWithChildren) {
                     backgroundImage="linear-gradient(90deg, #94a3b8, #6ee7b7)"
                     color="transparent" backgroundClip="text" textShadow="0 1px 2px rgba(0,0,0,0.08)"
                 >
-                    <Span fontFamily="Pacifico, cursive">We</Span>
+                    <Span
+                        //fontFamily="Pacifico, cursive"
+                    >
+                        We
+                    </Span>
                     Shop
                 </Heading>
             </Link>
@@ -76,8 +80,8 @@ export function NavLoginButton() {
             <IconButton
                 aria-label="Login"
                 size="md"
-                height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor= "transparent" padding="0px 10px"
-                _hover={{backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black"}}
+                height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor="transparent" padding="0px 10px"
+                _hover={{ backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black" }}
             >
                 <FaRightToBracket />
                 Login
@@ -99,8 +103,8 @@ export function NavLogoutButton() {
             <IconButton
                 aria-label="Login"
                 size="md"
-                height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor= "transparent" padding="0px 10px"
-                _hover={{backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black"}}
+                height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor="transparent" padding="0px 10px"
+                _hover={{ backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black" }}
                 onClick={() => {
                     logout();
                     navigate(Navigation.home);
@@ -121,8 +125,8 @@ export function NavProfilButton() {
                 <IconButton
                     aria-label="Profil"
                     size="md"
-                    height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor= "transparent" padding="0px 10px"
-                    _hover={{backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black"}}
+                    height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor="transparent" padding="0px 10px"
+                    _hover={{ backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black" }}
                 >
                     <FaUser />
                     Profil
@@ -144,8 +148,8 @@ export function NavCartButton() {
                 <IconButton
                     aria-label="Shopping cart"
                     size="md"
-                    height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor= "transparent" padding="0px 10px"
-                    _hover={{backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black"}}
+                    height="global-navbar-height" rounded="0px" color="gray.700" backgroundColor="transparent" padding="0px 10px"
+                    _hover={{ backgroundColor: "transparent", borderBottom: "1px solid rgba(0, 0, 0, .35)", color: "black" }}
                 >
                     <MdOutlineShoppingCart />
                     Cart
