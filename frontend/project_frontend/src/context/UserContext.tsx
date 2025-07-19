@@ -31,11 +31,12 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
             setActiveCartId(data.cartId ?? data.carts[0]?.cartId);
             console.log("TEMPORARY!\nUser data changed somehow. It should not happen.\nTODO: Remove this later.");
         }
-    }, [data, activeCartId]);
+    }, [data]);
 
 
     // Switching carts
     const switchCart = async (cartId: number) => {
+        console.log(cartId)
         if (data?.carts.some(c => c.cartId === cartId) || data?.cartId == cartId) {
             setActiveCartId(cartId);
             return true;

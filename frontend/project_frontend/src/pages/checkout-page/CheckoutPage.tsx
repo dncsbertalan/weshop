@@ -21,16 +21,16 @@ export function CheckoutPage() {
                 backgroundColor="bg-color"
                 padding="20px"
             >
-                {createOrderIsPending &&
+                {/*createOrderIsPending &&
                     <Flex>
                         LOADING
                     </Flex>
-                }
-                {createOrderIsSuccess &&
+                */}
+                {/*createOrderIsSuccess &&
                     <Flex width="100%" height="500px" backgroundColor="red">
                         SUCCESS
                     </Flex>
-                }
+                */}
                 <CheckoutSteps />
             </Center>
 

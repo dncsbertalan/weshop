@@ -38,11 +38,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     //#region SignalR handling the shared cart
 
     useCartHub(activeCartId, token, async () => {
-        await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
-        toaster.create({
+        await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
+        /*toaster.create({
             description: `${cart?.cartItems} was successfully added to your cart.`,
             type: "info",
-        })
+        })*/
     })
 
     //#endregion
