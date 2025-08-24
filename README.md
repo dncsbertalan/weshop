@@ -37,7 +37,7 @@
 
 - Node.js v18+
 - .NET 9 SDK
-- SQL Server / SQLite (depending on configuration)
+- SQL Server
 
 ### Running Locally
 
