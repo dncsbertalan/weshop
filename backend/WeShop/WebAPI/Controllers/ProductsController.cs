@@ -1,6 +1,4 @@
 ﻿using Domain.Dtos.Api;
-using Domain.Models;
-using Domain.Repository;
 using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,7 +7,7 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(ProductService _productRepository) : ControllerBase
+public class ProductsController(ProductService _productService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(
@@ -17,9 +15,10 @@ public class ProductsController(ProductService _productRepository) : ControllerB
         [FromQuery] int pageSize = 30,
         [FromQuery(Name = "filters")] string? categoryIds = null,
         [FromQuery(Name = "min")] double minPrice = 1000,
-        [FromQuery(Name = "max")] double maxPrice = 100_000)
+        [FromQuery(Name = "max")] double maxPrice = 100_000,
+        [FromQuery] string? productName = null)
     {
-        var result = await _productRepository.GetProductsAsync(page, pageSize, categoryIds, minPrice, maxPrice);
+        var result = await _productService.GetProductsAsync(page, pageSize, categoryIds, minPrice, maxPrice, productName);
         if (result is null)
         {
             return BadRequest(new { message = "Something went wrong" });
@@ -29,9 +28,9 @@ public class ProductsController(ProductService _productRepository) : ControllerB
     }
 
     [HttpGet("{id}")]
-    public ActionResult<ProductDto> Get(long id)
+    public async Task<ActionResult<ProductDto>> Get(long id)
     {
-        var product = _productRepository.GetByIdAsync(id);
-        return product != null ? Ok(product): NotFound();
+        var product = await _productService.GetByIdAsync(id);
+        return product is not null ? Ok(product): NotFound();
     }
 }

@@ -11,10 +11,10 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CartsController(CartService _cartService, IHubContext<SharedCartHub> _cartHub) : ControllerBase
 {
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> CreateCart()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -29,7 +29,6 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
     }
 
     [HttpGet("{cartId}")]
-    [Authorize]
     public async Task<ActionResult<CartDto>> GetCart(long cartId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -44,7 +43,6 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
     }
 
     [HttpPut("{cartId}/products/{cartItemId}")]
-    [Authorize]
     public async Task<IActionResult> ModifyCartItem(long cartId, long cartItemId, [FromBody] CartItemModificationData modificationData)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -63,7 +61,6 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
     }
 
     [HttpPost("{cartId}/products")]
-    [Authorize]
     public async Task<IActionResult> AddProductToCart(long cartId, [FromBody] AddProductToCartData productData)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -82,7 +79,6 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
     }
 
     [HttpDelete("{cartId}/products/{cartItemId}")]
-    [Authorize]
     public async Task<IActionResult> DeleteProductFromCart(long cartId, long cartItemId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -105,7 +101,6 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
     }
 
     [HttpPost("{cartId}/users")]
-    [Authorize]
     public async Task<IActionResult> AddUserToSharedCart(long cartId, [FromBody] AddUserToCartData data)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

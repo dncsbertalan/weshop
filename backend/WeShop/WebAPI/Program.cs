@@ -1,6 +1,7 @@
 using DataAccess;
 using DataAccess.Models;
 using DataAccess.Repository;
+using Domain.Constants;
 using Domain.Repository;
 using Domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -75,24 +76,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true
     };
-    /*options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            // Ha a kérés SignalR WebSocket, akkor az access token-t innen vegye
-            var accessToken = context.Request.Query["access_token"];
-
-            // Csak ha a SignalR path-on vagyunk
-            var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) &&
-                path.StartsWithSegments("/hubs/shared-cart"))
-            {
-                context.Token = accessToken;
-            }
-
-            return Task.CompletedTask;
-        }
-    };*/
 });
 
 builder.Services.AddAuthorization();
@@ -100,6 +83,47 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Create roles
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User_Data>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles = { RoleConstants.Admin, RoleConstants.User };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // Create default admin if not exists
+    string adminEmail = "dncs@gmail.com";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        adminUser = new User_Data
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FirstName = "Admin",
+            LastName = "User",
+            BirthDate = DateTime.Now
+        };
+
+        var result = await userManager.CreateAsync(adminUser, "Admin123!");
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, RoleConstants.Admin);
+        }
+    }
+
+    if (!await userManager.IsInRoleAsync(adminUser, RoleConstants.Admin))
+    {
+        await userManager.AddToRoleAsync(adminUser, RoleConstants.Admin);
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

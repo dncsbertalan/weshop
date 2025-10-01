@@ -1,6 +1,8 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
 using Domain.Dtos.Api;
+using Domain.Dtos.Api.Request;
+using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,37 @@ namespace DataAccess.Repository;
 
 public class ProductRepository(WebshopDbContext _context) : IProductRepository
 {
+    public async Task<bool> CreateProductAsync(CreateProductDto createProduct)
+    {
+        var newProduct = new Product_Data
+        {
+            Name = createProduct.Name,
+            Description = createProduct.Description,
+            Price = createProduct.Price,
+            AvailableQuantity = createProduct.StockQuantity,
+            //Categories = new List<Category>()
+        };
+
+        _context.Products.Add(newProduct);
+        var result = await _context.SaveChangesAsync();
+
+        return result > 0;
+    }
+
+    public async Task<bool> DeleteProductAsync(long productId)
+    {
+        var product = await _context.Products.FindAsync(productId);
+        if (product == null)
+        {
+            return false;
+        }
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     public async Task<int?> GetAvailableQuantityAsync(long productId)
     {
         var result = await _context.Products.FindAsync(productId);
@@ -17,16 +50,22 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
 
     public async Task<ProductDto?> GetByIdAsync(long id)
     {
-        var result = await _context.Products.FindAsync(id);
+        var result = await _context.Products.Include(product => product.Categories).Where(product => product.Id == id).FirstOrDefaultAsync();
         
         return result is null ? null : ProductMapper.ToDto(result);
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice)
+    public async Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice, string? productName)
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 
         query = query.Where(product => product.Price >= minPrice && product.Price <= maxPrice && product.AvailableQuantity > 0);
+
+        if (!string.IsNullOrWhiteSpace(productName))
+        {
+            var lowered = productName.ToLower();
+            query = query.Where(product => product.Name.ToLower().Contains(lowered));
+        }
 
         // Filtering by categories
         if (!string.IsNullOrEmpty(categoryIds))

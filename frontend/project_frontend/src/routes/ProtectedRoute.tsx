@@ -1,11 +1,23 @@
-import { useAuth } from "@/context/AuthContext";
+import { Role, useAuth } from "@/context/AuthContext";
 import { Navigation } from "@/routes/navigation";
 import { Navigate, Outlet } from "react-router";
 
-const ProtectedRoute = () => {
-    const { isAuthenticated } = useAuth();
+interface ProtectedRouteProps {
+  allowedRoles: Role[];
+  redirectPath?: string;
+}
 
-    return isAuthenticated ? <Outlet /> : <Navigate to={Navigation.login} replace />;
+const ProtectedRoute = ({
+  allowedRoles,
+  redirectPath = Navigation.login,
+}: ProtectedRouteProps) => {
+  const { isAuthenticated, roles } = useAuth();
+
+  if (isAuthenticated && roles.some((role) => allowedRoles.includes(role))) {
+    return <Outlet />;
+  }
+
+  return <Navigate to={redirectPath} replace />;
 };
 
 export default ProtectedRoute;

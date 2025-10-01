@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Domain.Constants;
 using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -24,12 +25,17 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
             Email = registrationData.Email,
             FirstName = registrationData.FirstName,
             LastName = registrationData.LastName,
-            BirthDate = registrationData.BirthDate
+            BirthDate = registrationData.BirthDate,
+            Role = RoleConstants.User,
         };
 
         var result = await _userManager.CreateAsync(user, registrationData.Password);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
+
+        var roleResult = await _userManager.AddToRoleAsync(user, RoleConstants.User);
+
+        if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
         // TODO: New cart for the new user.
         await _cartService.CreateCartAsync(user.Id);
@@ -47,7 +53,9 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
         }
 
         var token = GenerateJwtToken(user);
-        return Ok(token);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return Ok(new { token, roles});
     }
 
     [HttpGet("hello")]
@@ -61,8 +69,9 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.Role, user.Role)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
