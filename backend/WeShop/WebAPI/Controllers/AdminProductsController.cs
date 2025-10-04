@@ -2,6 +2,7 @@
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Models;
 
 namespace WebAPI.Controllers;
 
@@ -10,17 +11,34 @@ namespace WebAPI.Controllers;
 [Route("api/admin/[controller]")]
 public class AdminProductsController(ProductService _productService) : ControllerBase
 {
-    [HttpPost("products")]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto createProductDto)
+    [HttpPost]
+    public async Task<IActionResult> CreateProduct([FromForm] UpsertProductRequestDto upsertProductRequestDto)
     {
-        var createdProduct = await _productService.CreateProductAsync(createProductDto);
+        var upsertProductDto = new UpsertProductDto()
+        {
+            Name = upsertProductRequestDto.Name,
+            Description = upsertProductRequestDto.Description,
+            Price = upsertProductRequestDto.Price,
+            AvailableQuantity = upsertProductRequestDto.AvailableQuantity,
+            CategoryIds = upsertProductRequestDto.CategoryIds,
+        };
+        
+        if (upsertProductRequestDto.Image != null)
+        {
+            using var ms = new MemoryStream();
+            await upsertProductRequestDto.Image.CopyToAsync(ms);
+            upsertProductDto.Image = ms.ToArray();
+            upsertProductDto.ImageMimeType = upsertProductRequestDto.Image.ContentType;
+        }
+        
+        var createdProduct = await _productService.CreateProductAsync(upsertProductDto);
 
         if (!createdProduct) return BadRequest("Could not create product.");
 
         return Ok();
     }
 
-    [HttpPost("products/{productId}")]
+    [HttpPost("{productId:long}")]
     public async Task<IActionResult> DeleteProduct(long productId)
     {
         await _productService.DeleteProductAsync(productId);

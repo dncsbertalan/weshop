@@ -1,5 +1,5 @@
 import { PageContainer } from "@/components/PageContainer";
-import { EditorTab } from "@/features/editor/EditorTab";
+import { EditorTab } from "@/features/product-editor/EditorTab";
 import { Tabs } from "@chakra-ui/react";
 import { AdminPageProductTab } from "./AdminPage.ProductTab";
 

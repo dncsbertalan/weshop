@@ -10,15 +10,21 @@ namespace DataAccess.Repository;
 
 public class ProductRepository(WebshopDbContext _context) : IProductRepository
 {
-    public async Task<bool> CreateProductAsync(CreateProductDto createProduct)
+    public async Task<bool> CreateProductAsync(UpsertProductDto upsertProduct)
     {
+        var categories = await _context.Categories
+            .Where(category => upsertProduct.CategoryIds.Contains(category.Id))
+            .ToListAsync();
+        
         var newProduct = new Product_Data
         {
-            Name = createProduct.Name,
-            Description = createProduct.Description,
-            Price = createProduct.Price,
-            AvailableQuantity = createProduct.StockQuantity,
-            //Categories = new List<Category>()
+            Name = upsertProduct.Name,
+            Description = upsertProduct.Description,
+            Price = upsertProduct.Price,
+            AvailableQuantity = upsertProduct.AvailableQuantity,
+            Image = upsertProduct.Image,
+            ImageMimeType = upsertProduct.ImageMimeType,
+            Categories = categories,
         };
 
         _context.Products.Add(newProduct);
@@ -35,10 +41,12 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
             return false;
         }
 
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
+        product.IsDeleted = true;
+        product.ModifiedAt = DateTime.UtcNow;
+        
+        var result = await _context.SaveChangesAsync();
 
-        return true;
+        return result > 0;
     }
 
     public async Task<int?> GetAvailableQuantityAsync(long productId)
@@ -53,6 +61,11 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         var result = await _context.Products.Include(product => product.Categories).Where(product => product.Id == id).FirstOrDefaultAsync();
         
         return result is null ? null : ProductMapper.ToDto(result);
+    }
+
+    public async Task<bool> UpdateProductAsync(ProductDto product)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice, string? productName)

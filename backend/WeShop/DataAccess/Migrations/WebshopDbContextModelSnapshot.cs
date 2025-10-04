@@ -34,7 +34,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("Category_DataProduct_Data", (string)null);
+                    b.ToTable("Category_DataProduct_Data");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Address_Data", b =>
@@ -61,7 +61,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address", (string)null);
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("DataAccess.Models.CartItem_Data", b =>
@@ -92,7 +92,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CartItem", (string)null);
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
@@ -115,7 +115,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Cart", (string)null);
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Category_Data", b =>
@@ -135,7 +135,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("DataAccess.Models.OrderItem_Data", b =>
@@ -164,7 +164,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>
@@ -197,7 +197,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("DataAccess.Models.PaymentMethod_Data", b =>
@@ -214,7 +214,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod", (string)null);
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Product_Data", b =>
@@ -228,24 +228,43 @@ namespace DataAccess.Migrations
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeType")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "AvailableQuantity" }, "IX_AvailableQuantity");
+                    b.HasIndex(new[] { "AvailableQuantity" }, "IX_Product_AvailableQuantity");
 
-                    b.HasIndex(new[] { "Price" }, "IX_Price");
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_Product_IsDeleted");
 
-                    b.ToTable("Product", (string)null);
+                    b.HasIndex(new[] { "Price" }, "IX_Product_Price");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
@@ -272,7 +291,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CartUserId");
 
-                    b.ToTable("SharedCart", (string)null);
+                    b.ToTable("SharedCart");
                 });
 
             modelBuilder.Entity("DataAccess.Models.User_Data", b =>
