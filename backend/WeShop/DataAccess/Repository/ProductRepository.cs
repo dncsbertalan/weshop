@@ -68,39 +68,38 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         throw new NotImplementedException();
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice, string? productName)
+    public async Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter)
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 
-        query = query.Where(product => product.Price >= minPrice && product.Price <= maxPrice && product.AvailableQuantity > 0);
+        query = query.Where(product => product.Price >= productFilter.MinPrice && product.Price <= productFilter.MaxPrice && product.AvailableQuantity > 0);
 
-        if (!string.IsNullOrWhiteSpace(productName))
+        if (!string.IsNullOrWhiteSpace(productFilter.ProductName))
         {
-            var lowered = productName.ToLower();
+            var lowered = productFilter.ProductName.ToLower();
             query = query.Where(product => product.Name.ToLower().Contains(lowered));
         }
 
         // Filtering by categories
-        if (!string.IsNullOrEmpty(categoryIds))
+        if (productFilter.CategoryIds.Count != 0)
         {
-            var categoryIdList = categoryIds.Split(',').Select(long.Parse).ToList();
-            query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
+            query = query.Where(product => product.Categories.Any(category => productFilter.CategoryIds.Contains(category.Id)));
         }
 
         var totalItems = await query.CountAsync();
         if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
 
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        var totalPages = (int)Math.Ceiling(totalItems / (double)productFilter.PageSize);
 
-        if (page > totalPages) return null;
+        if (productFilter.Page > totalPages) return null;
 
         var products = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((productFilter.Page - 1) * productFilter.PageSize)
+            .Take(productFilter.PageSize)
             .ToListAsync();
 
         var productDtos = products.Select(ProductMapper.ToDto).ToList();
 
-        return new PagedResult<ProductDto>(productDtos, totalItems, totalPages, page);
+        return new PagedResult<ProductDto>(productDtos, totalItems, totalPages, productFilter.Page);
     }
 }

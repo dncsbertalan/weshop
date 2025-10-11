@@ -11,7 +11,7 @@ public interface IProductRepository
     
     Task<int?> GetAvailableQuantityAsync(long productId);
     
-    Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice, string? productName);
+    Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter);
     
     Task<ProductDto?> GetByIdAsync(long id);
     
