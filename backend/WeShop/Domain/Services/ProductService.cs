@@ -18,14 +18,14 @@ public class ProductService(IProductRepository _productRepository)
         return await _productRepository.GetByIdAsync(id);
     }
 
-    public async Task<bool> CreateProductAsync(UpsertProductDto upsertProductDto)
+    public async Task<bool> CreateProductAsync(CreateProductDto createProductDto)
     {
-        if (string.IsNullOrWhiteSpace(upsertProductDto.Name) || upsertProductDto.Price < 0 || upsertProductDto.AvailableQuantity < 0)
+        if (string.IsNullOrWhiteSpace(createProductDto.Name) || createProductDto.Price < 0 || createProductDto.AvailableQuantity < 0)
         {
             return false;
         }
 
-        return await _productRepository.CreateProductAsync(upsertProductDto);
+        return await _productRepository.CreateProductAsync(createProductDto);
     }
 
     public async Task<bool> DeleteProductAsync(long productId)

@@ -5,7 +5,7 @@ namespace Domain.Repository;
 
 public interface IProductRepository
 {
-    Task<bool> CreateProductAsync(UpsertProductDto upsertProduct);
+    Task<bool> CreateProductAsync(CreateProductDto createProduct);
     
     Task<bool> DeleteProductAsync(long productId);
     

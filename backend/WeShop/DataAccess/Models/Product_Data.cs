@@ -19,7 +19,7 @@ public class Product_Data
     public string Name { get; set; } = string.Empty;
     
     [Column(TypeName = "nvarchar(max)")]
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
 
     [Required]
     public double Price { get; set; }

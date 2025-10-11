@@ -10,20 +10,20 @@ namespace DataAccess.Repository;
 
 public class ProductRepository(WebshopDbContext _context) : IProductRepository
 {
-    public async Task<bool> CreateProductAsync(UpsertProductDto upsertProduct)
+    public async Task<bool> CreateProductAsync(CreateProductDto createProduct)
     {
         var categories = await _context.Categories
-            .Where(category => upsertProduct.CategoryIds.Contains(category.Id))
+            .Where(category => createProduct.CategoryIds.Contains(category.Id))
             .ToListAsync();
         
         var newProduct = new Product_Data
         {
-            Name = upsertProduct.Name,
-            Description = upsertProduct.Description,
-            Price = upsertProduct.Price,
-            AvailableQuantity = upsertProduct.AvailableQuantity,
-            Image = upsertProduct.Image,
-            ImageMimeType = upsertProduct.ImageMimeType,
+            Name = createProduct.Name,
+            Description = createProduct.Description,
+            Price = createProduct.Price,
+            AvailableQuantity = createProduct.AvailableQuantity,
+            Image = createProduct.Image,
+            ImageMimeType = createProduct.ImageMimeType,
             Categories = categories,
         };
 
