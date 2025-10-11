@@ -85,13 +85,7 @@ export function CreateProductDialogBody() {
 
       <CreateProductDialogCategorySelector />
 
-      <Field.Root invalid={!!errors.image}>
-        <Field.Label>Product image</Field.Label>
-
-        <UploadProductImage />
-
-        <Field.ErrorText>{errors.image?.message}</Field.ErrorText>
-      </Field.Root>
+      <UploadProductImage />
     </Stack>
   );
 }
