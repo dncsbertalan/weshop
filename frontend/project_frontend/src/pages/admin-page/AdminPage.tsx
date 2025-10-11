@@ -14,12 +14,10 @@ export function AdminPage() {
       >
         <Tabs.List>
           <Tabs.Trigger value={EditorTab.Product}>Products</Tabs.Trigger>
-          <Tabs.Trigger value={EditorTab.Category}>Category</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value={EditorTab.Product}>
           <AdminPageProductTab />
         </Tabs.Content>
-        <Tabs.Content value={EditorTab.Category}>product</Tabs.Content>
       </Tabs.Root>
     </PageContainer>
   );
