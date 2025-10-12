@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Api;
+﻿namespace Domain.Dtos.Api.Response;
 
 public class UserDto
 {
@@ -7,5 +7,6 @@ public class UserDto
     public string Email { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
     public long CartId { get; set; }
-    public List<CartInfoDto> Carts { get; set; } = [];
+    public List<CartInformationDto> Carts { get; set; } = [];
+    public required List<string> Roles { get; set; }
 }

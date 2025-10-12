@@ -26,7 +26,6 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
             FirstName = registrationData.FirstName,
             LastName = registrationData.LastName,
             BirthDate = registrationData.BirthDate,
-            Role = RoleConstants.User,
         };
 
         var result = await _userManager.CreateAsync(user, registrationData.Password);
@@ -52,7 +51,7 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
             return Unauthorized();
         }
 
-        var token = GenerateJwtToken(user);
+        var token = await GenerateJwtToken(user);
         var roles = await _userManager.GetRolesAsync(user);
 
         return Ok(new { token, roles});
@@ -65,14 +64,17 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
         return Ok(new { message = "Hi" });
     }
 
-    private string GenerateJwtToken(User_Data user)
+    private async Task<string> GenerateJwtToken(User_Data user)
     {
         var claims = new List<Claim>
         {
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Role, user.Role)
         };
+        
+        var roles = await _userManager.GetRolesAsync(user);
+
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
 

@@ -1,12 +1,14 @@
 ﻿using DataAccess.Mappers;
-using Domain.Dtos.Api;
+using DataAccess.Models;
+using Domain.Dtos.Api.Response;
 using Domain.Dtos.Data;
 using Domain.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository;
 
-public class UserRepository(WebshopDbContext _context) : IUserRepository
+public class UserRepository(WebshopDbContext _context, UserManager<User_Data> _userManager) : IUserRepository
 {
     public async Task<SimpleUserDto?> GetSimpleUserByIdAsync(string userId)
     {
@@ -29,7 +31,6 @@ public class UserRepository(WebshopDbContext _context) : IUserRepository
 
     public async Task<UserDto?> GetUserByIdAsync(string userId)
     {
-        //var user = await _context.Users.FindAsync(userId);
         var user = await _context.Users
             .Include(user => user.Cart)
             .Include(user => user.SharedCarts)
@@ -37,6 +38,13 @@ public class UserRepository(WebshopDbContext _context) : IUserRepository
                 .ThenInclude(cart => cart.User)
             .FirstOrDefaultAsync(user => user.Id == userId);
 
-        return user is null ? null : UserMapper.MapToUserDto(user);
+        if (user is null)
+        {
+            return null;
+        }
+        
+        var roles = await _userManager.GetRolesAsync(user);
+        
+        return UserMapper.MapToUserDto(user, roles.ToList());
     }
 }

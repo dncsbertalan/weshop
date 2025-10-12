@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response;
 using Domain.Dtos.Data;
 using Riok.Mapperly.Abstractions;
 
@@ -22,9 +23,10 @@ public static partial class CartMapper
         Participants = [.. data.Participants.Select(user => user.CartUserId)],
     };
 
-    public static CartInfoDto MapToCartInfoDto(SharedCart_Data data) => new()
+    public static CartInformationDto MapToCartInfoDto(SharedCart_Data data) => new()
     {
         CartId = data.CartId,
+        OwnerEmail = data.Cart.User.Email,
         OwnerFirstName = data.Cart.User.FirstName,
         OwnerLastName = data.Cart.User.LastName,
     };

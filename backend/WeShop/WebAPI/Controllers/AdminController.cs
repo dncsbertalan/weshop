@@ -7,7 +7,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers;
 
-//[Authorize(Roles = RoleConstants.Admin)]
+[Authorize(Roles = RoleConstants.Admin)]
 [ApiController]
 [Route("api/[controller]/products")]
 public class AdminController(ProductService _productService) : ControllerBase

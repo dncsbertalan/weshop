@@ -53,7 +53,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     {
         var result = await _context.Products.FindAsync(productId);
 
-        return result is null ? null : result.AvailableQuantity;
+        return result?.AvailableQuantity;
     }
 
     public async Task<ProductDto?> GetByIdAsync(long id)
