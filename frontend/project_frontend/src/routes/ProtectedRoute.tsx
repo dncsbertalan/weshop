@@ -1,4 +1,5 @@
-import { Role, useAuth } from "@/context/AuthContext";
+import { Role } from "@/context/authContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Navigation } from "@/routes/navigation";
 import { Navigate, Outlet } from "react-router";
 
@@ -7,13 +8,10 @@ interface ProtectedRouteProps {
   redirectPath?: string;
 }
 
-const ProtectedRoute = ({
-  allowedRoles,
-  redirectPath = Navigation.login,
-}: ProtectedRouteProps) => {
-  const { isAuthenticated, roles } = useAuth();
+const ProtectedRoute = ({ allowedRoles, redirectPath = Navigation.login }: ProtectedRouteProps) => {
+  const { isAuthenticated, user } = useAuthentication();
 
-  if (isAuthenticated && roles.some((role) => allowedRoles.includes(role))) {
+  if (isAuthenticated && user?.roles.some((role) => allowedRoles.includes(role as Role))) {
     return <Outlet />;
   }
 

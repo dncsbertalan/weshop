@@ -42,6 +42,18 @@ public class UserRepository(WebshopDbContext _context, UserManager<User_Data> _u
         {
             return null;
         }
+
+        // TODO: Remove this after cart handling
+        if (user.Cart is null)
+        {
+            var cart = new Cart_Data
+            {
+                UserId = userId,
+            };
+
+            _context.Carts.Add(cart);
+            await _context.SaveChangesAsync();
+        }
         
         var roles = await _userManager.GetRolesAsync(user);
         

@@ -1,5 +1,6 @@
 ﻿using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Product;
 
 namespace Domain.Repository;
 
@@ -12,6 +13,8 @@ public interface IProductRepository
     Task<int?> GetAvailableQuantityAsync(long productId);
     
     Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter);
+    
+    Task<ProductImageResponse?> GetProductImageAsync(long productId);
     
     Task<ProductDto?> GetByIdAsync(long id);
     

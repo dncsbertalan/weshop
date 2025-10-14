@@ -2,6 +2,7 @@
 using DataAccess.Models;
 using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Product;
 using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,21 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         return result?.AvailableQuantity;
     }
 
+    public async Task<ProductImageResponse?> GetProductImageAsync(long productId)
+    {
+        var result = await _context.Products.FindAsync(productId);
+
+        if (result?.Image == null || result.ImageMimeType == null)
+        {
+            return null;
+        }
+        
+        return new ProductImageResponse
+        {
+            Image = result.Image, ImageMimeType = result.ImageMimeType
+        };
+    }
+
     public async Task<ProductDto?> GetByIdAsync(long id)
     {
         var result = await _context.Products.Include(product => product.Categories).Where(product => product.Id == id).FirstOrDefaultAsync();
@@ -72,7 +88,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 
-        query = query.Where(product => product.Price >= productFilter.MinPrice && product.Price <= productFilter.MaxPrice && product.AvailableQuantity > 0);
+        query = query.Where(product => product.Price >= productFilter.Min && product.Price <= productFilter.Max && product.AvailableQuantity > 0);
 
         if (!string.IsNullOrWhiteSpace(productFilter.ProductName))
         {
@@ -81,9 +97,9 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         }
 
         // Filtering by categories
-        if (productFilter.CategoryIds.Count != 0)
+        if (productFilter.Filters.Count != 0)
         {
-            query = query.Where(product => product.Categories.Any(category => productFilter.CategoryIds.Contains(category.Id)));
+            query = query.Where(product => product.Categories.Any(category => productFilter.Filters.Contains(category.Id)));
         }
 
         var totalItems = await query.CountAsync();

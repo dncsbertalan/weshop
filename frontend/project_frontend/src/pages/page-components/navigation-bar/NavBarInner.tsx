@@ -1,17 +1,9 @@
-import { Role, useAuth } from "@/context/AuthContext";
+import { Role, useAuth } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Navigation } from "@/routes/navigation";
-import {
-  Badge,
-  Flex,
-  Float,
-  Heading,
-  HStack,
-  IconButton,
-  Spacer,
-  Span,
-} from "@chakra-ui/react";
-import { PropsWithChildren } from "react";
+import { Badge, Flex, Float, Heading, HStack, IconButton, Spacer, Span } from "@chakra-ui/react";
+import { PropsWithChildren, useMemo } from "react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
@@ -50,8 +42,8 @@ export function NavBarInner({ children }: PropsWithChildren) {
 }
 
 export function AdminButton() {
-  const { isAuthenticated, roles } = useAuth();
-  const isAdmin = roles.find((role) => role === Role.Admin) !== undefined;
+  const { isAuthenticated, user } = useAuthentication();
+  const isAdmin = useMemo(() => user?.roles.find((role) => role === Role.Admin) !== undefined, [user?.roles]);
 
   if (!isAuthenticated || !isAdmin) {
     return null;
@@ -80,7 +72,7 @@ export function AdminButton() {
 }
 
 export function NavLoginButton() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthentication();
   if (isAuthenticated) {
     return null;
   }
@@ -144,7 +136,7 @@ export function NavLogoutButton() {
 }
 
 export function NavProfilButton() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthentication();
   if (isAuthenticated) {
     return (
       <Link to={Navigation.profile}>
@@ -173,7 +165,7 @@ export function NavProfilButton() {
 }
 
 export function NavCartButton() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthentication();
   const { cart } = useCart();
 
   if (isAuthenticated) {

@@ -14,19 +14,12 @@ export function CreatePorductDialog() {
   const { mutateAsync, isPending } = useCreateProduct();
 
   const onSubmit = async (data: CreateProductRequestDto) => {
-    console.log("fasza", data);
-    mutateAsync(data).then(() =>
-      queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] })
-    );
+    mutateAsync(data).then(() => queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] }));
   };
 
   return (
     <FormProvider {...createProductForm}>
-      <Dialog.Root
-        closeOnInteractOutside={false}
-        placement="center"
-        motionPreset="slide-in-bottom"
-      >
+      <Dialog.Root closeOnInteractOutside={false} placement="center" motionPreset="slide-in-bottom">
         <Dialog.Trigger asChild>
           <Button variant="outline">Add new product</Button>
         </Dialog.Trigger>
@@ -48,12 +41,7 @@ export function CreatePorductDialog() {
                     Cancel
                   </Button>
                 </Dialog.ActionTrigger>
-                <Button
-                  type="submit"
-                  rounded="full"
-                  onClick={handleSubmit(onSubmit)}
-                  loading={isPending}
-                >
+                <Button type="submit" rounded="full" onClick={handleSubmit(onSubmit)} loading={isPending}>
                   Create product
                 </Button>
               </Dialog.Footer>

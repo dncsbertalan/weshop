@@ -22,10 +22,17 @@ public class ProductsController(ProductService _productService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:long}")]
     public async Task<ActionResult<ProductDto>> Get(long id)
     {
         var product = await _productService.GetByIdAsync(id);
         return product is not null ? Ok(product): NotFound();
+    }
+    
+    [HttpGet("{id:long}/image")]
+    public async Task<ActionResult<ProductDto>> GetProductImage(long id)
+    {
+        var productImageResponse = await _productService.GetProductImage(id);
+        return productImageResponse is not null ? Ok(File(productImageResponse.Image, productImageResponse.ImageMimeType)): NotFound();
     }
 }

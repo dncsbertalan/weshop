@@ -39,7 +39,7 @@ public class AdminController(ProductService _productService) : ControllerBase
         return Ok();
     }
 
-    [HttpPost("{productId:long}")]
+    [HttpDelete("{productId:long}")]
     public async Task<IActionResult> DeleteProduct(long productId)
     {
         await _productService.DeleteProductAsync(productId);

@@ -1,5 +1,6 @@
 ﻿using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Product;
 using Domain.Repository;
 
 namespace Domain.Services;
@@ -26,6 +27,11 @@ public class ProductService(IProductRepository _productRepository)
         }
 
         return await _productRepository.CreateProductAsync(createProductDto);
+    }
+
+    public async Task<ProductImageResponse?> GetProductImage(long productId)
+    {
+        return await _productRepository.GetProductImageAsync(productId);
     }
 
     public async Task<bool> DeleteProductAsync(long productId)

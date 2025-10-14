@@ -1,7 +1,7 @@
 import { Center, Flex, Grid, GridItem, Spacer } from "@chakra-ui/react";
 import { Footer } from "../page-components/footer/Footer";
 import { FiltersSection } from "./filter-section/FiltersSection";
-import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller"
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { ProductSection } from "./ProductsSection";
 import { ScrollToTopButton } from "@/components/button/ScrollToTopButton";
@@ -9,46 +9,45 @@ import { FilterFullScreen } from "./filter-section/FilterFullScreen";
 import { Toaster } from "@/components/ui/toaster";
 
 export function MainPage() {
+  return (
+    <Flex direction="column" minHeight="100vh">
+      <GlobalNavBar />
+      <NavBarFiller />
 
-    return (
-        <Flex
-            direction="column"
-            minHeight="100vh"
+      <Toaster />
+
+      <Center
+        //backgroundImage="linear-gradient(45deg, #845ec2, #d65db1, #ff6f91, #ff9671, #ffc75f, #f9f861)"
+        //backgroundImage="linear-gradient( #BDD5AF, #ffffff, #BDD5AF)"
+        backgroundImage="linear-gradient(135deg, #f4fff6 0%, #e2f5e7 40%, #cfe9d8 100%)"
+        //backgroundColor={{base: "red", sm: "blue", md: "purple", lg: "pink", xl: "bg-color"}}
+        animation="bg-animation"
+        backgroundSize="400%"
+        bgAttachment="fixed"
+        flexDirection="column"
+      >
+        <ScrollToTopButton />
+        <Grid
+          templateColumns={{ base: "1fr", md: "220px 1fr", lg: "220px 1fr", xl: "250px 1fr" }}
+          //bgColor="red.300"
+          width="100%"
+          maxWidth="global-max-window-size"
+          padding="20px 20px"
+          gap={{ md: "15px", lg: "10px", xl: "20px" }}
         >
-            <GlobalNavBar />
-            <NavBarFiller />
+          <GridItem colSpan={1} marginX="auto" width="fit-content">
+            <FilterFullScreen />
+            <FiltersSection />
+          </GridItem>
+          <GridItem colSpan={1} marginX="auto" width="fit-content">
+            <ProductSection />
+          </GridItem>
+        </Grid>
+      </Center>
 
-            <Toaster />
+      <Spacer />
 
-            <Center
-                //backgroundImage="linear-gradient(45deg, #845ec2, #d65db1, #ff6f91, #ff9671, #ffc75f, #f9f861)" 
-                //backgroundImage="linear-gradient( #BDD5AF, #ffffff, #BDD5AF)" 
-                //backgroundImage="linear-gradient(135deg, #f4fff6 0%, #e2f5e7 40%, #cfe9d8 100%)" 
-                //backgroundColor={{base: "red", sm: "blue", md: "purple", lg: "pink", xl: "bg-color"}} 
-                animation="bg-animation"
-                backgroundSize="400%"
-                bgAttachment="fixed"
-                flexDirection="column"
-            >
-                <ScrollToTopButton />
-                <Grid templateColumns={{ base: "1fr", md: "220px 1fr", lg: "220px 1fr", xl: "250px 1fr" }}
-                    //bgColor="red.300"
-                    width="100%" maxWidth="global-max-window-size" padding="20px 20px" 
-                    gap={{md: "15px", lg: "10px", xl: "20px"}}
-                >
-                    <GridItem colSpan={1} marginX="auto" width="fit-content">
-                        <FilterFullScreen />
-                        <FiltersSection />
-                    </GridItem>
-                    <GridItem colSpan={1} marginX="auto" width="fit-content">
-                        <ProductSection />
-                    </GridItem>
-                </Grid>
-            </Center>
-
-            <Spacer />
-
-            <Footer />
-        </Flex>
-    );
+      <Footer />
+    </Flex>
+  );
 }
