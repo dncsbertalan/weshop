@@ -28,7 +28,7 @@ export function ProductMaxPriceFilter() {
             ref={inputRef}
             value={filters.max}
             onChange={(event) => {
-              setFilters({ ...filters, max: Number(event.currentTarget.value) });
+              setFilters({ ...filters, page: 1, max: Number(event.currentTarget.value) });
             }}
           />
         </InputGroup>

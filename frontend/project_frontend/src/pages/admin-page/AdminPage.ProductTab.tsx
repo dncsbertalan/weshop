@@ -62,27 +62,27 @@ export function AdminPageProductTab() {
           </Table.Root>
         </Table.ScrollArea>
 
-        <Pagination.Root count={products?.totalItems} pageSize={filters.pageSize} page={products?.currentsPages}>
+        <Pagination.Root
+          count={products?.totalItems}
+          pageSize={filters.pageSize}
+          page={products?.currentsPages}
+          onPageChange={(details) => {
+            setFilters({ ...filters, page: details.page });
+          }}
+        >
           <ButtonGroup variant="ghost" size="sm" wrap="wrap">
             <Pagination.PrevTrigger asChild>
-              <IconButton onClick={() => setFilters({ ...filters, page: filters.page - 1 })}>
+              <IconButton>
                 <LuChevronLeft />
               </IconButton>
             </Pagination.PrevTrigger>
 
             <Pagination.Items
-              render={(page) => (
-                <IconButton
-                  variant={{ base: "ghost", _selected: "outline" }}
-                  onClick={() => setFilters({ ...filters, page: page.value })}
-                >
-                  {page.value}
-                </IconButton>
-              )}
+              render={(page) => <IconButton variant={{ base: "ghost", _selected: "outline" }}>{page.value}</IconButton>}
             />
 
             <Pagination.NextTrigger asChild>
-              <IconButton onClick={() => setFilters({ ...filters, page: filters.page + 1 })}>
+              <IconButton>
                 <LuChevronRight />
               </IconButton>
             </Pagination.NextTrigger>

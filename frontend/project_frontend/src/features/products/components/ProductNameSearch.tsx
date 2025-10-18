@@ -17,7 +17,7 @@ export function ProductNameSearch({ label }: ProductNameSearchProps) {
 
   useEffect(() => {
     if (debouncedFilterName !== undefined && debouncedFilterName !== filters.productName) {
-      setFilters({ ...filters, productName: debouncedFilterName });
+      setFilters({ ...filters, page: 1, productName: debouncedFilterName });
     }
   }, [debouncedFilterName, filters, setFilters]);
 

@@ -19,10 +19,10 @@ export function ProductCategorySelect() {
   );
 
   useEffect(() => {
-    const values = value.map(Number).sort();
+    const values = value.join(",");
 
-    if (JSON.stringify(filters.filters) !== JSON.stringify(values)) {
-      setFilters((prev) => ({ ...prev, filters: values }));
+    if (filters.filters !== values) {
+      setFilters((prev) => ({ ...prev, page: 1, filters: values }));
     }
   }, [filters, setFilters, value]);
 

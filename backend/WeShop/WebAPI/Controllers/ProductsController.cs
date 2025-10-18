@@ -30,9 +30,10 @@ public class ProductsController(ProductService _productService) : ControllerBase
     }
     
     [HttpGet("{id:long}/image")]
-    public async Task<ActionResult<ProductDto>> GetProductImage(long id)
+    public async Task<ActionResult?> GetProductImage(long id)
     {
         var productImageResponse = await _productService.GetProductImage(id);
-        return productImageResponse is not null ? Ok(File(productImageResponse.Image, productImageResponse.ImageMimeType)): NotFound();
+        
+        return productImageResponse is not null ? File(productImageResponse.Image, productImageResponse.ImageMimeType) : Ok(null);
     }
 }

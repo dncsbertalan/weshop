@@ -8,9 +8,10 @@ interface ProductDeleteButtonProps {
 export function ProductDeleteButton({ productId }: ProductDeleteButtonProps) {
   const { mutateAsync } = useDeleteProduct();
 
-  const handleDelete = () => {
+  const handleDelete = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
     mutateAsync(productId);
   };
 
-  return <DeleteButton onClick={handleDelete} />;
+  return <DeleteButton onClick={(event) => handleDelete(event)} />;
 }

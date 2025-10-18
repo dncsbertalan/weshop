@@ -5,36 +5,32 @@ import { ProductFilterKeys } from "../ProductFilterKeys";
 
 export function useGetProductFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useState<ProductFilter>(() => {
-    return {
-      page: Number(searchParams.get(ProductFilterKeys.page)) || ProductFilterDefaults.page,
-      pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
-      min: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
-      max: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
-      filters: searchParams.get(ProductFilterKeys.categories)?.split(",").map(Number) || [],
-      productName: searchParams.get(ProductFilterKeys.productName),
-    };
+  const [filters, setFilters] = useState<ProductFilter>({
+    page: Number(searchParams.get(ProductFilterKeys.page)) || ProductFilterDefaults.page,
+    pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
+    min: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
+    max: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
+    filters: searchParams.get(ProductFilterKeys.categories),
+    productName: searchParams.get(ProductFilterKeys.productName) || "",
   });
 
   useEffect(() => {
-    const params: Record<string, string> = {};
-    if (filters.page) {
-      params.page = filters.page.toString();
-    }
-    if (filters.pageSize) {
-      params.pageSize = filters.pageSize.toString();
-    }
+    const params = new URLSearchParams();
+
+    params.set(ProductFilterKeys.page, filters.page.toString());
+    params.set(ProductFilterKeys.pageSize, filters.pageSize.toString());
+
     if (filters.min) {
-      params.min = filters.min.toString();
+      params.set(ProductFilterKeys.minPrice, filters.min.toString());
     }
     if (filters.max) {
-      params.max = filters.max.toString();
+      params.set(ProductFilterKeys.maxPrice, filters.max.toString());
+    }
+    if (filters.productName !== null && filters.productName !== "") {
+      params.set(ProductFilterKeys.productName, filters.productName);
     }
     if (filters.filters) {
-      params.filters = filters.filters.join(",");
-    }
-    if (filters.productName) {
-      params.productName = filters.productName;
+      params.append(ProductFilterKeys.categories, filters.filters);
     }
 
     setSearchParams(params);
@@ -46,8 +42,8 @@ export function useGetProductFilters() {
       pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
       min: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
       max: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
-      filters: searchParams.get(ProductFilterKeys.categories)?.split(",").map(Number) || [],
-      productName: searchParams.get(ProductFilterKeys.productName),
+      filters: searchParams.get(ProductFilterKeys.categories),
+      productName: searchParams.get(ProductFilterKeys.productName) || "",
     });
   }, [searchParams]);
 

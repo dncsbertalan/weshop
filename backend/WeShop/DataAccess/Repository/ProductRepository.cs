@@ -97,9 +97,10 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         }
 
         // Filtering by categories
-        if (productFilter.Filters.Count != 0)
+        if (!string.IsNullOrEmpty(productFilter.Filters))
         {
-            query = query.Where(product => product.Categories.Any(category => productFilter.Filters.Contains(category.Id)));
+            var categoryIdList = productFilter.Filters.Split(',').Select(long.Parse).ToList();
+            query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
         }
 
         var totalItems = await query.CountAsync();

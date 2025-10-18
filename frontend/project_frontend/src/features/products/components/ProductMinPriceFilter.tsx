@@ -28,7 +28,7 @@ export function ProductMinPriceFilter() {
             ref={inputRef}
             value={filters.min}
             onChange={(event) => {
-              setFilters({ ...filters, min: Number(event.currentTarget.value) });
+              setFilters({ ...filters, page: 1, min: Number(event.currentTarget.value) });
             }}
           />
         </InputGroup>

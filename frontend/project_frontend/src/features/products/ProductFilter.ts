@@ -1,7 +1,7 @@
 export interface ProductFilter {
   page: number;
   pageSize: number;
-  filters?: number[];
+  filters: string | null;
   min?: number;
   max?: number;
   productName: string | null;
