@@ -2,6 +2,7 @@
 using DataAccess.Models;
 using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Product;
 using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +11,20 @@ namespace DataAccess.Repository;
 
 public class ProductRepository(WebshopDbContext _context) : IProductRepository
 {
-    public async Task<bool> CreateProductAsync(UpsertProductDto upsertProduct)
+    public async Task<bool> CreateProductAsync(CreateProductDto createProduct)
     {
         var categories = await _context.Categories
-            .Where(category => upsertProduct.CategoryIds.Contains(category.Id))
+            .Where(category => createProduct.CategoryIds.Contains(category.Id))
             .ToListAsync();
         
         var newProduct = new Product_Data
         {
-            Name = upsertProduct.Name,
-            Description = upsertProduct.Description,
-            Price = upsertProduct.Price,
-            AvailableQuantity = upsertProduct.AvailableQuantity,
-            Image = upsertProduct.Image,
-            ImageMimeType = upsertProduct.ImageMimeType,
+            Name = createProduct.Name,
+            Description = createProduct.Description,
+            Price = createProduct.Price,
+            AvailableQuantity = createProduct.AvailableQuantity,
+            Image = createProduct.Image,
+            ImageMimeType = createProduct.ImageMimeType,
             Categories = categories,
         };
 
@@ -53,7 +54,22 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     {
         var result = await _context.Products.FindAsync(productId);
 
-        return result is null ? null : result.AvailableQuantity;
+        return result?.AvailableQuantity;
+    }
+
+    public async Task<ProductImageResponse?> GetProductImageAsync(long productId)
+    {
+        var result = await _context.Products.FindAsync(productId);
+
+        if (result?.Image == null || result.ImageMimeType == null)
+        {
+            return null;
+        }
+        
+        return new ProductImageResponse
+        {
+            Image = result.Image, ImageMimeType = result.ImageMimeType
+        };
     }
 
     public async Task<ProductDto?> GetByIdAsync(long id)
@@ -68,39 +84,39 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         throw new NotImplementedException();
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProductsAsync(int page, int pageSize, string? categoryIds, double minPrice, double maxPrice, string? productName)
+    public async Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter)
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 
-        query = query.Where(product => product.Price >= minPrice && product.Price <= maxPrice && product.AvailableQuantity > 0);
+        query = query.Where(product => product.Price >= productFilter.Min && product.Price <= productFilter.Max && product.AvailableQuantity > 0 && !product.IsDeleted);
 
-        if (!string.IsNullOrWhiteSpace(productName))
+        if (!string.IsNullOrWhiteSpace(productFilter.ProductName))
         {
-            var lowered = productName.ToLower();
+            var lowered = productFilter.ProductName.ToLower();
             query = query.Where(product => product.Name.ToLower().Contains(lowered));
         }
 
         // Filtering by categories
-        if (!string.IsNullOrEmpty(categoryIds))
+        if (!string.IsNullOrEmpty(productFilter.Filters))
         {
-            var categoryIdList = categoryIds.Split(',').Select(long.Parse).ToList();
+            var categoryIdList = productFilter.Filters.Split(',').Select(long.Parse).ToList();
             query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
         }
 
         var totalItems = await query.CountAsync();
         if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
 
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        var totalPages = (int)Math.Ceiling(totalItems / (double)productFilter.PageSize);
 
-        if (page > totalPages) return null;
+        if (productFilter.Page > totalPages) return null;
 
         var products = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((productFilter.Page - 1) * productFilter.PageSize)
+            .Take(productFilter.PageSize)
             .ToListAsync();
 
         var productDtos = products.Select(ProductMapper.ToDto).ToList();
 
-        return new PagedResult<ProductDto>(productDtos, totalItems, totalPages, page);
+        return new PagedResult<ProductDto>(productDtos, totalItems, totalPages, productFilter.Page);
     }
 }

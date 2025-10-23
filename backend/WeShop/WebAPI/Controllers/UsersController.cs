@@ -3,6 +3,7 @@ using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Domain.Dtos.Api.Response;
 
 namespace WebAPI.Controllers;
 

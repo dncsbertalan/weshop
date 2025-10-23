@@ -1,6 +1,7 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
 using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response;
 using Domain.Dtos.Data;
 using Domain.Models;
 using Domain.Repository;
@@ -98,13 +99,14 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
-    public async Task<List<CartInfoDto>> GetUserCartInfoAsync(string userId)
+    public async Task<List<CartInformationDto>> GetUserCartInformationAsync(string userId)
     {
         return await _context.SharedCarts
             .Where(sharedCart => sharedCart.CartUserId == userId)
-            .Select(sharedCart => new CartInfoDto
+            .Select(sharedCart => new CartInformationDto
             {
                 CartId = sharedCart.CartId,
+                OwnerEmail = sharedCart.CartUser.Email,
                 OwnerFirstName = sharedCart.CartUser.FirstName,
                 OwnerLastName = sharedCart.CartUser.LastName,
             })

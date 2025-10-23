@@ -7,5 +7,6 @@ public class ProductDto
     public string Description { get; set; } = string.Empty;
     public double Price { get; set; }
     public int AvailableQuantity { get; set; }
+    public bool IsDeleted { get; set; }
     public List<CategoryDto> Categories { get; set; } = [];
 }

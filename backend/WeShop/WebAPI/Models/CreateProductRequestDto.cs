@@ -1,9 +1,9 @@
 namespace WebAPI.Models;
 
-public class UpsertProductRequestDto
+public class CreateProductRequestDto
 {
     public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
     public double Price { get; set; }
     public int AvailableQuantity { get; set; }
     public IFormFile? Image { get; set; }

@@ -4,4 +4,5 @@ export enum ProductFilterKeys {
   categories = "filters",
   minPrice = "min",
   maxPrice = "max",
+  productName = "productName",
 }

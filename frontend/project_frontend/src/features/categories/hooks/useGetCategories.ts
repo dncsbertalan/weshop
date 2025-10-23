@@ -6,6 +6,5 @@ export function useGetCategories() {
   return useQuery({
     queryKey: [CategoryKeys.Categories],
     queryFn: getCategories,
-    staleTime: Infinity,
   });
 }

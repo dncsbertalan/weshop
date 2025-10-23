@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Domain.Dtos.Api.Response;
 
 namespace WebAPI.Controllers;
 
@@ -26,7 +27,6 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
             FirstName = registrationData.FirstName,
             LastName = registrationData.LastName,
             BirthDate = registrationData.BirthDate,
-            Role = RoleConstants.User,
         };
 
         var result = await _userManager.CreateAsync(user, registrationData.Password);
@@ -44,18 +44,20 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login([FromBody] LoginData loginData)
+    public async Task<ActionResult<string>> Login([FromBody] LoginRequestDto loginRequestDto)
     {
-        var user = await _userManager.FindByEmailAsync(loginData.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, loginData.Password))
+        var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
+        if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
         {
             return Unauthorized();
         }
 
-        var token = GenerateJwtToken(user);
-        var roles = await _userManager.GetRolesAsync(user);
+        var token = await GenerateJwtToken(user);
 
-        return Ok(new { token, roles});
+        return Ok(new LoginResponseDto
+        {
+            Token = token
+        });
     }
 
     [HttpGet("hello")]
@@ -65,14 +67,17 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
         return Ok(new { message = "Hi" });
     }
 
-    private string GenerateJwtToken(User_Data user)
+    private async Task<string> GenerateJwtToken(User_Data user)
     {
         var claims = new List<Claim>
         {
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Role, user.Role)
         };
+        
+        var roles = await _userManager.GetRolesAsync(user);
+
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
 

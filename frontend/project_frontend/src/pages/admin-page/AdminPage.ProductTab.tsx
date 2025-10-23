@@ -1,36 +1,27 @@
 import { useGetProducts } from "@/features/products/hooks/useGetProducts";
-import { useProductFilters } from "@/features/products/hooks/useProductFilters";
 import { formatCurrencyFt } from "@/utils/currency";
-import {
-  ButtonGroup,
-  IconButton,
-  Pagination,
-  Stack,
-  Table,
-} from "@chakra-ui/react";
+import { ButtonGroup, IconButton, Pagination, Stack, Table, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { AdminPageProductEditor } from "./AdminPage.ProductEditor";
+import { useProductFilters } from "@/features/products/hooks/useProductFilters";
+import { AdminPageProductFilters } from "./AdminPage.ProductFilters";
+import { ProductDeleteButton } from "@/features/products/components/ProductDeleteButton";
 
 export function AdminPageProductTab() {
-  const { filters, setFilters } = useProductFilters();
+  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
   const { data: products } = useGetProducts({
     productFilter: { ...filters },
   });
 
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null
-  );
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
   return (
     <Stack direction="row" gap={5} marginBottom={5}>
       <Stack flex={1} width="full" alignItems="center" gap={5}>
-        <Table.ScrollArea
-          width="100%"
-          borderWidth="1px"
-          rounded="md"
-          height={500}
-        >
+        <AdminPageProductFilters />
+
+        <Table.ScrollArea width="100%" borderWidth="1px" rounded="md" height={600}>
           <Table.Root size="sm" variant="line" interactive stickyHeader>
             <Table.Header>
               <Table.Row>
@@ -38,6 +29,7 @@ export function AdminPageProductTab() {
                 <Table.ColumnHeader>Product</Table.ColumnHeader>
                 <Table.ColumnHeader>Category</Table.ColumnHeader>
                 <Table.ColumnHeader textAlign="end">Price</Table.ColumnHeader>
+                <Table.ColumnHeader />
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -51,17 +43,18 @@ export function AdminPageProductTab() {
                     }
                     setSelectedProductId(product.id);
                   }}
-                  bgColor={
-                    selectedProductId === product.id ? "gray.200" : undefined
-                  }
+                  bgColor={selectedProductId === product.id ? "gray.200" : product.isDeleted ? "red.100" : undefined}
                 >
                   <Table.Cell>{product.id}</Table.Cell>
                   <Table.Cell>{product.name}</Table.Cell>
-                  <Table.Cell>
-                    {product.categories.map(({ name }) => name).join(", ")}
-                  </Table.Cell>
+                  <Table.Cell>{product.categories.map(({ name }) => name).join(", ")}</Table.Cell>
+                  <Table.Cell textAlign="end">{formatCurrencyFt(product.price)}</Table.Cell>
                   <Table.Cell textAlign="end">
-                    {formatCurrencyFt(product.price)}
+                    {!product.isDeleted ? (
+                      <ProductDeleteButton productId={product.id} />
+                    ) : (
+                      <Text color="red">Deleted</Text>
+                    )}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -71,44 +64,31 @@ export function AdminPageProductTab() {
 
         <Pagination.Root
           count={products?.totalItems}
-          pageSize={products?.totalPages}
+          pageSize={filters.pageSize}
           page={products?.currentsPages}
+          onPageChange={(details) => {
+            setFilters({ ...filters, page: details.page });
+          }}
         >
           <ButtonGroup variant="ghost" size="sm" wrap="wrap">
             <Pagination.PrevTrigger asChild>
-              <IconButton
-                onClick={() =>
-                  setFilters({ ...filters, page: filters.page - 1 })
-                }
-              >
+              <IconButton>
                 <LuChevronLeft />
               </IconButton>
             </Pagination.PrevTrigger>
 
             <Pagination.Items
-              render={(page) => (
-                <IconButton
-                  variant={{ base: "ghost", _selected: "outline" }}
-                  onClick={() => setFilters({ ...filters, page: page.value })}
-                >
-                  {page.value}
-                </IconButton>
-              )}
+              render={(page) => <IconButton variant={{ base: "ghost", _selected: "outline" }}>{page.value}</IconButton>}
             />
 
             <Pagination.NextTrigger asChild>
-              <IconButton
-                onClick={() =>
-                  setFilters({ ...filters, page: filters.page + 1 })
-                }
-              >
+              <IconButton>
                 <LuChevronRight />
               </IconButton>
             </Pagination.NextTrigger>
           </ButtonGroup>
         </Pagination.Root>
       </Stack>
-
       <AdminPageProductEditor productId={selectedProductId} />
     </Stack>
   );

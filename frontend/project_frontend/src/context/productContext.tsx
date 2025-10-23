@@ -31,11 +31,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 const PRODUCT_CACHE_KEY = "products";
 const CATEGORY_CACHE_KEY = "categories";
 
-export const ProductProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const ProductProvider = ({ children }: { children: React.ReactNode }) => {
   const {
     searchParams,
     page,
@@ -51,45 +47,10 @@ export const ProductProvider = ({
 
   //#region Products
 
-  const {
-    isPending: productsIsPending,
-    isError: productsIsError,
-    data: products = {
-      items: [],
-      currentsPages: 0,
-      totalItems: 0,
-      totalPages: 0,
-    },
-    refetch,
-  } = useQuery({
-    queryKey: [
-      PRODUCT_CACHE_KEY,
-      page,
-      pageSize,
-      minPrice,
-      maxPrice,
-      selectedCategories,
-    ],
-    queryFn: () =>
-      getProducts(
-        page,
-        pageSize,
-        selectedCategories.join(","),
-        minPrice,
-        maxPrice
-      ),
-    staleTime: 1000 * 60 * 60,
-  });
-
   const setPageSafe = (newPage: number) => {
-    if (newPage < 1 || (products?.totalPages && newPage > products.totalPages))
-      return;
+    if (newPage < 1 || (products?.totalPages && newPage > products.totalPages)) return;
     setPage(newPage);
   };
-
-  useEffect(() => {
-    refetch();
-  }, [refetch, searchParams]);
 
   //#endregion
 
@@ -125,9 +86,14 @@ export const ProductProvider = ({
   return (
     <ProductContext.Provider
       value={{
-        products,
-        productsIsPending,
-        productsIsError,
+        products: {
+          items: [],
+          currentsPages: 0,
+          totalItems: 0,
+          totalPages: 0,
+        },
+        productsIsPending: false,
+        productsIsError: false,
         page,
         pageSize,
         setPage: setPageSafe,
@@ -150,7 +116,6 @@ export const ProductProvider = ({
 // eslint-disable-next-line react-refresh/only-export-components
 export const useProduct = () => {
   const context = useContext(ProductContext);
-  if (!context)
-    throw new Error("useProduct must be used within a ProductProvider");
+  if (!context) throw new Error("useProduct must be used within a ProductProvider");
   return context;
 };
