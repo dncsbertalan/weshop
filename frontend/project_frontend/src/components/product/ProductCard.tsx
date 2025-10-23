@@ -1,21 +1,14 @@
 import { useCart } from "@/context/cartContext";
 import { Product } from "@/models/Product";
 import { ProductInfoDialog } from "@/pages/product-page/ProductInfoDialog";
-import {
-  Button,
-  Card,
-  Flex,
-  Icon,
-  Image,
-  Spacer,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Card, Flex, Icon, Image, Spacer, Text } from "@chakra-ui/react";
 import { MdAddShoppingCart } from "react-icons/md";
 import { toaster } from "../ui/toaster";
 import { formatCurrency } from "@/utils/currency";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { useUser } from "@/context/UserContext";
+import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
 interface ProductCardProps {
   product: Product;
 }
@@ -30,6 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
       type: "info",
     });
   };
+  const { data: image, isPending } = useGetProductImage({ productId: product.id });
 
   return (
     <Flex
@@ -52,19 +46,16 @@ export function ProductCard({ product }: ProductCardProps) {
       transition="scale 0.2s ease-in-out, box-shadow 0.2s ease-in-out"
     >
       <Image
-        //src='https://www.zoldbolt.hu/img/86246/5999861502127/350x350,r/5999861502127.webp?time=1679576185'
-        //src='https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-skyblue-select-202503?wid=904&hei=840&fmt=jpeg&qlt=90&.v=M2RyY09CWXlTQUp1KzEveHR6VXNxcTQ1bzN1SitYTU83Mm9wbk1xa1lWNC9UNzNvY2N5NXJTTDQ2YkVYYmVXakJkRlpCNVhYU3AwTldRQldlSnpRa0lIV0Fmdk9rUlVsZ3hnNXZ3K3lEVlk'
-        src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE="
+        src={
+          image !== null && image !== undefined
+            ? image
+            : "https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE="
+        }
         height={{ base: 220, xl: 250 }}
         alt={product.pictureAlternative}
       />
 
-      <Flex
-        flexDirection="column"
-        padding="0px 20px 20px 20px"
-        marginTop="10px"
-        height="100%"
-      >
+      <Flex flexDirection="column" padding="0px 20px 20px 20px" marginTop="10px" height="100%">
         <Text fontSize="16px" fontWeight="bold" lineHeight="22.4px">
           {product.name}
         </Text>
@@ -73,15 +64,8 @@ export function ProductCard({ product }: ProductCardProps) {
         </Text>
 
         <Flex alignItems="center">
-          <Icon
-            marginRight="4px"
-            color={getQuantityColor(product.availableQuantity)}
-          >
-            {product.availableQuantity > 0 ? (
-              <IoCheckmarkCircleOutline />
-            ) : (
-              <FaRegCircleXmark />
-            )}
+          <Icon marginRight="4px" color={getQuantityColor(product.availableQuantity)}>
+            {product.availableQuantity > 0 ? <IoCheckmarkCircleOutline /> : <FaRegCircleXmark />}
           </Icon>
           <Text
             fontSize="12px"
@@ -134,76 +118,4 @@ function getQuantityColor(quantity: number) {
     default:
       return "rgb(151, 202, 79)"; // "rgb(151, 202, 79)";
   }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ProductCard_Old({ product }: ProductCardProps) {
-  const { addItemToCart: addItem } = useCart();
-  const user = useUser();
-  const add = async () => {
-    addItem(user.activeCartId!, product.id);
-    toaster.create({
-      description: `${product.name} was successfully added to your cart.`,
-      type: "info",
-    });
-  };
-
-  return (
-    <Card.Root
-      maxW="sm"
-      overflow="hidden"
-      backgroundColor="white"
-      backdropFilter="blur(20px)"
-      borderRadius={18}
-      border="none"
-      boxShadow="0px 0px 10px rgba(0, 0, 0, 0.3)"
-      _hover={{
-        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
-        scale: 1.025,
-      }}
-      transition="scale 0.2s ease-in-out"
-    >
-      <Image
-        //src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-        //src= {product.picture}
-        src="https://thewholeserving.com/wp-content/uploads/2014/06/Citrus-Cactus-Juice5.jpg"
-        height={250}
-        alt={product.pictureAlternative}
-      />
-      <Card.Body gap="2">
-        <Card.Title>{product.name}</Card.Title>
-
-        {/*product.categories &&
-                    <Box>
-                        {product.categories.map((category) => (
-                            <CategoryBadge key={category.id} categoryName={category.name} />
-                        ))}
-                    </Box>*/}
-
-        <Card.Description>{product.description}</Card.Description>
-
-        <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
-          {product.price} Ft
-        </Text>
-      </Card.Body>
-
-      <Card.Footer gap="2">
-        {/*<Link to={`/product/${product.id}`}>
-                    <Button
-                        rounded="full"
-                    >
-                        Details
-                    </Button>
-                </Link>*/}
-        <ProductInfoDialog product={product} />
-        <Spacer />
-        <Button rounded="full" onClick={add}>
-          <Icon>
-            <MdAddShoppingCart />
-          </Icon>
-          Add to cart
-        </Button>
-      </Card.Footer>
-    </Card.Root>
-  );
 }
