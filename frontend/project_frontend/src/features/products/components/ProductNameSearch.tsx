@@ -6,12 +6,13 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 interface ProductNameSearchProps {
   label?: string;
+  capsule?: boolean;
 }
 
-export function ProductNameSearch({ label }: ProductNameSearchProps) {
+export function ProductNameSearch({ label, capsule }: ProductNameSearchProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  const { filters, setFilters } = useProductFilters();
+  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
 
   const debouncedFilterName = useDebounce(inputValue, 300);
 
@@ -40,6 +41,8 @@ export function ProductNameSearch({ label }: ProductNameSearchProps) {
         <Input
           ref={inputRef}
           value={inputValue}
+          rounded={capsule ? "full" : undefined}
+          placeholder="Search products"
           onChange={(event) => {
             setInputValue(event.target.value);
           }}

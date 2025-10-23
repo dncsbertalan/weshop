@@ -5,7 +5,7 @@ import { useProductFilters } from "../hooks/useProductFilters";
 export function ProductMaxPriceFilter() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { filters, setFilters } = useProductFilters();
+  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
 
   const endElement = filters.max ? (
     <CloseButton

@@ -9,7 +9,7 @@ import { AdminPageProductFilters } from "./AdminPage.ProductFilters";
 import { ProductDeleteButton } from "@/features/products/components/ProductDeleteButton";
 
 export function AdminPageProductTab() {
-  const { filters, setFilters } = useProductFilters();
+  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
   const { data: products } = useGetProducts({
     productFilter: { ...filters },
   });

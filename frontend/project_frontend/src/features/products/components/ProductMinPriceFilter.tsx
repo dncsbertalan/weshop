@@ -5,7 +5,7 @@ import { useProductFilters } from "../hooks/useProductFilters";
 export function ProductMinPriceFilter() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { filters, setFilters } = useProductFilters();
+  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
 
   const endElement = filters.min ? (
     <CloseButton

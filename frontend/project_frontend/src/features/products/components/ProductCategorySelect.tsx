@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useProductFilters } from "../hooks/useProductFilters";
 
 export function ProductCategorySelect() {
-  const { filters, setFilters } = useProductFilters();
+  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
   const { data: categories, isPending } = useGetCategories();
   const [value, setValue] = useState<string[]>([]);
 
