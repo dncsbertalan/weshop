@@ -88,7 +88,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     {
         var query = _context.Products.Include(product => product.Categories).AsQueryable();
 
-        query = query.Where(product => product.Price >= productFilter.Min && product.Price <= productFilter.Max && product.AvailableQuantity > 0);
+        query = query.Where(product => product.Price >= productFilter.Min && product.Price <= productFilter.Max && product.AvailableQuantity > 0 && !product.IsDeleted);
 
         if (!string.IsNullOrWhiteSpace(productFilter.ProductName))
         {
