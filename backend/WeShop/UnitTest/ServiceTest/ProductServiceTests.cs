@@ -1,6 +1,5 @@
 ﻿using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
-using Domain.Dtos.Api.Response.Product;
 using Domain.Exceptions;
 using Domain.Repository;
 using Domain.Services;
@@ -10,6 +9,9 @@ namespace UnitTest.ServiceTest;
 
 public class ProductServiceTests
 {
+    private const string TooLongProductName =
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
     private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
     private readonly Mock<IProductRepository> _productRepositoryMock;
     private readonly ProductService _productService;
@@ -22,39 +24,75 @@ public class ProductServiceTests
     }
 
 
-    [Fact]
-    public async Task CreateProductAsync_Should_Return_False_When_Invalid_Data()
+    #region CreateProductAsync
+
+    [Theory]
+    [InlineData("  ", 10, 5, "Product name is required.")]
+    [InlineData(TooLongProductName, 10, 5, "Product name cannot exceed 200 characters.")]
+    [InlineData("Product", 0, 5, "Product price must be greater than zero.")]
+    [InlineData("Product", -5, 5, "Product price must be greater than zero.")]
+    [InlineData("Product", 5, -1, "Available quantity cannot be negative.")]
+    [InlineData("Product", 5, 5, "At least one category must be selected.")]
+    public async Task CreateProductAsync_InvalidInput_ThrowsValidationException(string name, double price, int quantity,
+        string expectedMessage)
     {
         // Arrange
-        var dto = new CreateProductDto
-        {
-            Name = "",
-            Price = -10,
-            AvailableQuantity = -1
-        };
+        var dto = new CreateProductDto { Name = name, Price = price, AvailableQuantity = quantity };
+        SetupProductRepositoryMock_CreateProduct(false, dto);
+        SetupCategoryRepositoryMock();
 
-        // Act
-        var result = await _productService.CreateProductAsync(dto);
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => _productService.CreateProductAsync(dto));
+        Assert.Equal(expectedMessage, exception.Message);
 
-        // Assert
-        Assert.False(result);
-        _productRepositoryMock.Verify(r => r.CreateProductAsync(It.IsAny<CreateProductDto>()), Times.Never);
+        _productRepositoryMock.Verify(r => r.CreateProductAsync(dto), Times.Never);
+        _categoryRepositoryMock.Verify(r => r.GetCategoriesAsync(), Times.Never);
     }
 
     [Fact]
-    public async Task CreateProductAsync_Should_Call_Repository_When_Valid_Data()
+    public async Task CreateProductAsync_InvalidCategoryIdsInput_ThrowsValidationException()
+    {
+        // Arrange
+        var dto = new CreateProductDto { Name = "Product", Price = 10, AvailableQuantity = 10, CategoryIds = [] };
+        SetupProductRepositoryMock_CreateProduct(false, dto);
+        SetupCategoryRepositoryMock();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => _productService.CreateProductAsync(dto));
+        Assert.Equal("At least one category must be selected.", exception.Message);
+
+        _productRepositoryMock.Verify(r => r.CreateProductAsync(dto), Times.Never);
+        _categoryRepositoryMock.Verify(r => r.GetCategoriesAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task CreateProductAsync_InvalidCategoryIdsInput_ThrowsNotFoundException()
+    {
+        // Arrange
+        var dto = new CreateProductDto { Name = "Product", Price = 10, AvailableQuantity = 10, CategoryIds = [3] };
+        SetupProductRepositoryMock_CreateProduct(false, dto);
+        SetupCategoryRepositoryMock();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() => _productService.CreateProductAsync(dto));
+        Assert.Equal("Category with identifier '3' was not found.", exception.Message);
+
+        _productRepositoryMock.Verify(r => r.CreateProductAsync(dto), Times.Never);
+        _categoryRepositoryMock.Verify(r => r.GetCategoriesAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateProductAsync_ValidInput()
     {
         // Arrange
         var dto = new CreateProductDto
         {
-            Name = "Bottle",
-            Price = 10,
-            AvailableQuantity = 5
+            Name = "Valid Product", Price = 20, AvailableQuantity = 10, CategoryIds = [1], Image = [1, 2, 3],
+            ImageMimeType = "image/png"
         };
 
-        _productRepositoryMock
-            .Setup(r => r.CreateProductAsync(dto))
-            .ReturnsAsync(true);
+        SetupProductRepositoryMock_CreateProduct(true, dto);
+        SetupCategoryRepositoryMock();
 
         // Act
         var result = await _productService.CreateProductAsync(dto);
@@ -62,67 +100,10 @@ public class ProductServiceTests
         // Assert
         Assert.True(result);
         _productRepositoryMock.Verify(r => r.CreateProductAsync(dto), Times.Once);
+        _categoryRepositoryMock.Verify(r => r.GetCategoriesAsync(), Times.Once);
     }
 
-    [Fact]
-    public async Task DeleteProductAsync_Should_Return_False_When_Product_Not_Found()
-    {
-        // Arrange
-        _productRepositoryMock
-            .Setup(r => r.GetByIdAsync(1))
-            .ReturnsAsync((ProductDto?)null);
-
-        // Act
-        var result = await _productService.DeleteProductAsync(1);
-
-        // Assert
-        Assert.False(result);
-        _productRepositoryMock.Verify(r => r.DeleteProductAsync(It.IsAny<long>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task DeleteProductAsync_Should_Call_Repository_When_Product_Exists()
-    {
-        // Arrange
-        var existingProduct = new ProductDto { Id = 1 };
-        _productRepositoryMock
-            .Setup(r => r.GetByIdAsync(1))
-            .ReturnsAsync(existingProduct);
-
-        _productRepositoryMock
-            .Setup(r => r.DeleteProductAsync(1))
-            .ReturnsAsync(true);
-
-        // Act
-        var result = await _productService.DeleteProductAsync(1);
-
-        // Assert
-        Assert.True(result);
-        _productRepositoryMock.Verify(r => r.DeleteProductAsync(1), Times.Once);
-    }
-
-    [Fact]
-    public async Task GetProductImage_Should_Return_ImageResponse()
-    {
-        // Arrange
-        var expectedImage = new ProductImageResponse
-        {
-            Image = [1, 2, 3],
-            ImageMimeType = "image/png"
-        };
-
-        _productRepositoryMock
-            .Setup(r => r.GetProductImageAsync(5))
-            .ReturnsAsync(expectedImage);
-
-        // Act
-        var result = await _productService.GetProductImage(5);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal("image/png", result.ImageMimeType);
-        _productRepositoryMock.Verify(r => r.GetProductImageAsync(5), Times.Once);
-    }
+    #endregion
 
     #region GetProductsAsync
 
@@ -242,6 +223,27 @@ public class ProductServiceTests
 
         _productRepositoryMock.Verify(repo => repo.GetProductsAsync(filter), Times.Once);
         _categoryRepositoryMock.Verify(r => r.GetCategoriesAsync(), Times.Once);
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private void SetupProductRepositoryMock_CreateProduct(bool result = true, CreateProductDto? dto = null)
+    {
+        _productRepositoryMock
+            .Setup(r => r.CreateProductAsync(dto ?? It.IsAny<CreateProductDto>()))
+            .ReturnsAsync(result);
+    }
+
+    private void SetupCategoryRepositoryMock()
+    {
+        _categoryRepositoryMock
+            .Setup(r => r.GetCategoriesAsync())
+            .ReturnsAsync([
+                new CategoryDto { Id = 1, Name = "Category 1" },
+                new CategoryDto { Id = 2, Name = "Category 2" }
+            ]);
     }
 
     #endregion

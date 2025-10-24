@@ -57,8 +57,40 @@ public class ProductService(IProductRepository _productRepository, ICategoryRepo
 
     public async Task<bool> CreateProductAsync(CreateProductDto createProductDto)
     {
-        if (string.IsNullOrWhiteSpace(createProductDto.Name) || createProductDto.Price < 0 ||
-            createProductDto.AvailableQuantity < 0) return false;
+        // Basic field validation
+        if (string.IsNullOrWhiteSpace(createProductDto.Name))
+            throw new ValidationException("Product name is required.");
+
+        if (createProductDto.Name.Length > 200)
+            throw new ValidationException("Product name cannot exceed 200 characters.");
+
+        if (createProductDto.Price <= 0)
+            throw new ValidationException("Product price must be greater than zero.");
+
+        if (createProductDto.AvailableQuantity < 0)
+            throw new ValidationException("Available quantity cannot be negative.");
+
+        // Image validation
+        if (createProductDto.Image is not null)
+        {
+            if (createProductDto.Image.Length == 0)
+                throw new ValidationException("Product image cannot be empty.");
+
+            if (string.IsNullOrWhiteSpace(createProductDto.ImageMimeType))
+                throw new ValidationException("Image MIME type is required when providing an image.");
+        }
+
+        // Category validation
+        if (createProductDto.CategoryIds is null || createProductDto.CategoryIds.Count == 0)
+            throw new ValidationException("At least one category must be selected.");
+
+        var categories = await _categoryRepository.GetCategoriesAsync();
+        var existingCategoryIds = categories.Select(c => c.Id).ToHashSet();
+
+        foreach (var categoryId in createProductDto.CategoryIds.Where(categoryId =>
+                     !existingCategoryIds.Contains(categoryId)))
+            throw new NotFoundException("Category", categoryId);
+
 
         return await _productRepository.CreateProductAsync(createProductDto);
     }
