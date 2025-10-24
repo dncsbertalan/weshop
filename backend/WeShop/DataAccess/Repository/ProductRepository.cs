@@ -1,9 +1,9 @@
-﻿using DataAccess.Mappers;
+﻿using DataAccess.Extensions;
+using DataAccess.Mappers;
 using DataAccess.Models;
 using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Product;
-using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -74,7 +74,10 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
 
     public async Task<ProductDto?> GetByIdAsync(long id)
     {
-        var result = await _context.Products.Include(product => product.Categories).Where(product => product.Id == id).FirstOrDefaultAsync();
+        var result = await _context.Products
+            .Include(product => product.Categories)
+            .Where(product => product.Id == id)
+            .FirstOrDefaultAsync();
         
         return result is null ? null : ProductMapper.ToDto(result);
     }
@@ -84,32 +87,21 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         throw new NotImplementedException();
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter)
+    public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductFilter productFilter)
     {
-        var query = _context.Products.Include(product => product.Categories).AsQueryable();
-
-        query = query.Where(product => product.Price >= productFilter.Min && product.Price <= productFilter.Max && product.AvailableQuantity > 0 && !product.IsDeleted);
-
-        if (!string.IsNullOrWhiteSpace(productFilter.ProductName))
-        {
-            var lowered = productFilter.ProductName.ToLower();
-            query = query.Where(product => product.Name.ToLower().Contains(lowered));
-        }
-
-        // Filtering by categories
-        if (!string.IsNullOrEmpty(productFilter.Filters))
-        {
-            var categoryIdList = productFilter.Filters.Split(',').Select(long.Parse).ToList();
-            query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
-        }
+        var query = _context.Products
+            .Include(product => product.Categories)
+            .AsQueryable()
+            .AvailableAndNotDeleted()
+            .FilterByPrice(productFilter.Min, productFilter.Max)
+            .FilterByName(productFilter.ProductName)
+            .FilterByCategories(productFilter.Filters);
 
         var totalItems = await query.CountAsync();
         if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)productFilter.PageSize);
-
-        if (productFilter.Page > totalPages) return null;
-
+        
         var products = await query
             .Skip((productFilter.Page - 1) * productFilter.PageSize)
             .Take(productFilter.PageSize)

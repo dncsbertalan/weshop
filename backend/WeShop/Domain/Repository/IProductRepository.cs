@@ -12,7 +12,7 @@ public interface IProductRepository
     
     Task<int?> GetAvailableQuantityAsync(long productId);
     
-    Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter);
+    Task<PagedResult<ProductDto>> GetProductsAsync(ProductFilter productFilter);
     
     Task<ProductImageResponse?> GetProductImageAsync(long productId);
     

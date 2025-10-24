@@ -27,7 +27,7 @@ public class Product_Data
     [Required]
     public int AvailableQuantity { get; set; }
     
-    public bool IsDeleted { get; set; } = false;
+    public bool IsDeleted { get; set; }
     
     public byte[]? Image { get; set; }
     

@@ -14,10 +14,6 @@ public class ProductsController(ProductService _productService) : ControllerBase
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] ProductFilter productFilter)
     {
         var result = await _productService.GetProductsAsync(productFilter);
-        if (result is null)
-        {
-            return BadRequest(new { message = "Something went wrong" });
-        }
 
         return Ok(result);
     }
