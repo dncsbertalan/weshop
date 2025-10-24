@@ -22,7 +22,7 @@ jobs:
         run: dotnet restore WeShop.sln
 
       - name: Build solution
-        run: dotnet build WeShop.sln --configuration Release --no-restore
+        run: dotnet build backend/WeShop/WeShop.sln --configuration Release --no-restore
 
       - name: Run unit tests
-        run: dotnet test WeShop.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx"
+        run: dotnet test backend/WeShop/WeShop.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx"
