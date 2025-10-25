@@ -1,8 +1,7 @@
 ﻿using Domain.Dtos.Api;
+using Domain.Dtos.Api.Request;
 using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Domain.Dtos.Api.Request;
 
 namespace WebAPI.Controllers;
 
@@ -14,10 +13,6 @@ public class ProductsController(ProductService _productService) : ControllerBase
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] ProductFilter productFilter)
     {
         var result = await _productService.GetProductsAsync(productFilter);
-        if (result is null)
-        {
-            return BadRequest(new { message = "Something went wrong" });
-        }
 
         return Ok(result);
     }
@@ -26,14 +21,16 @@ public class ProductsController(ProductService _productService) : ControllerBase
     public async Task<ActionResult<ProductDto>> Get(long id)
     {
         var product = await _productService.GetByIdAsync(id);
-        return product is not null ? Ok(product): NotFound();
+        return product is not null ? Ok(product) : NotFound();
     }
-    
+
     [HttpGet("{id:long}/image")]
     public async Task<ActionResult?> GetProductImage(long id)
     {
         var productImageResponse = await _productService.GetProductImage(id);
-        
-        return productImageResponse is not null ? File(productImageResponse.Image, productImageResponse.ImageMimeType) : Ok(null);
+
+        return productImageResponse is not null
+            ? File(productImageResponse.Image, productImageResponse.ImageMimeType)
+            : Ok(null);
     }
 }

@@ -1,9 +1,9 @@
-﻿using DataAccess.Mappers;
+﻿using DataAccess.Extensions;
+using DataAccess.Mappers;
 using DataAccess.Models;
 using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Product;
-using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +16,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         var categories = await _context.Categories
             .Where(category => createProduct.CategoryIds.Contains(category.Id))
             .ToListAsync();
-        
+
         var newProduct = new Product_Data
         {
             Name = createProduct.Name,
@@ -25,7 +25,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
             AvailableQuantity = createProduct.AvailableQuantity,
             Image = createProduct.Image,
             ImageMimeType = createProduct.ImageMimeType,
-            Categories = categories,
+            Categories = categories
         };
 
         _context.Products.Add(newProduct);
@@ -37,14 +37,11 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     public async Task<bool> DeleteProductAsync(long productId)
     {
         var product = await _context.Products.FindAsync(productId);
-        if (product == null)
-        {
-            return false;
-        }
+        if (product == null) return false;
 
         product.IsDeleted = true;
-        product.ModifiedAt = DateTime.UtcNow;
-        
+        product.ModificationDate = DateTime.UtcNow;
+
         var result = await _context.SaveChangesAsync();
 
         return result > 0;
@@ -61,11 +58,8 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
     {
         var result = await _context.Products.FindAsync(productId);
 
-        if (result?.Image == null || result.ImageMimeType == null)
-        {
-            return null;
-        }
-        
+        if (result?.Image == null || result.ImageMimeType == null) return null;
+
         return new ProductImageResponse
         {
             Image = result.Image, ImageMimeType = result.ImageMimeType
@@ -74,41 +68,51 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
 
     public async Task<ProductDto?> GetByIdAsync(long id)
     {
-        var result = await _context.Products.Include(product => product.Categories).Where(product => product.Id == id).FirstOrDefaultAsync();
-        
+        var result = await _context.Products
+            .Include(product => product.Categories)
+            .Where(product => product.Id == id)
+            .FirstOrDefaultAsync();
+
         return result is null ? null : ProductMapper.ToDto(result);
     }
 
-    public async Task<bool> UpdateProductAsync(ProductDto product)
+    public async Task<bool> UpdateProductAsync(long productId, string userId, UpdateProductDto updateProductDto)
     {
-        throw new NotImplementedException();
+        var product = await _context.Products.FindAsync(productId);
+        if (product is null) return false;
+
+        var categories = await _context.Categories
+            .Where(category => updateProductDto.CategoryIds.Contains(category.Id))
+            .ToListAsync();
+
+        product.Name = updateProductDto.Name;
+        product.Description = updateProductDto.Description;
+        product.Price = updateProductDto.Price;
+        product.AvailableQuantity = updateProductDto.AvailableQuantity;
+        product.Categories = categories;
+        product.ImageMimeType = updateProductDto.ImageMimeType;
+        product.Image = updateProductDto.Image;
+
+        product.ModificationDate = DateTime.UtcNow;
+        product.ModifiedByUserId = userId;
+
+        return await _context.SaveChangesAsync() == 1;
     }
 
-    public async Task<PagedResult<ProductDto>?> GetProductsAsync(ProductFilter productFilter)
+    public async Task<PagedResult<ProductDto>> GetProductsAsync(ProductFilter productFilter)
     {
-        var query = _context.Products.Include(product => product.Categories).AsQueryable();
-
-        query = query.Where(product => product.Price >= productFilter.Min && product.Price <= productFilter.Max && product.AvailableQuantity > 0 && !product.IsDeleted);
-
-        if (!string.IsNullOrWhiteSpace(productFilter.ProductName))
-        {
-            var lowered = productFilter.ProductName.ToLower();
-            query = query.Where(product => product.Name.ToLower().Contains(lowered));
-        }
-
-        // Filtering by categories
-        if (!string.IsNullOrEmpty(productFilter.Filters))
-        {
-            var categoryIdList = productFilter.Filters.Split(',').Select(long.Parse).ToList();
-            query = query.Where(product => product.Categories.Any(category => categoryIdList.Contains(category.Id)));
-        }
+        var query = _context.Products
+            .Include(product => product.Categories)
+            .AsQueryable()
+            .AvailableAndNotDeleted()
+            .FilterByPrice(productFilter.Min, productFilter.Max)
+            .FilterByName(productFilter.ProductName)
+            .FilterByCategories(productFilter.Filters);
 
         var totalItems = await query.CountAsync();
         if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)productFilter.PageSize);
-
-        if (productFilter.Page > totalPages) return null;
 
         var products = await query
             .Skip((productFilter.Page - 1) * productFilter.PageSize)
