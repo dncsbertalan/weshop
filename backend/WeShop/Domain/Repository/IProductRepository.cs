@@ -7,16 +7,16 @@ namespace Domain.Repository;
 public interface IProductRepository
 {
     Task<bool> CreateProductAsync(CreateProductDto createProduct);
-    
+
     Task<bool> DeleteProductAsync(long productId);
-    
+
     Task<int?> GetAvailableQuantityAsync(long productId);
-    
+
     Task<PagedResult<ProductDto>> GetProductsAsync(ProductFilter productFilter);
-    
+
     Task<ProductImageResponse?> GetProductImageAsync(long productId);
-    
+
     Task<ProductDto?> GetByIdAsync(long id);
-    
-    Task<bool> UpdateProductAsync(ProductDto product);
+
+    Task<bool> UpdateProductAsync(long productId, string userId, UpdateProductDto updateProductDto);
 }

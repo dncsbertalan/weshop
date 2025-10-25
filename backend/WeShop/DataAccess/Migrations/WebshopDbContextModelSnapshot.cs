@@ -228,7 +228,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -244,8 +244,11 @@ namespace DataAccess.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -256,6 +259,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModifiedByUserId");
 
                     b.HasIndex(new[] { "AvailableQuantity" }, "IX_Product_AvailableQuantity");
 
@@ -309,6 +314,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -345,11 +351,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -594,6 +595,15 @@ namespace DataAccess.Migrations
                     b.Navigation("PaymentMethod");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Product_Data", b =>
+                {
+                    b.HasOne("DataAccess.Models.User_Data", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId");
+
+                    b.Navigation("ModifiedByUser");
                 });
 
             modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>

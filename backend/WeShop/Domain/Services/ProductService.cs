@@ -3,6 +3,7 @@ using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Product;
 using Domain.Exceptions;
 using Domain.Repository;
+using Domain.Services.Helpers;
 
 namespace Domain.Services;
 
@@ -58,45 +59,54 @@ public class ProductService(IProductRepository _productRepository, ICategoryRepo
     public async Task<bool> CreateProductAsync(CreateProductDto createProductDto)
     {
         // Basic field validation
-        if (string.IsNullOrWhiteSpace(createProductDto.Name))
-            throw new ValidationException("Product name is required.");
-
-        if (createProductDto.Name.Length > 200)
-            throw new ValidationException("Product name cannot exceed 200 characters.");
-
-        if (createProductDto.Price <= 0)
-            throw new ValidationException("Product price must be greater than zero.");
-
-        if (createProductDto.AvailableQuantity < 0)
-            throw new ValidationException("Available quantity cannot be negative.");
+        ProductValidationHelper.ProductNameValidation(createProductDto.Name);
+        ProductValidationHelper.ProductPriceValidation(createProductDto.Price);
+        ProductValidationHelper.ProductAvailableQuantityValidation(createProductDto.AvailableQuantity);
 
         // Image validation
         if (createProductDto.Image is not null)
-        {
-            if (createProductDto.Image.Length == 0)
-                throw new ValidationException("Product image cannot be empty.");
-
-            if (string.IsNullOrWhiteSpace(createProductDto.ImageMimeType))
-                throw new ValidationException("Image MIME type is required when providing an image.");
-        }
+            ProductValidationHelper.ProductImageValidation(createProductDto.Image, createProductDto.ImageMimeType);
 
         // Category validation
-        if (createProductDto.CategoryIds is null || createProductDto.CategoryIds.Count == 0)
-            throw new ValidationException("At least one category must be selected.");
-
         var categories = await _categoryRepository.GetCategoriesAsync();
         var existingCategoryIds = categories.Select(c => c.Id).ToHashSet();
 
-        foreach (var categoryId in createProductDto.CategoryIds.Where(categoryId =>
-                     !existingCategoryIds.Contains(categoryId)))
-            throw new NotFoundException("Category", categoryId);
-
+        ProductValidationHelper.ProductCategoryValidation(createProductDto.CategoryIds, existingCategoryIds);
 
         return await _productRepository.CreateProductAsync(createProductDto);
     }
 
+    public async Task<bool> UpdateProductAsync(long productId, string userId, UpdateProductDto updateProductDto)
+    {
+        var product = await _productRepository.GetByIdAsync(productId);
+        if (product is null) throw new NotFoundException("Product", productId);
+
+        if (product.IsDeleted) throw new BusinessLogicException("Product is deleted.");
+
+        // Basic field validation
+        ProductValidationHelper.ProductNameValidation(updateProductDto.Name);
+        ProductValidationHelper.ProductPriceValidation(updateProductDto.Price);
+        ProductValidationHelper.ProductAvailableQuantityValidation(updateProductDto.AvailableQuantity);
+
+        // Image validation
+        if (updateProductDto.Image is not null)
+            ProductValidationHelper.ProductImageValidation(updateProductDto.Image, updateProductDto.ImageMimeType);
+
+        // Category validation
+        var categories = await _categoryRepository.GetCategoriesAsync();
+        var existingCategoryIds = categories.Select(c => c.Id).ToHashSet();
+
+        ProductValidationHelper.ProductCategoryValidation(updateProductDto.CategoryIds, existingCategoryIds);
+
+        return await _productRepository.UpdateProductAsync(productId, userId, updateProductDto);
+    }
+
     public async Task<ProductImageResponse?> GetProductImage(long productId)
     {
+        var product = await _productRepository.GetByIdAsync(productId);
+
+        if (product is null) return null;
+
         return await _productRepository.GetProductImageAsync(productId);
     }
 
