@@ -7,9 +7,10 @@ import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
 import { scrollToTopSmooth } from "@/utils/scroll";
 import { useGetProducts } from "@/features/products/hooks/useGetProducts";
 import { useProductFilters } from "@/features/products/hooks/useProductFilters";
+import { ProductFilterAction } from "@/features/products/productFilterReducer";
 
 export function ProductSection() {
-  const { productFilters, setProductFilters } = useProductFilters();
+  const { productFilters, dispatchProductFilters } = useProductFilters();
   const { data: products, isError, isPending } = useGetProducts({ productFilter: productFilters });
 
   useEffect(() => {
@@ -35,23 +36,32 @@ export function ProductSection() {
           defaultPage={1}
           page={productFilters.page}
           onPageChange={(details) => {
-            setProductFilters({ ...productFilters, page: details.page });
+            dispatchProductFilters({ type: ProductFilterAction.SetPage, payload: details.page });
           }}
-          marginTop={10}
+          css={{
+            marginTop: 10,
+            backgroundColor: "whiteAlpha.800",
+            padding: 2,
+            rounded: "full",
+          }}
         >
           <ButtonGroup variant="ghost" size="sm" rounded="full">
             <Pagination.PrevTrigger asChild>
-              <IconButton borderLeftRadius="9999px">
+              <IconButton rounded="full">
                 <LuChevronLeft />
               </IconButton>
             </Pagination.PrevTrigger>
 
             <Pagination.Items
-              render={(page) => <IconButton variant={{ base: "ghost", _selected: "outline" }}>{page.value}</IconButton>}
+              render={(page) => (
+                <IconButton rounded="full" variant={{ base: "ghost", _selected: "outline" }}>
+                  {page.value}
+                </IconButton>
+              )}
             />
 
             <Pagination.NextTrigger asChild>
-              <IconButton borderRightRadius="9999px">
+              <IconButton rounded="full">
                 <LuChevronRight />
               </IconButton>
             </Pagination.NextTrigger>

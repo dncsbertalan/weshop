@@ -1,13 +1,4 @@
-import {
-  Stack,
-  Field,
-  Input,
-  HStack,
-  NumberInput,
-  InputGroup,
-  Textarea,
-  Text,
-} from "@chakra-ui/react";
+import { Stack, Field, Input, HStack, NumberInput, InputGroup, Textarea, Text } from "@chakra-ui/react";
 import { CreateProductDialogCategorySelector } from "./CreateProductDialog.CategorySelector";
 import { useFormContext } from "react-hook-form";
 import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
@@ -45,7 +36,7 @@ export function CreateProductDialogBody() {
             Price
             <Field.RequiredIndicator />
           </Field.Label>
-          <NumberInput.Root>
+          <NumberInput.Root min={0}>
             <InputGroup endElement="Ft">
               <NumberInput.Input
                 {...register(upsertProductKeys.price, {
@@ -62,7 +53,7 @@ export function CreateProductDialogBody() {
             Available quantity
             <Field.RequiredIndicator />
           </Field.Label>
-          <NumberInput.Root width="100%">
+          <NumberInput.Root width="100%" min={0}>
             <NumberInput.Input
               {...register(upsertProductKeys.availableQuantity, {
                 required: "Product available quantity is required",
@@ -75,11 +66,7 @@ export function CreateProductDialogBody() {
 
       <Field.Root required invalid={!!errors.description}>
         <Field.Label>Description</Field.Label>
-        <Textarea
-          maxHeight="7lh"
-          autoresize
-          {...register(upsertProductKeys.description)}
-        />
+        <Textarea maxHeight="7lh" autoresize {...register(upsertProductKeys.description)} />
         <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
       </Field.Root>
 

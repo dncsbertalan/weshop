@@ -1,18 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { ProductFilter, ProductFilterDefaults } from "../ProductFilter";
 import { useSearchParams } from "react-router";
 import { ProductFilterKeys } from "../ProductFilterKeys";
+import { ProductFilterAction, productFilterReducer } from "../productFilterReducer";
 
-export function useGetProductFilters() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [productFilters, setProductFilters] = useState<ProductFilter>({
+function getFiltersFromSearchParams(searchParams: URLSearchParams): ProductFilter {
+  return {
     page: Number(searchParams.get(ProductFilterKeys.page)) || ProductFilterDefaults.page,
     pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
     min: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
     max: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
     filters: searchParams.get(ProductFilterKeys.categories),
     productName: searchParams.get(ProductFilterKeys.productName) || "",
-  });
+  };
+}
+
+export function useGetProductFilters() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [productFilters, dispatchProductFilters] = useReducer(
+    productFilterReducer,
+    getFiltersFromSearchParams(searchParams)
+  );
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -45,15 +53,8 @@ export function useGetProductFilters() {
   ]);
 
   useEffect(() => {
-    setProductFilters({
-      page: Number(searchParams.get(ProductFilterKeys.page)) || ProductFilterDefaults.page,
-      pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
-      min: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
-      max: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
-      filters: searchParams.get(ProductFilterKeys.categories),
-      productName: searchParams.get(ProductFilterKeys.productName) || "",
-    });
+    dispatchProductFilters({ type: ProductFilterAction.SetAll, payload: getFiltersFromSearchParams(searchParams) });
   }, [searchParams]);
 
-  return { productFilters, setProductFilters };
+  return { productFilters, dispatchProductFilters };
 }

@@ -1,10 +1,13 @@
 import { useGetCategories } from "@/features/categories/hooks/useGetCategories";
-import { createListCollection, Field, Select, Spinner } from "@chakra-ui/react";
+import { createListCollection, Field, Portal, Select, SelectTriggerProps, Spinner } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useProductFilters } from "../hooks/useProductFilters";
+import { ProductFilterAction } from "../productFilterReducer";
 
-export function ProductCategorySelect() {
-  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
+type ProductCategorySelectProps = SelectTriggerProps;
+
+export function ProductCategorySelect({ ...props }: ProductCategorySelectProps) {
+  const { productFilters, dispatchProductFilters } = useProductFilters();
   const { data: categories, isPending } = useGetCategories();
   const [value, setValue] = useState<string[]>([]);
 
@@ -19,12 +22,12 @@ export function ProductCategorySelect() {
   );
 
   useEffect(() => {
-    const values = value.join(",");
+    const values = value.length === 0 ? null : value.join(",");
 
-    if (filters.filters !== values) {
-      setFilters((prev) => ({ ...prev, page: 1, filters: values }));
+    if (productFilters.filters !== values) {
+      dispatchProductFilters({ type: ProductFilterAction.SetCategoryIds, payload: values });
     }
-  }, [filters, setFilters, value]);
+  }, [dispatchProductFilters, productFilters.filters, value]);
 
   return (
     <Field.Root>
@@ -39,7 +42,7 @@ export function ProductCategorySelect() {
         <Select.HiddenSelect />
 
         <Select.Control>
-          <Select.Trigger>
+          <Select.Trigger {...props}>
             <Select.ValueText placeholder="Select categories" />
           </Select.Trigger>
 
@@ -49,17 +52,18 @@ export function ProductCategorySelect() {
             <Select.Indicator />
           </Select.IndicatorGroup>
         </Select.Control>
-
-        <Select.Positioner>
-          <Select.Content>
-            {categories?.map((category) => (
-              <Select.Item item={category} key={category.id}>
-                {category.name}
-                <Select.ItemIndicator />
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Positioner>
+        <Portal>
+          <Select.Positioner>
+            <Select.Content>
+              {categories?.map((category) => (
+                <Select.Item item={category} key={category.id}>
+                  {category.name}
+                  <Select.ItemIndicator />
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Positioner>
+        </Portal>
       </Select.Root>
     </Field.Root>
   );

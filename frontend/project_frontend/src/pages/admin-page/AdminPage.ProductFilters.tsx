@@ -2,17 +2,23 @@ import { ProductCategorySelect } from "@/features/products/components/ProductCat
 import { ProductMaxPriceFilter } from "@/features/products/components/ProductMaxPriceFilter";
 import { ProductMinPriceFilter } from "@/features/products/components/ProductMinPriceFilter";
 import { ProductNameSearch } from "@/features/products/components/ProductNameSearch";
-import { HStack, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 
 export function AdminPageProductFilters() {
   return (
-    <Stack width="100%">
-      <ProductNameSearch label="Product name" />
-      <HStack>
+    <Stack width="100%" direction="row" flex={1}>
+      <Stack flex={2}>
+        <ProductNameSearch label="Product name" />
+      </Stack>
+      <Stack flex={1}>
         <ProductMinPriceFilter />
+      </Stack>
+      <Stack flex={1}>
         <ProductMaxPriceFilter />
-      </HStack>
-      <ProductCategorySelect />
+      </Stack>
+      <Stack flex={1}>
+        <ProductCategorySelect />
+      </Stack>
     </Stack>
   );
 }

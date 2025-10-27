@@ -8,7 +8,10 @@ import { Controller, useFormContext } from "react-hook-form";
 const upsertProductKeys = getFieldKeys(CreateProductRequestDto);
 
 export function CreateProductDialogCategorySelector() {
-  const { control } = useFormContext<CreateProductRequestDto>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<CreateProductRequestDto>();
   const { data: categories, isPending } = useGetCategories();
 
   const categoriesCollection = useMemo(
@@ -22,11 +25,16 @@ export function CreateProductDialogCategorySelector() {
   );
 
   return (
-    <Field.Root>
-      <Field.Label>Categories</Field.Label>
+    <Field.Root required invalid={!!errors.categoryIds}>
+      <Field.Label>
+        Categories <Field.RequiredIndicator />
+      </Field.Label>
       <Controller
         control={control}
         name={upsertProductKeys.categoryIds}
+        rules={{
+          required: "At least one category is required",
+        }}
         render={({ field }) => (
           <Select.Root
             multiple
@@ -45,9 +53,7 @@ export function CreateProductDialogCategorySelector() {
               </Select.Trigger>
 
               <Select.IndicatorGroup>
-                {isPending && (
-                  <Spinner size="xs" borderWidth="1.5px" color="fg.muted" />
-                )}
+                {isPending && <Spinner size="xs" borderWidth="1.5px" color="fg.muted" />}
                 <Select.ClearTrigger />
                 <Select.Indicator />
               </Select.IndicatorGroup>
@@ -66,6 +72,7 @@ export function CreateProductDialogCategorySelector() {
           </Select.Root>
         )}
       />
+      <Field.ErrorText>{errors.categoryIds?.message}</Field.ErrorText>
     </Field.Root>
   );
 }

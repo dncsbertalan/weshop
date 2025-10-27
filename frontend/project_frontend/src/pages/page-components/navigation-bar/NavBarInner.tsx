@@ -1,13 +1,14 @@
-import { Role, useAuth } from "@/context/authContext";
+import { Role } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useLogoutUser } from "@/features/authentication/hooks/useLogoutUser";
 import { Navigation } from "@/routes/navigation";
 import { Badge, Flex, Float, Heading, HStack, IconButton, Spacer, Span } from "@chakra-ui/react";
 import { PropsWithChildren, useMemo } from "react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export function NavBarInner({ children }: PropsWithChildren) {
   return (
@@ -101,8 +102,8 @@ export function NavLoginButton() {
 }
 
 export function NavLogoutButton() {
-  const { isAuthenticated, logout } = useAuth();
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthentication();
+  const { logout } = useLogoutUser();
 
   if (!isAuthenticated) {
     return null;
@@ -125,7 +126,6 @@ export function NavLogoutButton() {
         }}
         onClick={() => {
           logout();
-          navigate(Navigation.home);
         }}
       >
         <FaRightToBracket />

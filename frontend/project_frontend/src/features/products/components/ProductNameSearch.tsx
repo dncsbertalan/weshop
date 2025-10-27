@@ -1,26 +1,26 @@
-import { CloseButton, InputGroup, Input, Field } from "@chakra-ui/react";
+import { CloseButton, InputGroup, Input, Field, InputProps } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useProductFilters } from "../hooks/useProductFilters";
 import { LuSearch } from "react-icons/lu";
 import { useDebounce } from "@/hooks/useDebounce";
+import { ProductFilterAction } from "../productFilterReducer";
 
-interface ProductNameSearchProps {
+interface ProductNameSearchProps extends InputProps {
   label?: string;
-  capsule?: boolean;
 }
 
-export function ProductNameSearch({ label, capsule }: ProductNameSearchProps) {
+export function ProductNameSearch({ label, ...props }: ProductNameSearchProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
+  const { productFilters, dispatchProductFilters } = useProductFilters();
 
   const debouncedFilterName = useDebounce(inputValue, 300);
 
   useEffect(() => {
-    if (debouncedFilterName !== undefined && debouncedFilterName !== filters.productName) {
-      setFilters({ ...filters, page: 1, productName: debouncedFilterName });
+    if (debouncedFilterName !== undefined && debouncedFilterName !== productFilters.productName) {
+      dispatchProductFilters({ type: ProductFilterAction.SetProductName, payload: debouncedFilterName });
     }
-  }, [debouncedFilterName, filters, setFilters]);
+  }, [debouncedFilterName, dispatchProductFilters, productFilters.productName]);
 
   const endElement = inputValue ? (
     <CloseButton
@@ -40,8 +40,8 @@ export function ProductNameSearch({ label, capsule }: ProductNameSearchProps) {
       <InputGroup endElement={endElement} startElement={<LuSearch />}>
         <Input
           ref={inputRef}
+          {...props}
           value={inputValue}
-          rounded={capsule ? "full" : undefined}
           placeholder="Search products"
           onChange={(event) => {
             setInputValue(event.target.value);

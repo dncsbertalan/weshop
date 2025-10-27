@@ -8,11 +8,11 @@ import { Stack } from "@chakra-ui/react";
 export function ProductFilters() {
   return (
     <GlassContainer>
-      <ProductNameSearch capsule />
+      <ProductNameSearch rounded="full" />
       <Stack direction="row" gap={2}>
-        <ProductMinPriceFilter />
-        <ProductMaxPriceFilter />
-        <ProductCategorySelect />
+        <ProductMinPriceFilter rounded="full" />
+        <ProductMaxPriceFilter rounded="full" />
+        <ProductCategorySelect rounded="full" />
       </Stack>
     </GlassContainer>
   );

@@ -1,58 +1,52 @@
 import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
-import { Portal, Button, CloseButton, Dialog } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CreateProductDialogBody } from "./CreateProductDialog.Body";
-import { useCreateProduct } from "../hooks/useCreateProduct";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ProductKeys } from "@/features/products/ProductKeys";
+import { Dialog } from "@/components/Dialog";
+import { createProduct } from "../api/createProduct";
+import { toaster } from "@/components/ui/toaster";
 
 export function CreatePorductDialog() {
   const queryClient = useQueryClient();
-  const createProductForm = useForm<CreateProductRequestDto>();
+  const createProductForm = useForm<CreateProductRequestDto>({
+    defaultValues: {
+      availableQuantity: 0,
+      categoryIds: [],
+      description: "",
+      image: undefined,
+      name: "",
+      price: 0,
+    },
+  });
 
-  const { handleSubmit } = createProductForm;
-  const { mutateAsync, isPending } = useCreateProduct();
+  const { handleSubmit, reset } = createProductForm;
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (createProductRequest: CreateProductRequestDto) => await createProduct(createProductRequest),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] });
+      reset();
+      toaster.create({ title: "Succesfully created product", type: "success" });
+    },
+  });
 
   const onSubmit = async (data: CreateProductRequestDto) => {
-    mutateAsync(data).then(() => queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] }));
+    mutate(data);
   };
 
   return (
     <FormProvider {...createProductForm}>
-      <Dialog.Root closeOnInteractOutside={false} placement="center" motionPreset="slide-in-bottom">
-        <Dialog.Trigger asChild>
-          <Button variant="outline">Add new product</Button>
-        </Dialog.Trigger>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content rounded="3xl" maxHeight="90%">
-              <Dialog.Header>
-                <Dialog.Title>Add new product</Dialog.Title>
-              </Dialog.Header>
-
-              <Dialog.Body overflow="auto">
-                <CreateProductDialogBody />
-              </Dialog.Body>
-
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" rounded="full">
-                    Cancel
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button type="submit" rounded="full" onClick={handleSubmit(onSubmit)} loading={isPending}>
-                  Create product
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" rounded="full" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
+      <Dialog
+        title="Add new product"
+        body={<CreateProductDialogBody />}
+        trigger={<Button>Add new product</Button>}
+        footer={
+          <Button type="submit" rounded="full" onClick={handleSubmit(onSubmit)} loading={isPending}>
+            Create product
+          </Button>
+        }
+      />
     </FormProvider>
   );
 }

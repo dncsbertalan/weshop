@@ -1,18 +1,21 @@
-import { CloseButton, Field, InputGroup, NumberInput } from "@chakra-ui/react";
+import { CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useProductFilters } from "../hooks/useProductFilters";
+import { ProductFilterAction } from "../productFilterReducer";
 
-export function ProductMinPriceFilter() {
+type ProductMinPriceFilterProps = InputProps;
+
+export function ProductMinPriceFilter({ ...props }: ProductMinPriceFilterProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
+  const { productFilters, dispatchProductFilters } = useProductFilters();
 
-  const endElement = filters.min ? (
+  const endElement = productFilters.min ? (
     <CloseButton
       rounded="full"
       size="xs"
       onClick={() => {
-        setFilters({ ...filters, min: 0 });
+        dispatchProductFilters({ type: ProductFilterAction.SetMinPrice, payload: 0 });
         inputRef.current?.focus();
       }}
       me="-2"
@@ -26,9 +29,13 @@ export function ProductMinPriceFilter() {
         <InputGroup startElement="Ft" endElement={endElement}>
           <NumberInput.Input
             ref={inputRef}
-            value={filters.min}
+            {...props}
+            value={productFilters.min}
             onChange={(event) => {
-              setFilters({ ...filters, page: 1, min: Number(event.currentTarget.value) });
+              dispatchProductFilters({
+                type: ProductFilterAction.SetMinPrice,
+                payload: Number(event.currentTarget.value),
+              });
             }}
           />
         </InputGroup>

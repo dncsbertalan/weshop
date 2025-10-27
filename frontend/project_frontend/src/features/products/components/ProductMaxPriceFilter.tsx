@@ -1,18 +1,21 @@
-import { CloseButton, Field, InputGroup, NumberInput } from "@chakra-ui/react";
+import { CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useProductFilters } from "../hooks/useProductFilters";
+import { ProductFilterAction } from "../productFilterReducer";
 
-export function ProductMaxPriceFilter() {
+type ProductMaxPriceFilterProps = InputProps;
+
+export function ProductMaxPriceFilter({ ...props }: ProductMaxPriceFilterProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { productFilters: filters, setProductFilters: setFilters } = useProductFilters();
+  const { productFilters, dispatchProductFilters } = useProductFilters();
 
-  const endElement = filters.max ? (
+  const endElement = productFilters.max ? (
     <CloseButton
       rounded="full"
       size="xs"
       onClick={() => {
-        setFilters({ ...filters, max: 100000 });
+        dispatchProductFilters({ type: ProductFilterAction.SetMaxPrice, payload: 100000 });
         inputRef.current?.focus();
       }}
       me="-2"
@@ -26,9 +29,13 @@ export function ProductMaxPriceFilter() {
         <InputGroup startElement="Ft" endElement={endElement}>
           <NumberInput.Input
             ref={inputRef}
-            value={filters.max}
+            {...props}
+            value={productFilters.max}
             onChange={(event) => {
-              setFilters({ ...filters, page: 1, max: Number(event.currentTarget.value) });
+              dispatchProductFilters({
+                type: ProductFilterAction.SetMaxPrice,
+                payload: Number(event.currentTarget.value),
+              });
             }}
           />
         </InputGroup>

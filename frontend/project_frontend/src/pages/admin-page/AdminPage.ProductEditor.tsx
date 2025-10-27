@@ -1,8 +1,7 @@
-import { CreatePorductDialog } from "@/features/product-editor/components/CreatePorductDialog";
 import { useGetProduct } from "@/features/products/hooks/useGetProduct";
 import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
 import { formatCurrencyFt } from "@/utils/currency";
-import { DataList, HStack, Image, Stack, Text } from "@chakra-ui/react";
+import { DataList, HStack, Image, Stack } from "@chakra-ui/react";
 
 interface AdminPageProductEditorProps {
   productId: number | null;
@@ -14,10 +13,6 @@ export function AdminPageProductEditor({ productId }: AdminPageProductEditorProp
 
   return (
     <Stack flex={1}>
-      <Text textStyle="lg">Product</Text>
-
-      <CreatePorductDialog />
-
       {product && (
         <HStack justifyContent="space-between">
           <Stack>
