@@ -11,7 +11,7 @@ public static class UserMapper
         UserId = data.Id,
     };
 
-    public static UserDto MapToUserDto(User_Data data, List<string> roles) => new()
+    public static UserDto MapToUserDto(User_Data data) => new()
     {
         FirstName = data.FirstName,
         LastName = data.LastName,
@@ -19,6 +19,5 @@ public static class UserMapper
         BirthDate = data.BirthDate,
         CartId = data.Cart.Id,
         Carts = [.. data.SharedCarts.Select(CartMapper.MapToCartInfoDto)],
-        Roles = roles
     };
 }

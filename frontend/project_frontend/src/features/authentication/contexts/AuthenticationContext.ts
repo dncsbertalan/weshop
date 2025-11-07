@@ -1,8 +1,10 @@
+import { Role } from "@/context/authContext";
 import { UserDto } from "@/dtos/response/user/UserDto";
 import { createContext } from "react";
 
 interface AuthenticationContextType {
   user: UserDto | undefined;
+  roles: Role[];
   isAuthenticated: boolean;
   isAdmin: boolean;
   jwtToken: string | null;

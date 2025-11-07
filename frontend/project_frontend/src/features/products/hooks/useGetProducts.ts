@@ -12,5 +12,6 @@ export function useGetProducts({ productFilter }: UseGetProductsParams) {
     queryKey: [ProductKeys.Products, productFilter],
     queryFn: () => getProducts(productFilter),
     staleTime: 1000 * 60 * 60,
+    placeholderData: (prev) => prev,
   });
 }

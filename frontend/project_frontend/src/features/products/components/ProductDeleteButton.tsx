@@ -22,6 +22,7 @@ export function ProductDeleteButton({ productId }: ProductDeleteButtonProps) {
           Delete
         </Button>
       }
+      title="Caution"
     />
   );
 }

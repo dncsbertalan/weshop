@@ -24,7 +24,7 @@ export function ProductSection() {
       {isPending && <ProductSectionLoading />}
 
       {!isPending && (
-        <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap="20px" width="100%">
+        <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap="20px" width="100%">
           <For each={products?.items}>{(item, index) => <ProductCard product={item} key={index} />}</For>
         </SimpleGrid>
       )}
@@ -43,6 +43,7 @@ export function ProductSection() {
             backgroundColor: "whiteAlpha.800",
             padding: 2,
             rounded: "full",
+            shadow: "md",
           }}
         >
           <ButtonGroup variant="ghost" size="sm" rounded="full">

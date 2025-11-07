@@ -44,6 +44,7 @@ export function CreateProductDialogCategorySelector() {
             onValueChange={({ value }) => field.onChange(value)}
             onInteractOutside={() => field.onBlur()}
             collection={categoriesCollection}
+            positioning={{ strategy: "fixed", hideWhenDetached: true }}
           >
             <Select.HiddenSelect />
 

@@ -8,5 +8,4 @@ public class UserDto
     public DateTime BirthDate { get; set; }
     public long CartId { get; set; }
     public List<CartInformationDto> Carts { get; set; } = [];
-    public required List<string> Roles { get; set; }
 }

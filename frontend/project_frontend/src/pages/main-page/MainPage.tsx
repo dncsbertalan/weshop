@@ -1,5 +1,4 @@
 import { Center, Flex, Grid, GridItem, Spacer } from "@chakra-ui/react";
-import { Footer } from "../page-components/footer/Footer";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { ProductSection } from "./ProductsSection";
@@ -7,6 +6,7 @@ import { ScrollToTopButton } from "@/components/button/ScrollToTopButton";
 import { Toaster } from "@/components/ui/toaster";
 import { ProductFilters } from "./ProductFilters";
 import { ProductFilterProvider } from "@/features/products/components/ProductFilterProvider";
+import { Footer } from "@/components/footer/Footer";
 
 export function MainPage() {
   return (

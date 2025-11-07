@@ -1,21 +1,25 @@
-﻿using DataAccess.Models;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
+using DataAccess.Models;
 using Domain.Constants;
+using Domain.Dtos.Api.Response;
 using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Domain.Dtos.Api.Response;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController(UserManager<User_Data> _userManager, IConfiguration _configuration, CartService _cartService) : ControllerBase
+public class AuthenticationController(
+    UserManager<User_Data> _userManager,
+    IConfiguration _configuration,
+    CartService _cartService) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationData registrationData)
@@ -26,7 +30,7 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
             Email = registrationData.Email,
             FirstName = registrationData.FirstName,
             LastName = registrationData.LastName,
-            BirthDate = registrationData.BirthDate,
+            BirthDate = registrationData.BirthDate
         };
 
         var result = await _userManager.CreateAsync(user, registrationData.Password);
@@ -48,9 +52,7 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
     {
         var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
-        {
             return Unauthorized();
-        }
 
         var token = await GenerateJwtToken(user);
 
@@ -72,21 +74,24 @@ public class AuthenticationController(UserManager<User_Data> _userManager, IConf
         var claims = new List<Claim>
         {
             new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.NameIdentifier, user.Id)
         };
-        
+
         var roles = await _userManager.GetRolesAsync(user);
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var rolesJson = JsonSerializer.Serialize(roles);
+        claims.Add(new Claim("roles", rolesJson));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
         var tokenDescriptor = new JwtSecurityToken(
-            issuer: _configuration["JwtSettings:Issuer"],
-            audience: _configuration["JwtSettings:Audience"],
-            claims: claims,
+            _configuration["JwtSettings:Issuer"],
+            _configuration["JwtSettings:Audience"],
+            claims,
             expires: DateTime.UtcNow.AddDays(1),
             signingCredentials: credentials
         );

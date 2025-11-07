@@ -3,29 +3,60 @@ import { PropsWithChildren, useState, useEffect, useMemo } from "react";
 import { AuthenticationKeys } from "../AuthenticationKeys";
 import { AuthenticationContext } from "../contexts/AuthenticationContext";
 import { Role } from "@/context/authContext";
+import { jwtDecode } from "jwt-decode";
+import { useQueryClient } from "@tanstack/react-query";
+
+interface JwtPayload {
+  exp: number;
+  email?: string;
+  roles?: Role[];
+}
 
 export function AuthenticationProvider({ children }: PropsWithChildren) {
+  const queryClient = useQueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [jwtToken, setJwtToken] = useState<string | null>(() =>
     localStorage.getItem(AuthenticationKeys.AuthenticatianTokenLocalStorageKey)
   );
 
-  const { data: user } = useGetCurrentUser();
+  const { data: user } = useGetCurrentUser({ enabled: isAuthenticated });
 
-  const isAdmin = useMemo(() => user?.roles.find((role) => role === Role.Admin) !== undefined, [user?.roles]);
+  const isAdmin = useMemo(() => roles.includes(Role.Admin), [roles]);
 
+  // decode the JWT token returned on login, extracting the roles and expiration date from it
   useEffect(() => {
-    if (user) {
-      setIsAuthenticated(true);
+    if (jwtToken) {
+      try {
+        const decoded = jwtDecode<JwtPayload>(jwtToken);
+        const isExpired = decoded.exp * 1000 < Date.now();
+        if (isExpired) {
+          localStorage.removeItem(AuthenticationKeys.AuthenticatianTokenLocalStorageKey);
+          setJwtToken(null);
+          setIsAuthenticated(false);
+          setRoles([]);
+          queryClient.clear();
+          return;
+        }
+
+        const roles = decoded.roles ?? [];
+
+        setIsAuthenticated(true);
+        setRoles(roles.filter(Boolean));
+      } catch (err) {
+        console.error("Failed to decode token:", err);
+        setRoles([]);
+      }
     } else {
-      setIsAuthenticated(false);
+      setRoles([]);
     }
-  }, [user]);
+  }, [jwtToken, queryClient]);
 
   return (
     <AuthenticationContext.Provider
       value={{
         user,
+        roles,
         isAuthenticated,
         isAdmin,
         jwtToken,

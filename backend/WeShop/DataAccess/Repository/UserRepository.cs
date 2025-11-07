@@ -14,9 +14,9 @@ public class UserRepository(WebshopDbContext _context, UserManager<User_Data> _u
     {
         return await _context.Users
             .AsNoTracking()
-            .Select(user => new SimpleUserDto 
-            { 
-                UserId = user.Id 
+            .Select(user => new SimpleUserDto
+            {
+                UserId = user.Id
             })
             .FirstOrDefaultAsync(user => user.UserId == userId);
     }
@@ -34,29 +34,24 @@ public class UserRepository(WebshopDbContext _context, UserManager<User_Data> _u
         var user = await _context.Users
             .Include(user => user.Cart)
             .Include(user => user.SharedCarts)
-                .ThenInclude(sharedCart => sharedCart.Cart)
-                .ThenInclude(cart => cart.User)
+            .ThenInclude(sharedCart => sharedCart.Cart)
+            .ThenInclude(cart => cart.User)
             .FirstOrDefaultAsync(user => user.Id == userId);
 
-        if (user is null)
-        {
-            return null;
-        }
+        if (user is null) return null;
 
         // TODO: Remove this after cart handling
         if (user.Cart is null)
         {
             var cart = new Cart_Data
             {
-                UserId = userId,
+                UserId = userId
             };
 
             _context.Carts.Add(cart);
             await _context.SaveChangesAsync();
         }
-        
-        var roles = await _userManager.GetRolesAsync(user);
-        
-        return UserMapper.MapToUserDto(user, roles.ToList());
+
+        return UserMapper.MapToUserDto(user);
     }
 }
