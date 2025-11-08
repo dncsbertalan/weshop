@@ -1,8 +1,8 @@
-import { Footer } from "@/pages/page-components/footer/Footer";
 import { GlobalNavBar } from "@/pages/page-components/navigation-bar/GlobalNavBar";
 import { NavBarFiller } from "@/pages/page-components/navigation-bar/NavBarFiller";
 import { Flex, Spacer } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
+import { Footer } from "./footer/Footer";
 
 export function PageContainer({ children }: PropsWithChildren) {
   return (

@@ -13,7 +13,7 @@ import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { Role } from "@/context/authContext";
+import { Role } from "@/features/authentication/Role";
 import { useCart } from "@/context/cartContext";
 import { Link } from "react-router";
 

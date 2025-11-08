@@ -1,4 +1,4 @@
-import { Role } from "@/context/authContext";
+import { Role } from "@/features/authentication/Role";
 import { UserDto } from "@/dtos/response/user/UserDto";
 import { createContext } from "react";
 

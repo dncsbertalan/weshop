@@ -2,7 +2,7 @@ import { useGetCurrentUser } from "@/features/users/hooks/useGetCurrentUser";
 import { PropsWithChildren, useState, useEffect, useMemo } from "react";
 import { AuthenticationKeys } from "../AuthenticationKeys";
 import { AuthenticationContext } from "../contexts/AuthenticationContext";
-import { Role } from "@/context/authContext";
+import { Role } from "@/features/authentication/Role";
 import { jwtDecode } from "jwt-decode";
 import { useQueryClient } from "@tanstack/react-query";
 

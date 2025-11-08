@@ -10,7 +10,7 @@ import { Routes, Route } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
 import { CheckoutPage } from "@/pages/checkout-page/CheckoutPage";
 import { AdminPage } from "@/pages/admin-page/AdminPage";
-import { Role } from "@/context/authContext";
+import { Role } from "@/features/authentication/Role";
 
 const AppRoutes = () => {
   return (

@@ -1,4 +1,4 @@
-import { Role } from "@/context/authContext";
+import { Role } from "@/features/authentication/Role";
 import { useCart } from "@/context/cartContext";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { useLogoutUser } from "@/features/authentication/hooks/useLogoutUser";

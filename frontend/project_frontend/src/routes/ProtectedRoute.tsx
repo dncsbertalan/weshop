@@ -1,4 +1,4 @@
-import { Role } from "@/context/authContext";
+import { Role } from "@/features/authentication/Role";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Navigation } from "@/routes/navigation";
 import { Navigate, Outlet } from "react-router";

@@ -10,12 +10,15 @@ public class Cart_Data
     [Key]
     public long Id { get; set; }
 
-    public string UserId { get; set; }
-    [ForeignKey("UserId")]
-    public User_Data User { get; set; }
+    // A cart must have one and only one owner
+    [Required] public string OwnerId { get; set; }
+    [ForeignKey(nameof(OwnerId))] public virtual User_Data Owner { get; set; }
 
-    [Required]
-    public bool IsShared { get; set; } = false;
+    // Refers to the users whose active cart this is
+    [InverseProperty(nameof(User_Data.ActiveCart))]
+    public virtual List<User_Data> ActiveUsers { get; set; } = [];
+
+    [Required] public bool IsShared { get; set; }
 
     public virtual List<CartItem_Data> CartItems { get; set; } = [];
     public virtual List<SharedCart_Data> Participants { get; set; } = [];

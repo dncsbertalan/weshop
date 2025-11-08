@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(WebshopDbContext))]
-    [Migration("20250422140024_SharedCartModificationsAndIndexes")]
-    partial class SharedCartModificationsAndIndexes
+    [Migration("20251108232514_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,13 +109,14 @@ namespace DataAccess.Migrations
                     b.Property<bool>("IsShared")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
 
                     b.ToTable("Cart");
                 });
@@ -230,20 +231,45 @@ namespace DataAccess.Migrations
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeType")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Price" }, "IX_Price");
+                    b.HasIndex("ModifiedByUserId");
+
+                    b.HasIndex(new[] { "AvailableQuantity" }, "IX_Product_AvailableQuantity");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_Product_IsDeleted");
+
+                    b.HasIndex(new[] { "Price" }, "IX_Product_Price");
 
                     b.ToTable("Product");
                 });
@@ -283,6 +309,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<long>("ActiveCartId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
@@ -291,6 +320,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -328,6 +358,9 @@ namespace DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -339,6 +372,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActiveCartId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -526,13 +561,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
-                    b.HasOne("DataAccess.Models.User_Data", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("DataAccess.Models.User_Data", "Owner")
+                        .WithOne("OwnedCart")
+                        .HasForeignKey("DataAccess.Models.Cart_Data", "OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("DataAccess.Models.OrderItem_Data", b =>
@@ -573,6 +608,15 @@ namespace DataAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Product_Data", b =>
+                {
+                    b.HasOne("DataAccess.Models.User_Data", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId");
+
+                    b.Navigation("ModifiedByUser");
+                });
+
             modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
                 {
                     b.HasOne("DataAccess.Models.Cart_Data", "Cart")
@@ -582,7 +626,7 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("DataAccess.Models.User_Data", "CartUser")
-                        .WithMany()
+                        .WithMany("SharedCarts")
                         .HasForeignKey("CartUserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -590,6 +634,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Cart");
 
                     b.Navigation("CartUser");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.User_Data", b =>
+                {
+                    b.HasOne("DataAccess.Models.Cart_Data", "ActiveCart")
+                        .WithMany()
+                        .HasForeignKey("ActiveCartId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ActiveCart");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -653,6 +708,14 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.User_Data", b =>
+                {
+                    b.Navigation("OwnedCart")
+                        .IsRequired();
+
+                    b.Navigation("SharedCarts");
                 });
 #pragma warning restore 612, 618
         }

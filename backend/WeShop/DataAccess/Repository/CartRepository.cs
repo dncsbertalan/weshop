@@ -1,7 +1,7 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
 using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 using Domain.Models;
 using Domain.Repository;
@@ -11,6 +11,17 @@ namespace DataAccess.Repository;
 
 public class CartRepository(WebshopDbContext _context) : ICartRepository
 {
+    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
+    {
+        //var cart = await _context.Carts.FindAsync(cartId);
+        var cartItem = await _context.CartItems
+            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
+            .ExecuteDeleteAsync();
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     #region Cart
 
     public async Task<CartWithParticipantsDto?> GetCartParticipantsAsync(long cartId)
@@ -21,10 +32,10 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             .Select(cart => new CartWithParticipantsDto
             {
                 CartId = cart.Id,
-                UserId = cart.UserId,
+                UserId = cart.OwnerId,
                 Participants = cart.Participants
                     .Select(p => p.CartUserId)
-                    .ToList(),
+                    .ToList()
             })
             .FirstOrDefaultAsync();
     }
@@ -33,7 +44,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     {
         var cart = new Cart_Data
         {
-            UserId = userId,
+            OwnerId = userId
         };
 
         _context.Carts.Add(cart);
@@ -44,7 +55,6 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     public async Task DeleteCartAsync(long cartId)
     {
-
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
@@ -65,14 +75,14 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     public async Task<long?> GetCartIdFromUserIdAsync(string userId)
     {
-        var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.User.Id == userId);
+        var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.Owner.Id == userId);
         return cart?.Id;
     }
 
     public async Task<string?> GetCartOwnerIdAsync(long cartId)
     {
         var cart = await _context.Carts.FindAsync(cartId);
-        return cart?.UserId;
+        return cart?.OwnerId;
     }
 
     #endregion
@@ -82,16 +92,13 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
     {
         var cart = await _context.Carts.FindAsync(cartId);
-        if (!cart!.IsShared)
-        {
-            cart.IsShared = true;
-        }
+        if (!cart!.IsShared) cart.IsShared = true;
 
         var newData = new SharedCart_Data
         {
             CartId = cartId,
             CartUserId = userId,
-            JoinedDate = DateTime.UtcNow,
+            JoinedDate = DateTime.UtcNow
         };
 
         _context.SharedCarts.Add(newData);
@@ -108,7 +115,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
                 CartId = sharedCart.CartId,
                 OwnerEmail = sharedCart.CartUser.Email,
                 OwnerFirstName = sharedCart.CartUser.FirstName,
-                OwnerLastName = sharedCart.CartUser.LastName,
+                OwnerLastName = sharedCart.CartUser.LastName
             })
             .AsNoTracking()
             .ToListAsync();
@@ -142,7 +149,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
                 Product = product,
                 Cart = cart,
                 Quantity = 1,
-                UserId = userId,
+                UserId = userId
             };
 
             _context.CartItems.Add(newCartItem);
@@ -172,12 +179,12 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
-                .ThenInclude(cartItem => cartItem.Product)
-                    .ThenInclude(product => product.Categories)
+            .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
             .Include(cart => cart.CartItems)
-                .ThenInclude(cartItem => cartItem.AddedBy)
+            .ThenInclude(cartItem => cartItem.AddedBy)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
-        
+
         return cart is null ? null : CartMapper.Map(cart);
     }
 
@@ -194,17 +201,4 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     }
 
     #endregion
-
-
-
-    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
-    {
-        //var cart = await _context.Carts.FindAsync(cartId);
-        var cartItem = await _context.CartItems
-            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
-            .ExecuteDeleteAsync();
-
-        await _context.SaveChangesAsync();
-        return true;
-    }
 }

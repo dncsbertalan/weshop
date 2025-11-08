@@ -1,151 +1,150 @@
 import { createContext, useContext } from "react";
-import { addProductToCart, addUserToCart, deleteProductFromCart, getCart, modifyProductInCart, } from "../api/cart-api";
+import { addProductToCart, addUserToCart, deleteProductFromCart, getCart, modifyProductInCart } from "../api/cart-api";
 import { Cart } from "@/models/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOrder } from "@/api/order-api";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { useUser } from "./UserContext";
 import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
-import { useAuth } from "./AuthContext";
 import { useCartHub } from "@/hooks/use-cart-hub";
 import { toaster } from "@/components/ui/toaster";
 import { ORDER_REFETCH_KEY } from "@/api/api-constants";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 
 interface CartContextType {
-    // Cart
-    cart: Cart | undefined;
-    cartIsPending: boolean;
-    cartIsError: boolean;
-    addItemToCart: (cartId: number, productId: number) => Promise<void>;
-    removeItemToCart: (cartId: number, cartItemId: number) => Promise<void>;
-    modifyItemToCart: (cartId: number, cartItemId: number, quantity: number) => Promise<void>;
-    addUserToCart: (cartId: number, userData: AddUserToCartDto) => Promise<void>;
-    // Order
-    createOrderIsPending: boolean;
-    createOrderIsSuccess: boolean;
-    createOrderIsError: boolean;
-    createOrder: (checkoutInfo: CheckoutInfoData) => Promise<void>;
+  // Cart
+  cart: Cart | undefined;
+  cartIsPending: boolean;
+  cartIsError: boolean;
+  addItemToCart: (cartId: number, productId: number) => Promise<void>;
+  removeItemToCart: (cartId: number, cartItemId: number) => Promise<void>;
+  modifyItemToCart: (cartId: number, cartItemId: number, quantity: number) => Promise<void>;
+  addUserToCart: (cartId: number, userData: AddUserToCartDto) => Promise<void>;
+  // Order
+  createOrderIsPending: boolean;
+  createOrderIsSuccess: boolean;
+  createOrderIsError: boolean;
+  createOrder: (checkoutInfo: CheckoutInfoData) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_QUERY_KEY = "cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-    const queryClient = useQueryClient();
-    const { activeCartId } = useUser();
-    const { token } = useAuth();
+  const queryClient = useQueryClient();
+  const { activeCartId } = useUser();
+  const { token } = useAuthentication();
 
-    //#region SignalR handling the shared cart
+  //#region SignalR handling the shared cart
 
-    useCartHub(activeCartId, token, async () => {
-        await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
-        /*toaster.create({
+  useCartHub(activeCartId, token, async () => {
+    await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
+    /*toaster.create({
             description: `${cart?.cartItems} was successfully added to your cart.`,
             type: "info",
         })*/
-    })
+  });
 
-    //#endregion
+  //#endregion
 
+  // Get the cart items from the server.
+  const {
+    data: cart,
+    isPending: cartIsPending,
+    isError: cartIsError,
+  } = useQuery({
+    queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId],
+    queryFn: () => getCart(activeCartId!),
+    staleTime: 1000 * 60 * 60, // data counts as fresh for an hour
+    enabled: !!activeCartId,
+  });
 
-    // Get the cart items from the server.
-    const {
-        data: cart,
-        isPending: cartIsPending,
-        isError: cartIsError,
-    } = useQuery({
-        queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId],
-        queryFn: () => getCart(activeCartId!),
-        staleTime: 1000 * 60 * 60, // data counts as fresh for an hour
-        enabled: !!activeCartId,
-    });
+  //#region Cart item modifications
 
+  // Add item to the cart.
+  const addItemMutation = useMutation({
+    mutationFn: ({ cartId, productId }: { cartId: number; productId: number }) => addProductToCart(cartId, productId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
+    },
+    onError: (error) => {
+      console.error("Error adding item to cart:", error);
+    },
+  });
 
-    //#region Cart item modifications
+  // Remove item from the cart.
+  const removeItemMutation = useMutation({
+    mutationFn: ({ cartId, cartItemId }: { cartId: number; cartItemId: number }) =>
+      deleteProductFromCart(cartId, cartItemId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
+    },
+  });
 
-    // Add item to the cart.
-    const addItemMutation = useMutation({
-        mutationFn: ({ cartId, productId }: { cartId: number; productId: number }) =>
-            addProductToCart(cartId, productId),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
-        },
-        onError: (error) => {
-            console.error("Error adding item to cart:", error);
-        },
-    });
+  // Modify the quantity of an item in the cart.
+  const modifyItemMutation = useMutation({
+    mutationFn: ({ cartId, cartItemId, quantity }: { cartId: number; cartItemId: number; quantity: number }) =>
+      modifyProductInCart(cartId, cartItemId, quantity),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
+    },
+  });
 
-    // Remove item from the cart.
-    const removeItemMutation = useMutation({
-        mutationFn: ({ cartId, cartItemId }: { cartId: number; cartItemId: number }) =>
-            deleteProductFromCart(cartId, cartItemId),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
-        },
-    });
+  //#endregion
 
-    // Modify the quantity of an item in the cart.
-    const modifyItemMutation = useMutation({
-        mutationFn: ({ cartId, cartItemId, quantity }: { cartId: number; cartItemId: number; quantity: number }) =>
-            modifyProductInCart(cartId, cartItemId, quantity),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
-        },
-    });
+  //#region Shared cart
 
-    //#endregion
+  const addUserToCartMutation = useMutation({
+    mutationFn: ({ cartId, userData }: { cartId: number; userData: AddUserToCartDto }) =>
+      addUserToCart(cartId, userData),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
+    },
+    onError: (error) => {
+      console.error("Error adding user to cart:", error);
+    },
+  });
 
+  //#endregion
 
-    //#region Shared cart
+  // Checkout
+  const createOrderMutation = useMutation({
+    mutationFn: (checkoutData: CheckoutInfoData) => createOrder(activeCartId!, checkoutData),
+    onSuccess: async () => {
+      //await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
+      await queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === ORDER_REFETCH_KEY });
+    },
+    onError: (error) => {
+      console.error("Error creating the order:", error);
+    },
+  });
 
-    const addUserToCartMutation = useMutation({
-        mutationFn: ({ cartId, userData }: { cartId: number; userData: AddUserToCartDto; }) => addUserToCart(cartId, userData),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [ORDER_REFETCH_KEY, CART_QUERY_KEY, activeCartId] });
-        },
-        onError: (error) => {
-            console.error("Error adding user to cart:", error);
-        },
-    });
+  return (
+    <CartContext.Provider
+      value={{
+        cart,
+        cartIsPending,
+        cartIsError,
+        addItemToCart: (cartId, productId) => addItemMutation.mutateAsync({ cartId, productId }),
+        removeItemToCart: (cartId, cartItemId) => removeItemMutation.mutateAsync({ cartId, cartItemId }),
+        modifyItemToCart: (cartId, cartItemId, quantity) =>
+          modifyItemMutation.mutateAsync({ cartId, cartItemId, quantity }),
+        addUserToCart: (cartId, userData) => addUserToCartMutation.mutateAsync({ cartId, userData }),
 
-    //#endregion
-
-
-    // Checkout
-    const createOrderMutation = useMutation({
-        mutationFn: (checkoutData: CheckoutInfoData) => createOrder(activeCartId!, checkoutData),
-        onSuccess: async () => {
-            //await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY, activeCartId] });
-           await queryClient.invalidateQueries({ predicate: query => query.queryKey[0] === ORDER_REFETCH_KEY });
-        },
-        onError: (error) => {
-            console.error("Error creating the order:", error);
-        },
-    });
-
-    return (
-        <CartContext.Provider value={{
-            cart,
-            cartIsPending,
-            cartIsError,
-            addItemToCart: (cartId, productId) => addItemMutation.mutateAsync({ cartId, productId }),
-            removeItemToCart: (cartId, cartItemId) => removeItemMutation.mutateAsync({ cartId, cartItemId }),
-            modifyItemToCart: (cartId, cartItemId, quantity) => modifyItemMutation.mutateAsync({ cartId, cartItemId, quantity }),
-            addUserToCart: (cartId, userData) => addUserToCartMutation.mutateAsync({ cartId, userData }),
-
-            createOrderIsPending: createOrderMutation.isPending,
-            createOrderIsSuccess: createOrderMutation.isSuccess,
-            createOrderIsError: createOrderMutation.isError,
-            createOrder: (checkoutData: CheckoutInfoData) => createOrderMutation.mutateAsync(checkoutData),
-        }}>
-            {children}
-        </CartContext.Provider>
-    );
+        createOrderIsPending: createOrderMutation.isPending,
+        createOrderIsSuccess: createOrderMutation.isSuccess,
+        createOrderIsError: createOrderMutation.isError,
+        createOrder: (checkoutData: CheckoutInfoData) => createOrderMutation.mutateAsync(checkoutData),
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
-    const context = useContext(CartContext);
-    if (!context) throw new Error("useCart must be used within a CartProvider");
-    return context;
+  const context = useContext(CartContext);
+  if (!context) throw new Error("useCart must be used within a CartProvider");
+  return context;
 };

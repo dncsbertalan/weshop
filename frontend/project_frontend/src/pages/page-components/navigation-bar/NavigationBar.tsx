@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/AuthContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Navigation } from "@/routes/navigation";
 import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
@@ -7,7 +7,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
 
 export function NavigationBar() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthentication();
 
   return (
     <Flex
@@ -44,13 +44,7 @@ export function NavigationBar() {
 
         {isAuthenticated && (
           <Link to={Navigation.shoppingCart}>
-            <IconButton
-              aria-label="Shopping cart"
-              variant="ghost"
-              rounded="full"
-              size="md"
-              padding={2}
-            >
+            <IconButton aria-label="Shopping cart" variant="ghost" rounded="full" size="md" padding={2}>
               <MdOutlineShoppingCart />
               Cart
             </IconButton>
@@ -59,13 +53,7 @@ export function NavigationBar() {
 
         {isAuthenticated && (
           <Link to={Navigation.profile}>
-            <IconButton
-              aria-label="Profil"
-              variant="ghost"
-              rounded="full"
-              size="md"
-              padding={2}
-            >
+            <IconButton aria-label="Profil" variant="ghost" rounded="full" size="md" padding={2}>
               <FaUser />
               Profil
             </IconButton>
@@ -74,12 +62,7 @@ export function NavigationBar() {
 
         {!isAuthenticated && (
           <Link to={Navigation.login}>
-            <IconButton
-              aria-label="Login"
-              variant="ghost"
-              rounded="full"
-              size="md"
-            >
+            <IconButton aria-label="Login" variant="ghost" rounded="full" size="md">
               <FaRightToBracket />
             </IconButton>
           </Link>

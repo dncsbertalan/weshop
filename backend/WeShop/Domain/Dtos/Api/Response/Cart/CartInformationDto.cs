@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Api.Response;
+﻿namespace Domain.Dtos.Api.Response.Cart;
 
 public class CartInformationDto
 {

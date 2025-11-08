@@ -32,20 +32,20 @@ public class UserRepository(WebshopDbContext _context, UserManager<User_Data> _u
     public async Task<UserDto?> GetUserByIdAsync(string userId)
     {
         var user = await _context.Users
-            .Include(user => user.Cart)
+            .Include(user => user.OwnedCart)
             .Include(user => user.SharedCarts)
             .ThenInclude(sharedCart => sharedCart.Cart)
-            .ThenInclude(cart => cart.User)
+            .ThenInclude(cart => cart.Owner)
             .FirstOrDefaultAsync(user => user.Id == userId);
 
         if (user is null) return null;
 
         // TODO: Remove this after cart handling
-        if (user.Cart is null)
+        if (user.OwnedCart is null)
         {
             var cart = new Cart_Data
             {
-                UserId = userId
+                OwnerId = userId
             };
 
             _context.Carts.Add(cart);
