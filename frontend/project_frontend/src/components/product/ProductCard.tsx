@@ -1,29 +1,29 @@
 import { useCart } from "@/context/cartContext";
 import { Product } from "@/models/Product";
 import { ProductInfoDialog } from "@/pages/product-page/ProductInfoDialog";
-import { Button, Card, Flex, Icon, Image, Spacer, Text } from "@chakra-ui/react";
+import { Button, Flex, Icon, Image, Spacer, Text } from "@chakra-ui/react";
 import { MdAddShoppingCart } from "react-icons/md";
 import { toaster } from "../ui/toaster";
 import { formatCurrency } from "@/utils/currency";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { FaRegCircleXmark } from "react-icons/fa6";
-import { useUser } from "@/context/UserContext";
 import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItemToCart: addItem } = useCart();
-  const user = useUser();
+  const { user } = useAuthentication();
   const add = async () => {
-    addItem(user.activeCartId!, product.id);
+    addItem(user?.activeCartId!, product.id);
     toaster.create({
       description: `${product.name} was successfully added to your cart.`,
       type: "info",
     });
   };
-  const { data: image, isPending } = useGetProductImage({ productId: product.id });
+  const { data: image } = useGetProductImage({ productId: product.id });
 
   return (
     <Flex

@@ -2,12 +2,12 @@ import { Flex, Spacer, VStack, Text } from "@chakra-ui/react";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { GlobalNavBarProfil } from "../page-components/navigation-bar/GlobalNavBar";
 import { OrdersSection } from "./OrdersSection";
-import { useUser } from "@/hooks/use-user";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { Footer } from "@/components/footer/Footer";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 
 export function ProfileMain() {
-  const user = useUser();
+  const { user } = useAuthentication();
 
   return (
     <Flex direction="column" minHeight="100vh">
@@ -27,7 +27,7 @@ export function ProfileMain() {
             //flexDirection="column"
           >
             <Text fontSize="25px" lineHeight="28px">
-              Hello, {user.data?.firstName} {user.data?.lastName}!
+              Hello, {user?.firstName} {user?.lastName}!
             </Text>
 
             <ColorModeButton />

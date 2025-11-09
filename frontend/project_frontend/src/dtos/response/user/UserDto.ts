@@ -3,6 +3,7 @@ import { CartInformationDto } from "../cart/CartInformationDto";
 
 export const UserDto = z
   .object({
+    userId: z.string(),
     firstName: z.string(),
     lastName: z.string(),
     email: z.string(),

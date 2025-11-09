@@ -1,5 +1,6 @@
-import { useCart } from "@/context/CartContext";
-import { useUser } from "@/context/UserContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useModifyProductInCart } from "@/features/cart/hooks/useModifyProductInCart";
+import { useRemoveProductFromCart } from "@/features/cart/hooks/useRemoveProductFromCart";
 import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
 import { CartItem } from "@/models/cart";
 import { formatCurrency } from "@/utils/currency";
@@ -12,12 +13,13 @@ type CartItemCardProps = {
 };
 
 export function CartItemCard({ cartItem }: CartItemCardProps) {
-  const { removeItemToCart: removeItem, modifyItemToCart: modifyItem } = useCart();
-  const user = useUser();
+  const { mutate: removeProductFromCart } = useRemoveProductFromCart();
+  const { mutate: modifyProductInCart } = useModifyProductInCart();
+  const { user } = useAuthentication();
   const remove = async () => {
-    removeItem(user.activeCartId!, cartItem.id);
+    removeProductFromCart({ cartId: user?.activeCartId!, cartItemId: cartItem.id });
   };
-  const { data: image, isPending } = useGetProductImage({ productId: cartItem.productId });
+  const { data: image } = useGetProductImage({ productId: cartItem.productId });
 
   return (
     <Box
@@ -66,7 +68,13 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
                 <NumberInput.DecrementTrigger
                   asChild
                   disabled={cartItem.quantity < 2}
-                  onClick={() => modifyItem(user.activeCartId!, cartItem.id, cartItem.quantity - 1)}
+                  onClick={() =>
+                    modifyProductInCart({
+                      cartId: user?.activeCartId!,
+                      cartItemId: cartItem.id,
+                      quantity: cartItem.quantity - 1,
+                    })
+                  }
                 >
                   <IconButton variant="outline" size="sm">
                     <LuMinus />
@@ -77,7 +85,13 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
                 <NumberInput.IncrementTrigger
                   asChild
-                  onClick={() => modifyItem(user.activeCartId!, cartItem.id, cartItem.quantity + 1)}
+                  onClick={() =>
+                    modifyProductInCart({
+                      cartId: user?.activeCartId!,
+                      cartItemId: cartItem.id,
+                      quantity: cartItem.quantity + 1,
+                    })
+                  }
                 >
                   <IconButton variant="outline" size="sm">
                     <LuPlus />

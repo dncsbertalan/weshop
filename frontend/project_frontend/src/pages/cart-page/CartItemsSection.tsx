@@ -1,163 +1,175 @@
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cartContext";
 import { VStack, For, Flex, Button, EmptyState, Spinner, Box, Text, Menu, Portal, HStack } from "@chakra-ui/react";
 import { Navigation } from "@/routes/navigation";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
 import { CartItemCard } from "@/components/product/CartItemCard";
 import { useUser } from "@/context/UserContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 
 export function CartItemsSection() {
-    const { cart, cartIsPending, cartIsError } = useCart();
+  const { cart, cartIsPending, cartIsError } = useCart();
 
-    if (cartIsError) {
-        return (
-            <CartItemSectionError />
-        );
-    }
+  if (cartIsError) {
+    return <CartItemSectionError />;
+  }
 
-    return (
-        <Flex
-            padding={{ lg: "0px 10px", xl: "0px 30px" }}
-            marginBottom={{ base: "30px", md:"30px", lg: 0}}
-        >
-            {cartIsPending && <CartItemSectionLoading />}
+  return (
+    <Flex padding={{ lg: "0px 10px", xl: "0px 30px" }} marginBottom={{ base: "30px", md: "30px", lg: 0 }}>
+      {cartIsPending && <CartItemSectionLoading />}
 
-            {!cartIsPending &&
-                <Box>
-                    <HStack gap="30px" marginBottom="10px">
-                        <CartInfoSec isShared={cart!.isShared} />
-                        <ChangeCart />
-                    </HStack>
-                    {cart!.cartItems?.length === 0 ? (
-                        <CartItemSectionEmpty />
-                    ) : (
-                        <Box borderTop="1px solid" borderTopColor="separator-color">
-                            <VStack gap="0px">
-                                <For each={cart?.cartItems}>
-                                    {(item) => (
-                                        <CartItemCard cartItem={item} key={item.id} />
-                                    )}
-                                </For>
-                            </VStack>
-                        </Box>
-                    )}
-                </Box>
-            }
-
-        </Flex>
-    );
+      {!cartIsPending && (
+        <Box>
+          <HStack gap="30px" marginBottom="10px">
+            <CartInfoSec isShared={cart!.isShared} />
+            <ChangeCart />
+          </HStack>
+          {cart!.cartItems?.length === 0 ? (
+            <CartItemSectionEmpty />
+          ) : (
+            <Box borderTop="1px solid" borderTopColor="separator-color">
+              <VStack gap="0px">
+                <For each={cart?.cartItems}>{(item) => <CartItemCard cartItem={item} key={item.id} />}</For>
+              </VStack>
+            </Box>
+          )}
+        </Box>
+      )}
+    </Flex>
+  );
 }
 
 function ChangeCart() {
-    const { user, switchCart } = useUser();
+  const { user, switchCart } = useUser();
 
-    if (!user?.carts.length) return null;
+  if (!user?.carts.length) {
+    return null;
+  }
 
-    return (
-        <Menu.Root>
-            <Menu.Trigger asChild>
-                <Button size="md" variant="outline" rounded="full">Change cart</Button>
-            </Menu.Trigger>
+  return (
+    <Menu.Root>
+      <Menu.Trigger asChild>
+        <Button size="md" variant="outline" rounded="full">
+          Change cart
+        </Button>
+      </Menu.Trigger>
 
-            <Portal>
-                <Menu.Positioner>
-                    <Menu.Content>
-                        <Menu.ItemGroup>
-                            <Menu.ItemGroupLabel>Your cart</Menu.ItemGroupLabel>
-                            <Menu.Item value="ownCart" onClick={() => { switchCart(user.cartId) }}>
-                                {user?.firstName} {user?.lastName}
-                            </Menu.Item>
-                        </Menu.ItemGroup>
-                        <Menu.Separator />
-                        <Menu.ItemGroup>
-                            <Menu.ItemGroupLabel>Shared with you</Menu.ItemGroupLabel>
-                            {user?.carts.map((cartItem, index) => {
-                                return (
-                                    <Menu.Item value={index.toString()} key={index} onClick={() => { switchCart(cartItem.cartId) }}>
-                                        {cartItem.ownerFirstName} {cartItem.ownerLastName}
-                                    </Menu.Item>
-                                );
-                            })}
-                        </Menu.ItemGroup>
-                    </Menu.Content>
-                </Menu.Positioner>
-            </Portal>
-        </Menu.Root>
-    );
+      <Portal>
+        <Menu.Positioner>
+          <Menu.Content>
+            <Menu.ItemGroup>
+              <Menu.ItemGroupLabel>Your cart</Menu.ItemGroupLabel>
+              <Menu.Item
+                value="ownCart"
+                onClick={() => {
+                  switchCart(user.cartId);
+                }}
+              >
+                {user?.firstName} {user?.lastName}
+              </Menu.Item>
+            </Menu.ItemGroup>
+            <Menu.Separator />
+            <Menu.ItemGroup>
+              <Menu.ItemGroupLabel>Shared with you</Menu.ItemGroupLabel>
+              {user?.carts.map((cartItem, index) => {
+                return (
+                  <Menu.Item
+                    value={index.toString()}
+                    key={index}
+                    onClick={() => {
+                      switchCart(cartItem.cartId);
+                    }}
+                  >
+                    {cartItem.ownerFirstName} {cartItem.ownerLastName}
+                  </Menu.Item>
+                );
+              })}
+            </Menu.ItemGroup>
+          </Menu.Content>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
+  );
 }
 
 function CartInfoSec({ isShared }: { isShared: boolean }) {
-    const user = useUser();
+  const { user } = useAuthentication();
+  const isOwnCart =
+    user?.carts.filter(({ cartId, owner }) => cartId === user.activeCartId && owner.id === user.userId).length ?? 0 > 0;
 
-    if (user.activeCartId == user.user?.cartId) {
-        return (
-            <Box>
-                <Flex flexDirection="column" gap="6px">
-                    <Text lineHeight="25px" fontSize="21px" fontWeight="500">Your cart</Text>
-                </Flex>
-                {isShared && <Text marginTop="6px" color="rgb(170, 170, 170)"
-                    lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
-                >
-                    Shared
-                </Text>}
-            </Box>
-        );
-    }
-
-    //const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
+  if (isOwnCart) {
     return (
-        <Box>
-            <Flex flexDirection="column" gap="6px">
-                {/*<Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>*/}
-                <Text lineHeight="25px" fontSize="21px" fontWeight="500">
-                    {user.user?.carts.find(cart => cart.cartId == user.activeCartId)?.ownerFirstName} 
-                    {user.user?.carts.find(cart => cart.cartId == user.activeCartId)?.ownerLastName}'s cart
-                </Text>
-            </Flex>
-            {isShared && <Text marginTop="6px" color="rgb(170, 170, 170)"
-                lineHeight="16px" fontSize="12px" fontWeight="400px" width="275px"
-            >
-                Shared
-            </Text>}
-        </Box>
+      <Box>
+        <Flex flexDirection="column" gap="6px">
+          <Text lineHeight="25px" fontSize="21px" fontWeight="500">
+            Your cart
+          </Text>
+        </Flex>
+        {isShared && (
+          <Text
+            marginTop="6px"
+            color="rgb(170, 170, 170)"
+            lineHeight="16px"
+            fontSize="12px"
+            fontWeight="400px"
+            width="275px"
+          >
+            Shared
+          </Text>
+        )}
+      </Box>
     );
-};
+  }
+
+  //const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
+  return (
+    <Box>
+      <Flex flexDirection="column" gap="6px">
+        {/*<Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>*/}
+        <Text lineHeight="25px" fontSize="21px" fontWeight="500">
+          {user?.carts.find((cart) => cart.cartId == user.activeCartId)?.owner.firstName}
+          {user?.carts.find((cart) => cart.cartId == user.activeCartId)?.owner.lastName}'s cart
+        </Text>
+      </Flex>
+      {isShared && (
+        <Text
+          marginTop="6px"
+          color="rgb(170, 170, 170)"
+          lineHeight="16px"
+          fontSize="12px"
+          fontWeight="400px"
+          width="275px"
+        >
+          Shared
+        </Text>
+      )}
+    </Box>
+  );
+}
 
 function CartItemSectionLoading() {
-    return (
-        <Spinner
-            size="xl"
-            borderWidth="4px"
-            css={{ "--spinner-track-color": "colors.gray.200" }}
-        />
-    );
+  return <Spinner size="xl" borderWidth="4px" css={{ "--spinner-track-color": "colors.gray.200" }} />;
 }
 
 function CartItemSectionEmpty() {
-    return (
-        <EmptyState.Root
-            size="lg" width="500px"
-        >
-            <EmptyState.Content>
-                <EmptyState.Indicator>
-                    <MdOutlineShoppingCart />
-                </EmptyState.Indicator>
-                <VStack textAlign="center">
-                    <EmptyState.Title>Your cart is empty</EmptyState.Title>
-                    <EmptyState.Description>
-                        Explore our products and add items to your cart
-                    </EmptyState.Description>
-                </VStack>
-                <Link to={Navigation.home}>
-                    <Button rounded="full">See products</Button>
-                </Link>
-            </EmptyState.Content>
-        </EmptyState.Root>
-    );
+  return (
+    <EmptyState.Root size="lg" width="500px">
+      <EmptyState.Content>
+        <EmptyState.Indicator>
+          <MdOutlineShoppingCart />
+        </EmptyState.Indicator>
+        <VStack textAlign="center">
+          <EmptyState.Title>Your cart is empty</EmptyState.Title>
+          <EmptyState.Description>Explore our products and add items to your cart</EmptyState.Description>
+        </VStack>
+        <Link to={Navigation.home}>
+          <Button rounded="full">See products</Button>
+        </Link>
+      </EmptyState.Content>
+    </EmptyState.Root>
+  );
 }
 
 function CartItemSectionError() {
-    return (
-        <div>ERROR IN THE CART</div>
-    );
+  return <div>ERROR IN THE CART</div>;
 }

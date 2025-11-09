@@ -7,14 +7,16 @@ import { useNavigate } from "react-router";
 import { Navigation } from "@/routes/navigation";
 import { formatCurrency } from "@/utils/currency";
 import { InviteUserToCart } from "./InviteUserToCart";
-import { useUser } from "@/context/UserContext";
 import { Toaster } from "@/components/ui/toaster";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/footer/Footer";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 
 export function CartMain() {
-  const { user, activeCartId } = useUser();
-  const isOwnCart = user?.cartId === activeCartId;
+  const { user } = useAuthentication();
+  // TODO: Correct this
+  const isOwnCart =
+    user?.carts.filter(({ cartId, owner }) => cartId === user.activeCartId && owner.id === user.userId).length ?? 0 > 0;
 
   return (
     <Flex flexDirection="column" minHeight="100vh">
