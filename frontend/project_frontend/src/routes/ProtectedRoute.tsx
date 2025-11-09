@@ -9,9 +9,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ allowedRoles, redirectPath = Navigation.login }: ProtectedRouteProps) => {
-  const { isAuthenticated, user } = useAuthentication();
+  const { isAuthenticated, roles } = useAuthentication();
 
-  if (isAuthenticated && user?.roles.some((role) => allowedRoles.includes(role as Role))) {
+  if (isAuthenticated && roles.some((role) => allowedRoles.includes(role))) {
     return <Outlet />;
   }
 

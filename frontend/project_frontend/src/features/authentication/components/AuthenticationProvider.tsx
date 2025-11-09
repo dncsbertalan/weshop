@@ -42,7 +42,7 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
         const roles = decoded.roles ?? [];
 
         setIsAuthenticated(true);
-        setRoles(roles.filter(Boolean));
+        setRoles(roles);
       } catch (err) {
         console.error("Failed to decode token:", err);
         setRoles([]);

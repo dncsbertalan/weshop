@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using DataAccess.Models;
 using Domain.Constants;
 using Domain.Dtos.Api.Response;
@@ -80,9 +79,7 @@ public class AuthenticationController(
         var roles = await _userManager.GetRolesAsync(user);
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-        var rolesJson = JsonSerializer.Serialize(roles);
-        claims.Add(new Claim("roles", rolesJson));
+        claims.AddRange(roles.Select(role => new Claim("roles", role)));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
 
