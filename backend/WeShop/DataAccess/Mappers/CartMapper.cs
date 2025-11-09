@@ -2,21 +2,19 @@
 using Domain.Dtos.Api;
 using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
-using Riok.Mapperly.Abstractions;
 
 namespace DataAccess.Mappers;
 
-[Mapper]
-public static partial class CartMapper
+public static class CartMapper
 {
-    public static CartDto Map(Cart_Data data)
+    public static CartDto MapToCartDto(Cart_Data data)
     {
         return new CartDto
         {
             Id = data.Id,
-            OwnerId = data.OwnerId,
+            Owner = UserMapper.MapToUserInformationDto(data.Owner),
             IsShared = data.IsShared,
-            CartItems = [.. data.CartItems.Select(CartItemMapper.Map)]
+            CartItems = [.. data.CartItems.Select(CartItemMapper.MapToCartItemDto)]
         };
     }
 
@@ -34,9 +32,7 @@ public static partial class CartMapper
         return new CartInformationDto
         {
             CartId = data.CartId,
-            OwnerEmail = data.Cart.Owner.Email,
-            OwnerFirstName = data.Cart.Owner.FirstName,
-            OwnerLastName = data.Cart.Owner.LastName
+            Owner = UserMapper.MapToUserInformationDto(data.Cart.Owner)
         };
     }
 }

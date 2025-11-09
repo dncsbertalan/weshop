@@ -1,5 +1,4 @@
-﻿using Domain.Dtos.Api;
-using Domain.Models;
+﻿using Domain.Dtos.Api.Response.Category;
 using Domain.Repository;
 
 namespace Domain.Services;

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(WebshopDbContext))]
-    [Migration("20251108232514_Initial")]
-    partial class Initial
+    [Migration("20251109203843_UserActiveCartNullable")]
+    partial class UserActiveCartNullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -309,7 +310,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<long>("ActiveCartId")
+                    b.Property<long?>("ActiveCartId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("BirthDate")
@@ -539,7 +540,7 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.Cart_Data", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DataAccess.Models.Product_Data", "Product")
@@ -550,7 +551,9 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.Models.User_Data", "AddedBy")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AddedBy");
 
@@ -639,10 +642,9 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.User_Data", b =>
                 {
                     b.HasOne("DataAccess.Models.Cart_Data", "ActiveCart")
-                        .WithMany()
+                        .WithMany("ActiveUsers")
                         .HasForeignKey("ActiveCartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ActiveCart");
                 });
@@ -700,6 +702,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
+                    b.Navigation("ActiveUsers");
+
                     b.Navigation("CartItems");
 
                     b.Navigation("Participants");

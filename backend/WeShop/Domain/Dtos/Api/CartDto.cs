@@ -1,9 +1,11 @@
-﻿namespace Domain.Dtos.Api;
+﻿using Domain.Dtos.Api.Response.User;
+
+namespace Domain.Dtos.Api;
 
 public class CartDto
 {
     public long Id { get; set; }
-    public required string OwnerId { get; set; }
+    public UserInformationDto Owner { get; set; }
     public bool IsShared { get; set; }
     public List<CartItemDto> CartItems { get; set; } = [];
 }

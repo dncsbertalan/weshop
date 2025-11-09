@@ -110,7 +110,7 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
             .FilterByCategories(productFilter.Filters);
 
         var totalItems = await query.CountAsync();
-        if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
+        if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 1, 0);
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)productFilter.PageSize);
 

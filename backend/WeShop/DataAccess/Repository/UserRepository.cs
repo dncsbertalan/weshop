@@ -1,6 +1,6 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
-using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Response.User;
 using Domain.Dtos.Data;
 using Domain.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +27,20 @@ public class UserRepository(WebshopDbContext _context, UserManager<User_Data> _u
             .AsNoTracking()
             .FirstOrDefaultAsync(user => user.Email == email);
         return user?.Id;
+    }
+
+    public async Task<bool> SetActiveCartAsync(string userId, long cartId)
+    {
+        var user = await _context.Users
+            .FindAsync(userId);
+
+        if (user == null)
+            return false;
+
+        user.ActiveCartId = cartId;
+        var result = await _context.SaveChangesAsync();
+
+        return result > 0;
     }
 
     public async Task<UserDto?> GetUserByIdAsync(string userId)

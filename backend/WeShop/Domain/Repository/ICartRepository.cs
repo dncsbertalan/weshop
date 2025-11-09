@@ -1,5 +1,4 @@
 ﻿using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 using Domain.Models;
 
@@ -7,6 +6,12 @@ namespace Domain.Repository;
 
 public interface ICartRepository
 {
+    #region Shared cart
+
+    Task<bool> AddUserToSharedCartAsync(string userId, long cartId);
+
+    #endregion
+
     #region Cart
 
     Task<CartWithParticipantsDto?> GetCartParticipantsAsync(long cartId);
@@ -15,13 +20,6 @@ public interface ICartRepository
     Task<long?> GetCartIdFromCartItemIdAsync(long cartItemId);
     Task<long?> GetCartIdFromUserIdAsync(string userId);
     Task<string?> GetCartOwnerIdAsync(long cartId);
-
-    #endregion
-
-    #region Shared cart
-
-    Task<bool> AddUserToSharedCartAsync(string userId, long cartId);
-    Task<List<CartInformationDto>> GetUserCartInformationAsync(string userId);
 
     #endregion
 

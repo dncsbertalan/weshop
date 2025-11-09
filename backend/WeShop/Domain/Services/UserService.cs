@@ -1,5 +1,4 @@
-﻿using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+﻿using Domain.Dtos.Api.Response.User;
 using Domain.Repository;
 
 namespace Domain.Services;

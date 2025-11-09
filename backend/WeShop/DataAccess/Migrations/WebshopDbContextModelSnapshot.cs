@@ -34,7 +34,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("Category_DataProduct_Data", (string)null);
+                    b.ToTable("Category_DataProduct_Data");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Address_Data", b =>
@@ -61,7 +61,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address", (string)null);
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("DataAccess.Models.CartItem_Data", b =>
@@ -82,6 +82,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -92,7 +93,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CartItem", (string)null);
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
@@ -115,7 +116,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("OwnerId")
                         .IsUnique();
 
-                    b.ToTable("Cart", (string)null);
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Category_Data", b =>
@@ -135,7 +136,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("DataAccess.Models.OrderItem_Data", b =>
@@ -164,7 +165,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>
@@ -197,7 +198,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("DataAccess.Models.PaymentMethod_Data", b =>
@@ -214,7 +215,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod", (string)null);
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Product_Data", b =>
@@ -268,7 +269,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex(new[] { "Price" }, "IX_Product_Price");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
@@ -295,7 +296,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CartUserId");
 
-                    b.ToTable("SharedCart", (string)null);
+                    b.ToTable("SharedCart");
                 });
 
             modelBuilder.Entity("DataAccess.Models.User_Data", b =>
@@ -306,7 +307,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<long>("ActiveCartId")
+                    b.Property<long?>("ActiveCartId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("BirthDate")
@@ -536,7 +537,7 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.Cart_Data", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DataAccess.Models.Product_Data", "Product")
@@ -547,7 +548,9 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.Models.User_Data", "AddedBy")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AddedBy");
 
@@ -636,10 +639,9 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.User_Data", b =>
                 {
                     b.HasOne("DataAccess.Models.Cart_Data", "ActiveCart")
-                        .WithMany()
+                        .WithMany("ActiveUsers")
                         .HasForeignKey("ActiveCartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ActiveCart");
                 });
@@ -697,6 +699,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
+                    b.Navigation("ActiveUsers");
+
                     b.Navigation("CartItems");
 
                     b.Navigation("Participants");

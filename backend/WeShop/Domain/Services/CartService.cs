@@ -4,7 +4,10 @@ using Domain.Repository;
 
 namespace Domain.Services;
 
-public class CartService(ICartRepository _cartRepository, IUserRepository _userRepository, IProductRepository _productRepository)
+public class CartService(
+    ICartRepository _cartRepository,
+    IUserRepository _userRepository,
+    IProductRepository _productRepository)
 {
     #region Cart
 
@@ -12,7 +15,10 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
     {
         if (await UserIsNotValid(userId)) return null;
 
-        return await _cartRepository.CreateCartAsync(userId);
+        var newCartId = await _cartRepository.CreateCartAsync(userId);
+        await _userRepository.SetActiveCartAsync(userId, newCartId);
+
+        return newCartId;
     }
 
     public async Task DeleteCartAsync(long cartId)
@@ -27,7 +33,7 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
     {
         if (await UserDoesNotHaveCartAccesAsync(userId, cartId)) return null;
 
-        var cartItems = await _cartRepository.GetCartItemsAsync((long)cartId);
+        var cartItems = await _cartRepository.GetCartItemsAsync(cartId);
 
         return cartItems;
     }
@@ -57,7 +63,8 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return await _cartRepository.DeleteProductFromCartAsync(cartId, cartItemId);
     }
 
-    public async Task<bool> ModifyCartItemAsync(string userId, long cartId, long cartItemId, CartItemModificationData modificationData)
+    public async Task<bool> ModifyCartItemAsync(string userId, long cartId, long cartItemId,
+        CartItemModificationData modificationData)
     {
         if (await UserDoesNotHaveCartAccesAsync(userId, cartId)) return false;
 
@@ -85,15 +92,20 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return result;
     }
 
-    public async Task<bool> DoesUserHasCartAccess(string userId, long cartId) => await UserHasCartAccesAsync(userId, cartId);
+    public async Task<bool> DoesUserHasCartAccess(string userId, long cartId)
+    {
+        return await UserHasCartAccesAsync(userId, cartId);
+    }
 
     #endregion
 
 
-
     #region Helper methods
 
-    private async Task<bool> UserDoesNotHaveCartAccesAsync(string userId, long cartId) => !await UserHasCartAccesAsync(userId, cartId);
+    private async Task<bool> UserDoesNotHaveCartAccesAsync(string userId, long cartId)
+    {
+        return !await UserHasCartAccesAsync(userId, cartId);
+    }
 
     private async Task<bool> UserHasCartAccesAsync(string userId, long cartId)
     {
@@ -107,7 +119,10 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return false;
     }
 
-    private async Task<bool> UserIsNotCartOwnerAsync(string userId, long cartId) => !await UserIsCartOwnerAsync(userId, cartId);
+    private async Task<bool> UserIsNotCartOwnerAsync(string userId, long cartId)
+    {
+        return !await UserIsCartOwnerAsync(userId, cartId);
+    }
 
     private async Task<bool> UserIsCartOwnerAsync(string userId, long cartId)
     {
@@ -119,7 +134,10 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
         return false;
     }
 
-    private async Task<bool> UserIsNotValid(string userId) => await _userRepository.GetSimpleUserByIdAsync(userId) is null;
+    private async Task<bool> UserIsNotValid(string userId)
+    {
+        return await _userRepository.GetSimpleUserByIdAsync(userId) is null;
+    }
 
     #endregion
 }

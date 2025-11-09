@@ -1,4 +1,6 @@
-﻿namespace Domain.Dtos.Api;
+﻿using Domain.Dtos.Api.Response.Category;
+
+namespace Domain.Dtos.Api;
 
 public class ProductDto
 {

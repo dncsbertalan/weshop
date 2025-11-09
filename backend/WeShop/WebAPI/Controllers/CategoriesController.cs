@@ -1,9 +1,6 @@
-﻿using Domain.Dtos.Api;
-using Domain.Models;
-using Domain.Repository;
+﻿using Domain.Dtos.Api.Response.Category;
 using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace WebAPI.Controllers;
 

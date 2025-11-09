@@ -1,6 +1,5 @@
 ﻿using DataAccess.Mappers;
-using DataAccess.Models;
-using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response.Category;
 using Domain.Repository;
 
 namespace DataAccess.Repository;

@@ -18,11 +18,11 @@ public class User_Data : IdentityUser
     [InverseProperty(nameof(Cart_Data.Owner))]
     public virtual Cart_Data OwnedCart { get; set; }
 
-    [Required] public long ActiveCartId { get; set; }
+    public long? ActiveCartId { get; set; }
 
     [DeleteBehavior(DeleteBehavior.Restrict)]
     [ForeignKey(nameof(ActiveCartId))]
-    public virtual Cart_Data ActiveCart { get; set; }
+    public virtual Cart_Data? ActiveCart { get; set; }
 
     public List<SharedCart_Data> SharedCarts { get; set; } = [];
 
