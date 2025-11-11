@@ -9,7 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 interface JwtPayload {
   exp: number;
   email?: string;
-  roles?: Role[];
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: Role[];
 }
 
 export function AuthenticationProvider({ children }: PropsWithChildren) {
@@ -39,7 +39,7 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
           return;
         }
 
-        const roles = decoded.roles ?? [];
+        const roles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ?? [];
 
         setIsAuthenticated(true);
         setRoles(roles);
