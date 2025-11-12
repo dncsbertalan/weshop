@@ -116,3 +116,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// This is needed in order to expose the Program class for testing purposes
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class Program
+{
+}
