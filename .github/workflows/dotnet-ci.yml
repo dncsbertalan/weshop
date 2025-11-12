@@ -26,3 +26,6 @@ jobs:
 
       - name: Run unit tests
         run: dotnet test backend/WeShop/WeShop.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx"
+
+      - name: Run integration tests
+        run: dotnet test backend/WeShop/IntegrationTest/IntegrationTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx"
