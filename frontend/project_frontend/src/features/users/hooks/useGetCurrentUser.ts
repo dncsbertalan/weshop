@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { UserKeys } from "../UserKeys";
+
 import { getCurrentUser } from "../api/getCurrentUser";
+import { UserKeys } from "../UserKeys";
 
 interface UseGetCurrentUserParams {
   enabled: boolean;

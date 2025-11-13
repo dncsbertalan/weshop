@@ -1,14 +1,14 @@
-import { Role } from "@/features/authentication/Role";
-import { useCart } from "@/context/cartContext";
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { useLogoutUser } from "@/features/authentication/hooks/useLogoutUser";
-import { Navigation } from "@/routes/navigation";
 import { Badge, Flex, Float, Heading, HStack, IconButton, Spacer, Span } from "@chakra-ui/react";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren } from "react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
+
+import { useCart } from "@/context/cartContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useLogoutUser } from "@/features/authentication/hooks/useLogoutUser";
+import { Navigation } from "@/routes/navigation";
 
 export function NavBarInner({ children }: PropsWithChildren) {
   return (
@@ -43,8 +43,7 @@ export function NavBarInner({ children }: PropsWithChildren) {
 }
 
 export function AdminButton() {
-  const { isAuthenticated, user } = useAuthentication();
-  const isAdmin = useMemo(() => user?.roles.find((role) => role === Role.Admin) !== undefined, [user?.roles]);
+  const { isAuthenticated, isAdmin } = useAuthentication();
 
   if (!isAuthenticated || !isAdmin) {
     return null;

@@ -1,6 +1,6 @@
 ﻿using Domain.Dtos.Api.Response.Category;
 
-namespace Domain.Dtos.Api;
+namespace Domain.Dtos.Api.Response.Product;
 
 public class ProductDto
 {

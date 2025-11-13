@@ -1,20 +1,20 @@
 import { Category } from "./category";
 
 
-export type Cart = {
+export interface Cart {
     cartId: number;
     ownerId: string;
     isShared: boolean;
     cartItems: CartItem[];
-};
+}
 
-export type CartInfo = {
+export interface CartInfo {
     cartId: number;
     ownerFirstName: string;
     ownerLastName: string;
-};
+}
 
-export type CartItem = {
+export interface CartItem {
     id: number;
     quantity: number;
     productId: number;
@@ -25,5 +25,5 @@ export type CartItem = {
     categories: Category[];
     addedByFirstName: string;
     addedByLastName: string;
-};
+}
 

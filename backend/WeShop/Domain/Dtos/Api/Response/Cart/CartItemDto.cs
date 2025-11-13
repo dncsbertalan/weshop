@@ -1,7 +1,7 @@
 ﻿using Domain.Dtos.Api.Response.Category;
 using Domain.Dtos.Api.Response.User;
 
-namespace Domain.Dtos.Api;
+namespace Domain.Dtos.Api.Response.Cart;
 
 public class CartItemDto
 {

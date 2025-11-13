@@ -1,16 +1,18 @@
+import "./index.css";
+
+import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CartProvider } from "./context/cartContext.tsx";
 import { BrowserRouter } from "react-router";
-import AppRoutes from "./routes/AppRoutes.tsx";
-import { ChakraProvider } from "@chakra-ui/react";
-import { system } from "./theme/theme.ts";
+
 import { ColorModeProvider } from "./components/ui/color-mode.tsx";
+import { CartProvider } from "./context/cartContext.tsx";
 import { OrdersProvider } from "./context/OrdersContext.tsx";
 import { UserProvider } from "./context/UserContext.tsx";
 import { AuthenticationProvider } from "./features/authentication/components/AuthenticationProvider.tsx";
+import AppRoutes from "./routes/AppRoutes.tsx";
+import { system } from "./theme/theme.ts";
 
 const queryClient = new QueryClient();
 

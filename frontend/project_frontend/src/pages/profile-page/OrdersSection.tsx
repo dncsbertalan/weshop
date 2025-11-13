@@ -1,7 +1,8 @@
+import { Accordion, Box, Flex, Image, Span, Text, VStack } from "@chakra-ui/react";
+
 import { useOrders } from "@/context/OrdersContext";
 import { OrderItem, Orders } from "@/models/orders";
 import { formatCurrency } from "@/utils/currency";
-import { Accordion, Box, Flex, Image, Span, Text, VStack } from "@chakra-ui/react";
 
 export function OrdersSection() {
     const { orders, ordersIsPending, ordersIsError } = useOrders();

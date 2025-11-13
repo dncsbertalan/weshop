@@ -1,15 +1,17 @@
-import { createContext, useContext } from "react";
-import { addProductToCart, addUserToCart, deleteProductFromCart, getCart, modifyProductInCart } from "../api/cart-api";
-import { Cart } from "@/models/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrder } from "@/api/order-api";
-import { CheckoutInfoData } from "@/dtos/chekout-info-data";
-import { useUser } from "./UserContext";
-import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
-import { useCartHub } from "@/hooks/use-cart-hub";
-import { toaster } from "@/components/ui/toaster";
+import { createContext, useContext } from "react";
+
 import { ORDER_REFETCH_KEY } from "@/api/api-constants";
+import { createOrder } from "@/api/order-api";
+import { toaster } from "@/components/ui/toaster";
+import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
+import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useCartHub } from "@/hooks/use-cart-hub";
+import { Cart } from "@/models/cart";
+
+import { addProductToCart, addUserToCart, deleteProductFromCart, getCart, modifyProductInCart } from "../api/cart-api";
+import { useUser } from "./UserContext";
 
 interface CartContextType {
   // Cart
@@ -145,6 +147,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within a CartProvider");
+  if (!context) {throw new Error("useCart must be used within a CartProvider");}
+
   return context;
 };

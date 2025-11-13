@@ -1,4 +1,5 @@
 import { useContext } from "react";
+
 import { ProductFilterContext } from "../contexts/ProductFilterContext";
 
 export function useProductFilters() {

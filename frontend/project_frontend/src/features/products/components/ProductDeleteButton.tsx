@@ -1,6 +1,7 @@
+import { Button, Link, Text } from "@chakra-ui/react";
+
 import { Dialog } from "@/components/Dialog";
 import { useDeleteProduct } from "@/features/product-editor/hooks/useDeleteProduct";
-import { Button, Link, Text } from "@chakra-ui/react";
 
 interface ProductDeleteButtonProps {
   productId: number;

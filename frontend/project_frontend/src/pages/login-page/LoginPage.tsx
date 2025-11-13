@@ -1,13 +1,15 @@
 import { Button, Field, Flex, Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import { Navigation } from "@/routes/navigation";
-import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
+
+import { Footer } from "@/components/footer/Footer";
 import { PasswordInput } from "@/components/ui/password-input";
 import { LoginRequestDto } from "@/dtos/request/authentication/LoginRequestDto";
-import { getFieldKeys } from "@/utils/getFieldKeys";
 import { useLoginUser } from "@/features/authentication/hooks/useLoginUser";
-import { Footer } from "@/components/footer/Footer";
+import { Navigation } from "@/routes/navigation";
+import { getFieldKeys } from "@/utils/getFieldKeys";
+
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 
 const loginRequestKeys = getFieldKeys(LoginRequestDto);
 

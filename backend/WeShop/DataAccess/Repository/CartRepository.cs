@@ -1,6 +1,8 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
 using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 using Domain.Models;
 using Domain.Repository;
@@ -52,12 +54,44 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             .Select(cart => new CartWithParticipantsDto
             {
                 CartId = cart.Id,
-                UserId = cart.OwnerId,
+                OwnerId = cart.OwnerId,
                 Participants = cart.Participants
                     .Select(p => p.CartUserId)
                     .ToList()
             })
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<CartDto?> GetCartByOwnerAsync(string userId)
+    {
+        var cart = await _context.Carts
+            .AsNoTracking()
+            .Include(cart => cart.Owner)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.AddedBy)
+            .Where(cart => cart.OwnerId == userId)
+            .FirstOrDefaultAsync();
+
+        return cart is null ? null : CartMapper.MapToCartDto(cart);
+    }
+
+    public async Task<CartDto?> GetCartByIdAsync(long cartId)
+    {
+        var cart = await _context.Carts
+            .AsNoTracking()
+            .Include(cart => cart.Owner)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.AddedBy)
+            .Where(cart => cart.Id == cartId)
+            .FirstOrDefaultAsync();
+
+        return cart is null ? null : CartMapper.MapToCartDto(cart);
     }
 
     public async Task<long> CreateCartAsync(string userId)

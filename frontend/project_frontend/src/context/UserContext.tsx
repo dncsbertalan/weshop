@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+
 import { ORDER_REFETCH_KEY } from "@/api/api-constants";
 import { getUser } from "@/api/user-api";
 import { User } from "@/models/user";
-import { useQuery } from "@tanstack/react-query";
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 interface UserContextType {
     user: User | undefined;
@@ -41,6 +42,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
             setActiveCartId(cartId);
             return true;
         }
+
         return false;
     };
 
@@ -60,6 +62,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const useUser = () => {
     const context = useContext(UserContext);
-    if (!context) throw new Error("useUserContext must be used within a UserProvider");
+    if (!context) {throw new Error("useUserContext must be used within a UserProvider");}
+
     return context;
 };

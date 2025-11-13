@@ -1,15 +1,15 @@
-export type OrderItem = {
+export interface OrderItem {
     productName: string;
     price: number;
     quantity: number;
-};
+}
 
-export type Order = {
+export interface Order {
     orderId: string;
     createdAt: Date;
     items: OrderItem[];
-};
+}
 
-export type Orders = {
+export interface Orders {
     orders: Order[];
-};
+}

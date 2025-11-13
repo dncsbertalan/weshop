@@ -1,4 +1,15 @@
 import { Badge, Box, Flex, Heading, HStack, IconButton } from "@chakra-ui/react";
+import { PropsWithChildren, useMemo } from "react";
+import { FaUser } from "react-icons/fa";
+import { FaRightToBracket } from "react-icons/fa6";
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { Link } from "react-router";
+
+import { useCart } from "@/context/cartContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { Role } from "@/features/authentication/Role";
+import { Navigation } from "@/routes/navigation";
+
 import {
   AdminButton,
   NavBarInner,
@@ -7,15 +18,6 @@ import {
   NavLogoutButton,
   NavProfilButton,
 } from "./NavBarInner";
-import { PropsWithChildren, useMemo } from "react";
-import { Navigation } from "@/routes/navigation";
-import { FaUser } from "react-icons/fa";
-import { FaRightToBracket } from "react-icons/fa6";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { Role } from "@/features/authentication/Role";
-import { useCart } from "@/context/cartContext";
-import { Link } from "react-router";
 
 export function GlobalNavBar_ols() {
   const { isAuthenticated, user } = useAuthentication();

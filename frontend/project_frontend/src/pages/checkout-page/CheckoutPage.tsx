@@ -1,9 +1,11 @@
 import { Center, Flex, Spacer } from "@chakra-ui/react";
+
+import { Footer } from "@/components/footer/Footer";
+import { useCart } from "@/context/cartContext";
+
 import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
 import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { CheckoutSteps } from "./CheckoutSteps";
-import { useCart } from "@/context/cartContext";
-import { Footer } from "@/components/footer/Footer";
 
 export function CheckoutPage() {
   const { createOrderIsPending, createOrderIsSuccess } = useCart();

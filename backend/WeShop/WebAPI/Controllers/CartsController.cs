@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Response.Cart;
 using WebAPI.Hubs;
 
 namespace WebAPI.Controllers;

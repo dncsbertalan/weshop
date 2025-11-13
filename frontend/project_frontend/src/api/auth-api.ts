@@ -1,6 +1,7 @@
 import { LoginDto } from "@/dtos/LoginDto";
-import api from "./axios-instance";
 import { RegistrationDto } from "@/dtos/RegistrationDto";
+
+import api from "./axios-instance";
 
 export const authLogin = async (loginData: LoginDto) => {
   const response = await api.post("/api/authentication/login", {

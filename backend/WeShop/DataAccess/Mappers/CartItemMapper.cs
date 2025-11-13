@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response.Cart;
 
 namespace DataAccess.Mappers;
 

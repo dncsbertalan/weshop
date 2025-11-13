@@ -1,9 +1,11 @@
-import { PageContainer } from "@/components/PageContainer";
-import { EditorTab } from "@/features/product-editor/EditorTab";
 import { Tabs } from "@chakra-ui/react";
-import { AdminPageProductTab } from "./AdminPage.ProductTab";
-import { ProductFilterProvider } from "@/features/products/components/ProductFilterProvider";
+
+import { PageContainer } from "@/components/PageContainer";
 import { Toaster } from "@/components/ui/toaster";
+import { EditorTab } from "@/features/product-editor/EditorTab";
+import { ProductFilterProvider } from "@/features/products/components/ProductFilterProvider";
+
+import { AdminPageProductTab } from "./AdminPage.ProductTab";
 
 export function AdminPage() {
   return (

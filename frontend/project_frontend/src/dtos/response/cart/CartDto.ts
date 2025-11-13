@@ -1,10 +1,11 @@
 import z from "zod";
-import { CartItemDto } from "./CartItemDto";
+
 import { UserInformatioDto } from "../user/UserInformatioDto";
+import { CartItemDto } from "./CartItemDto";
 
 export const CartDto = z
   .object({
-    cartId: z.number(),
+    id: z.number(),
     owner: UserInformatioDto,
     isShared: z.boolean(),
     cartItems: CartItemDto.array(),

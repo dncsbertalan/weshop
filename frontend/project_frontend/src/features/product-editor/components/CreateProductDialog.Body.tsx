@@ -1,8 +1,10 @@
-import { Stack, Field, Input, HStack, NumberInput, InputGroup, Textarea, Text } from "@chakra-ui/react";
-import { CreateProductDialogCategorySelector } from "./CreateProductDialog.CategorySelector";
+import { Field, HStack, Input, InputGroup, NumberInput, Stack, Text,Textarea } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
+
 import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
 import { getFieldKeys } from "@/utils/getFieldKeys";
+
+import { CreateProductDialogCategorySelector } from "./CreateProductDialog.CategorySelector";
 import { UploadProductImage } from "./UploadProductImage";
 
 const upsertProductKeys = getFieldKeys(CreateProductRequestDto);

@@ -1,5 +1,7 @@
-import { getProducts } from "@/api/product-api";
 import { useQuery } from "@tanstack/react-query";
+
+import { getProducts } from "@/api/product-api";
+
 import { ProductFilter } from "../ProductFilter";
 import { ProductKeys } from "../ProductKeys";
 

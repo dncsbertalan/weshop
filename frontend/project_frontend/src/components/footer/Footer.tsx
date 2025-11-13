@@ -1,17 +1,19 @@
-import { Navigation } from "@/routes/navigation";
 import {
-  VStack,
-  HStack,
-  Text,
-  IconButton,
-  Link as ChakraLink,
   Box,
   Container,
-  Stack,
+  HStack,
+  IconButton,
+  Link as ChakraLink,
   Separator,
+  Stack,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import { LuGithub, LuLinkedin, LuMail } from "react-icons/lu";
 import { Link as RouterLink } from "react-router";
+
+import { Navigation } from "@/routes/navigation";
+
 import { useColorModeValue } from "../ui/color-mode";
 
 export function Footer() {

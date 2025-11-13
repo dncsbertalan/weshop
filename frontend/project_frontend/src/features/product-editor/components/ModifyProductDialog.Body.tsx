@@ -1,7 +1,8 @@
+import { DataList, HStack, Image, Stack } from "@chakra-ui/react";
+
 import { useGetProduct } from "@/features/products/hooks/useGetProduct";
 import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
 import { formatCurrencyFt } from "@/utils/currency";
-import { DataList, HStack, Image, Stack } from "@chakra-ui/react";
 
 interface ModifyProductDialogBodyProps {
   productId: number;

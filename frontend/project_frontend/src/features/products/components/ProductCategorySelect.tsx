@@ -1,6 +1,8 @@
-import { useGetCategories } from "@/features/categories/hooks/useGetCategories";
 import { createListCollection, Field, Portal, Select, SelectTriggerProps, Spinner } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
+
+import { useGetCategories } from "@/features/categories/hooks/useGetCategories";
+
 import { useProductFilters } from "../hooks/useProductFilters";
 import { ProductFilterAction } from "../productFilterReducer";
 

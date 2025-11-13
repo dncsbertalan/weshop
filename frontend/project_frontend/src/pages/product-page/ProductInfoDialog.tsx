@@ -1,27 +1,28 @@
+import {
+  Box,
+  Button,
+  CloseButton,
+  Dialog,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  IconButton,
+  Image,
+  Portal,
+  Spacer,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { MdAddShoppingCart } from "react-icons/md";
+
 import { CategoryBadge } from "@/components/product/CategoryBadge";
 import { toaster } from "@/components/ui/toaster";
 import { useCart } from "@/context/cartContext";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Product } from "@/models/Product";
-import {
-  Dialog,
-  Button,
-  Portal,
-  CloseButton,
-  Flex,
-  Image,
-  VStack,
-  Box,
-  Icon,
-  Spacer,
-  HStack,
-  Heading,
-  Text,
-  IconButton,
-} from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { MdAddShoppingCart } from "react-icons/md";
 
 interface ProductInfoDialogProps {
   product: Product;

@@ -1,9 +1,10 @@
-import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
-import { useGetCategories } from "@/features/categories/hooks/useGetCategories";
-import { getFieldKeys } from "@/utils/getFieldKeys";
 import { createListCollection, Field, Select, Spinner } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+
+import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
+import { useGetCategories } from "@/features/categories/hooks/useGetCategories";
+import { getFieldKeys } from "@/utils/getFieldKeys";
 
 const upsertProductKeys = getFieldKeys(CreateProductRequestDto);
 

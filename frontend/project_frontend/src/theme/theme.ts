@@ -1,4 +1,5 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+
 import { selectSlotRecipe } from "./slotRecipes/selectSlotRecipe";
 
 const config = defineConfig({

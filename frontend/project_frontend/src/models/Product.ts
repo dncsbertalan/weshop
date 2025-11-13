@@ -1,6 +1,6 @@
 import { Category } from "./category";
 
-export type Product = {
+export interface Product {
   id: number;
   name: string;
   description: string;
@@ -10,11 +10,11 @@ export type Product = {
   availableQuantity: number;
   categories: Category[];
   isDeleted: boolean;
-};
+}
 
-export type PagedProducts = {
+export interface PagedProducts {
   items: Product[];
   totalItems: number;
   totalPages: number;
   currentsPages: number;
-};
+}

@@ -1,5 +1,7 @@
-import { Dialog } from "@/components/Dialog";
 import { Button, Link } from "@chakra-ui/react";
+
+import { Dialog } from "@/components/Dialog";
+
 import { ModifyProductDialogBody } from "./ModifyProductDialog.Body";
 
 interface ModifyProductDialogProps {

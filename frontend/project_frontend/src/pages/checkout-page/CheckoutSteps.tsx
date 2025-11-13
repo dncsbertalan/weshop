@@ -1,10 +1,11 @@
+import { Box, Button, ButtonGroup, Center, Field, Heading, HStack, Input, RadioGroup, Separator, Stack,Steps, Text, useSteps, VStack } from "@chakra-ui/react"
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { useNavigate } from "react-router";
+
 import { useCart } from "@/context/CartContext";
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
 import { Navigation } from "@/routes/navigation";
 import { sleep } from "@/utils/sleep";
-import { useSteps, Steps, ButtonGroup, Button, Box, Field, Input, VStack, HStack, RadioGroup, Center, Heading, Text, Separator, Stack } from "@chakra-ui/react"
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { useNavigate } from "react-router";
 
 export function CheckoutSteps() {
     const steps = useSteps({
@@ -284,6 +285,7 @@ function ConfirmationAndPayment() {
                 navigate(Navigation.home);
             });
     };
+
     const { cart } = useCart();
 
     const paymentMethodLabel = paymentMethods.find(pm => pm.value === allFormData.paymentMethod)?.label || allFormData.paymentMethod;

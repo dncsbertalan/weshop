@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response;
 using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 
@@ -22,7 +23,7 @@ public static class CartMapper
     {
         return new CartWithParticipantsDto
         {
-            UserId = data.OwnerId,
+            OwnerId = data.OwnerId,
             Participants = [.. data.Participants.Select(user => user.CartUserId)]
         };
     }

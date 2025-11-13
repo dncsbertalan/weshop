@@ -1,4 +1,5 @@
 import { User } from "@/models/user";
+
 import api from "./axios-instance";
 
 export const getUser = async () => {

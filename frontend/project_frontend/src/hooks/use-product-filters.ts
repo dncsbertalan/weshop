@@ -1,5 +1,6 @@
+import { ProductFilterKeys as ProductFilterKeys,ProductQueryDefaults } from "@/api/product-api";
+
 import useUpdateQueryParam from "./use-update-query-param";
-import { ProductQueryDefaults, ProductFilterKeys as ProductFilterKeys } from "@/api/product-api";
 
 export default function useProductFilters() {
     const { searchParams, updateQueryParam } = useUpdateQueryParam();
@@ -31,4 +32,6 @@ export default function useProductFilters() {
     };
 
     return { searchParams, page, pageSize, categories, setPage, setCategories, minPrice, maxPrice, setMinPrice, setMaxPrice };
-};
+}
+
+;

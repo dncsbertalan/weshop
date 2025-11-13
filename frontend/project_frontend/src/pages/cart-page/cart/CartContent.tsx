@@ -1,41 +1,35 @@
-import { useCart } from "@/context/cartContext";
-import { VStack, For, Flex, Button, EmptyState, Spinner, Box, Text, Menu, Portal, HStack } from "@chakra-ui/react";
-import { Navigation } from "@/routes/navigation";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { Link } from "react-router";
-import { CartItemCard } from "@/components/product/CartItemCard";
+import { Box, Button, Flex, HStack, Menu, Portal, Spinner, Stack, Text, VStack } from "@chakra-ui/react";
+
 import { useUser } from "@/context/UserContext";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { CartItems } from "./CartItems";
+import { GlassContainer } from "@/components/GlassContainer";
+import { CartDto } from "@/dtos/response/cart/CartDto";
+import { CartContentHeader } from "./CartContent.Header";
 
-export function CartItemsSection() {
-  const { cart, cartIsPending, cartIsError } = useCart();
+interface CartContentProps {
+  cart: CartDto;
+}
 
-  if (cartIsError) {
-    return <CartItemSectionError />;
-  }
-
+export function CartContent({ cart }: CartContentProps) {
   return (
-    <Flex padding={{ lg: "0px 10px", xl: "0px 30px" }} marginBottom={{ base: "30px", md: "30px", lg: 0 }}>
-      {cartIsPending && <CartItemSectionLoading />}
-
-      {!cartIsPending && (
+    <GlassContainer>
+      <Stack gap={2}>
+        {/* <Flex padding={{ lg: "0px 10px", xl: "0px 30px" }} marginBottom={{ base: "30px", md: "30px", lg: 0 }}> */}
         <Box>
+          <CartContentHeader cart={cart} />
           <HStack gap="30px" marginBottom="10px">
-            <CartInfoSec isShared={cart!.isShared} />
+            {cart && <CartInfoSec isShared={cart.isShared} />}
             <ChangeCart />
           </HStack>
-          {cart!.cartItems?.length === 0 ? (
-            <CartItemSectionEmpty />
-          ) : (
-            <Box borderTop="1px solid" borderTopColor="separator-color">
-              <VStack gap="0px">
-                <For each={cart?.cartItems}>{(item) => <CartItemCard cartItem={item} key={item.id} />}</For>
-              </VStack>
-            </Box>
-          )}
+          <Box borderTop="1px solid" borderTopColor="separator-color">
+            {cart && <CartItems cartItems={cart.cartItems} />}
+            <VStack gap="0px"></VStack>
+          </Box>
         </Box>
-      )}
-    </Flex>
+        {/* </Flex> */}
+      </Stack>
+    </GlassContainer>
   );
 }
 
@@ -123,7 +117,7 @@ function CartInfoSec({ isShared }: { isShared: boolean }) {
 
   //const cartInfo = user.user?.carts.find(cart => cart.cartId == user.activeCartId);
   return (
-    <Box>
+    <Box bgColor="red">
       <Flex flexDirection="column" gap="6px">
         {/*<Text lineHeight="25px" fontSize="21px" fontWeight="500">{cartInfo?.ownerFirstName} {cartInfo?.ownerLastName}'s cart</Text>*/}
         <Text lineHeight="25px" fontSize="21px" fontWeight="500">
@@ -149,25 +143,6 @@ function CartInfoSec({ isShared }: { isShared: boolean }) {
 
 function CartItemSectionLoading() {
   return <Spinner size="xl" borderWidth="4px" css={{ "--spinner-track-color": "colors.gray.200" }} />;
-}
-
-function CartItemSectionEmpty() {
-  return (
-    <EmptyState.Root size="lg" width="500px">
-      <EmptyState.Content>
-        <EmptyState.Indicator>
-          <MdOutlineShoppingCart />
-        </EmptyState.Indicator>
-        <VStack textAlign="center">
-          <EmptyState.Title>Your cart is empty</EmptyState.Title>
-          <EmptyState.Description>Explore our products and add items to your cart</EmptyState.Description>
-        </VStack>
-        <Link to={Navigation.home}>
-          <Button rounded="full">See products</Button>
-        </Link>
-      </EmptyState.Content>
-    </EmptyState.Root>
-  );
 }
 
 function CartItemSectionError() {

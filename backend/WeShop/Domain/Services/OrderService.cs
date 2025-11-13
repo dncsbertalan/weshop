@@ -1,11 +1,15 @@
-﻿using Domain.Dtos.Api;
+﻿using System.Transactions;
+using Domain.Dtos.Api;
 using Domain.Models;
 using Domain.Repository;
-using System.Transactions;
 
 namespace Domain.Services;
 
-public class OrderService(IOrderRepository _orderRepository, IOrderItemRepository _orderItemRepository, IUserRepository _userRepository, ICartRepository _cartRepository)
+public class OrderService(
+    IOrderRepository _orderRepository,
+    IOrderItemRepository _orderItemRepository,
+    IUserRepository _userRepository,
+    ICartRepository _cartRepository)
 {
     public async Task<bool> CreateOrderAsync(string userId, CreateOrderData orderData)
     {
@@ -49,7 +53,7 @@ public class OrderService(IOrderRepository _orderRepository, IOrderItemRepositor
         var cart = await _cartRepository.GetCartParticipantsAsync(cartId);
         if (cart is null) return false;
 
-        if (cart.UserId == userId) return true;
+        if (cart.OwnerId == userId) return true;
 
         if (cart.Participants.Contains(userId)) return true;
 

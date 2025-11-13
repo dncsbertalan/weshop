@@ -1,4 +1,4 @@
-import { Button, Portal, CloseButton, Dialog as ChakraDialog } from "@chakra-ui/react";
+import { Button, CloseButton, Dialog as ChakraDialog,Portal } from "@chakra-ui/react";
 import React from "react";
 
 interface DialogProps {

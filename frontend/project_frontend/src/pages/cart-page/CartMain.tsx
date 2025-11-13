@@ -1,19 +1,24 @@
 import { Button, Flex, Heading, Separator, Spacer, Text, VStack } from "@chakra-ui/react";
-import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
-import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
-import { CartItemsSection } from "./CartItemsSection";
-import { useCart } from "@/context/cartContext";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+
+import { Footer } from "@/components/footer/Footer";
+import { Toaster } from "@/components/ui/toaster";
+import { useCart } from "@/context/cartContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Navigation } from "@/routes/navigation";
 import { formatCurrency } from "@/utils/currency";
+
+import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
+import { CartContent } from "./cart/CartContent";
 import { InviteUserToCart } from "./InviteUserToCart";
-import { Toaster } from "@/components/ui/toaster";
-import { useEffect, useState } from "react";
-import { Footer } from "@/components/footer/Footer";
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useGetCart } from "@/features/cart/hooks/useGetCart";
 
 export function CartMain() {
   const { user } = useAuthentication();
+  const { data: cart, isPending, isError } = useGetCart();
+
   // TODO: Correct this
   const isOwnCart =
     user?.carts.filter(({ cartId, owner }) => cartId === user.activeCartId && owner.id === user.userId).length ?? 0 > 0;
@@ -32,7 +37,7 @@ export function CartMain() {
           flexDirection={{ base: "column", lg: "row" }}
         >
           <Flex flexDirection="column" alignItems="center">
-            <CartItemsSection />
+            {cart && <CartContent cart={cart} />}
           </Flex>
 
           <Flex flexDirection="column" gap="30px" alignItems="center">
@@ -54,6 +59,7 @@ function CheckoutSection() {
   const checkout = () => {
     navigate(Navigation.checkout);
   };
+
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
@@ -72,7 +78,7 @@ function CheckoutSection() {
       width={{ base: "100%", sm: "520px", md: "700px", lg: "285px", xl: "300px" }}
       height="min"
     >
-      <VStack alignItems={"flex-start"} width="100%">
+      <VStack alignItems="flex-start" width="100%">
         <Heading lineHeight="25px" fontSize="21px" fontWeight="500">
           Cart summary
         </Heading>

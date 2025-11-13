@@ -1,10 +1,12 @@
-import { Flex, Spacer, VStack, Text } from "@chakra-ui/react";
-import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
-import { GlobalNavBarProfil } from "../page-components/navigation-bar/GlobalNavBar";
-import { OrdersSection } from "./OrdersSection";
-import { ColorModeButton } from "@/components/ui/color-mode";
+import { Flex, Spacer, Text,VStack } from "@chakra-ui/react";
+
 import { Footer } from "@/components/footer/Footer";
+import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+
+import { GlobalNavBarProfil } from "../page-components/navigation-bar/GlobalNavBar";
+import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
+import { OrdersSection } from "./OrdersSection";
 
 export function ProfileMain() {
   const { user } = useAuthentication();

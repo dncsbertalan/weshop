@@ -1,10 +1,11 @@
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { Navigation } from "@/routes/navigation";
 import { Flex, Heading, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 import { FaRightToBracket } from "react-icons/fa6";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
+
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { Navigation } from "@/routes/navigation";
 
 export function NavigationBar() {
   const { isAuthenticated } = useAuthentication();

@@ -1,5 +1,6 @@
 import { CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
 import { useRef } from "react";
+
 import { useProductFilters } from "../hooks/useProductFilters";
 import { ProductFilterAction } from "../productFilterReducer";
 

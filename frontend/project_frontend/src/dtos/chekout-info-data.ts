@@ -1,4 +1,4 @@
-export type CheckoutInfoData = {
+export interface CheckoutInfoData {
     firstName: string;
     lastName: string;
     phoneNumber: string;

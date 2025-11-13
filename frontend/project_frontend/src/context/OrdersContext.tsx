@@ -1,8 +1,9 @@
-import { createContext, PropsWithChildren, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { createContext, PropsWithChildren, useContext } from "react";
+
+import { ORDER_REFETCH_KEY } from "@/api/api-constants";
 import { getOrders } from "@/api/order-api";
 import { Orders } from "@/models/orders";
-import { ORDER_REFETCH_KEY } from "@/api/api-constants";
 
 interface OrdersContextType {
     // Orders
@@ -36,6 +37,7 @@ export const OrdersProvider = ({ children }: PropsWithChildren) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const useOrders = () => {
     const context = useContext(OrdersContext);
-    if (!context) throw new Error("useCart must be used within a CartProvider");
+    if (!context) {throw new Error("useCart must be used within a CartProvider");}
+
     return context;
 };

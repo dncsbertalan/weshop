@@ -1,4 +1,4 @@
-import { useFileUploadContext, FileUpload, Float } from "@chakra-ui/react";
+import { FileUpload, Float,useFileUploadContext } from "@chakra-ui/react";
 import { LuX } from "react-icons/lu";
 
 export function UploadProductImageList() {

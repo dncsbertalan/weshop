@@ -1,14 +1,16 @@
+import { Button, Flex, Icon, Image, Spacer, Text } from "@chakra-ui/react";
+import { FaRegCircleXmark } from "react-icons/fa6";
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { MdAddShoppingCart } from "react-icons/md";
+
 import { useCart } from "@/context/cartContext";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
 import { Product } from "@/models/Product";
 import { ProductInfoDialog } from "@/pages/product-page/ProductInfoDialog";
-import { Button, Flex, Icon, Image, Spacer, Text } from "@chakra-ui/react";
-import { MdAddShoppingCart } from "react-icons/md";
-import { toaster } from "../ui/toaster";
 import { formatCurrency } from "@/utils/currency";
-import { IoCheckmarkCircleOutline } from "react-icons/io5";
-import { FaRegCircleXmark } from "react-icons/fa6";
-import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+
+import { toaster } from "../ui/toaster";
 interface ProductCardProps {
   product: Product;
 }
@@ -23,6 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
       type: "info",
     });
   };
+
   const { data: image } = useGetProductImage({ productId: product.id });
 
   return (

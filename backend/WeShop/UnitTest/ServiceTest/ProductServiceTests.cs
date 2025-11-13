@@ -1,6 +1,7 @@
 ﻿using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Category;
+using Domain.Dtos.Api.Response.Product;
 using Domain.Exceptions;
 using Domain.Repository;
 using Domain.Services;

@@ -1,8 +1,10 @@
-import { CloseButton, InputGroup, Input, Field, InputProps } from "@chakra-ui/react";
+import { CloseButton, Field, Input, InputGroup, InputProps } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { useProductFilters } from "../hooks/useProductFilters";
 import { LuSearch } from "react-icons/lu";
+
 import { useDebounce } from "@/hooks/useDebounce";
+
+import { useProductFilters } from "../hooks/useProductFilters";
 import { ProductFilterAction } from "../productFilterReducer";
 
 interface ProductNameSearchProps extends InputProps {

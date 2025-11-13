@@ -1,10 +1,11 @@
+import { Box, Button, defineStyle,Field, Flex, Icon, Input, Text, VStack } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { IoInformationCircleOutline } from "react-icons/io5";
+
 import { Tooltip } from "@/components/ui/tooltip";
 import { useCart } from "@/context/cartContext";
 import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { Flex, VStack, Button, Text, Icon, Input, Field, Box, defineStyle } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { IoInformationCircleOutline } from "react-icons/io5";
 
 export function InviteUserToCart() {
   const { register, handleSubmit } = useForm<AddUserToCartDto>();
@@ -18,7 +19,7 @@ export function InviteUserToCart() {
       return;
     }
 
-    addUserToCart(user?.activeCartId, data);
+    addUserToCart(user.activeCartId, data);
   };
 
   return (
@@ -32,7 +33,7 @@ export function InviteUserToCart() {
       width={{ base: "100%", sm: "520px", md: "700px", lg: "285px", xl: "300px" }}
       height="min"
     >
-      <VStack alignItems={"flex-start"} width="100%">
+      <VStack alignItems="flex-start" width="100%">
         <Flex alignItems="flex-end" gap="5px">
           <Text lineHeight="22px" fontSize="18px" fontWeight="500">
             Invite user

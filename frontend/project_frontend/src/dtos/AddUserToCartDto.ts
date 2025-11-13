@@ -1,3 +1,3 @@
-export type AddUserToCartDto = {
+export interface AddUserToCartDto {
     email: string;
 }

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { CategoryKeys } from "../CategoryKeys";
+
 import { getCategories } from "../api/getCategories";
+import { CategoryKeys } from "../CategoryKeys";
 
 export function useGetCategories() {
   return useQuery({

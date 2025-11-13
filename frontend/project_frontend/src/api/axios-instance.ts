@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { authToken } from "./api-constants";
 
 const api = axios.create({
@@ -14,6 +15,7 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 

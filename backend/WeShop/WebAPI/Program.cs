@@ -24,6 +24,7 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CartAccessService>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
@@ -45,16 +46,16 @@ builder.Services.AddIdentity<User_Data, IdentityRole>()
     .AddEntityFrameworkStores<WebshopDbContext>()
     .AddDefaultTokenProviders();
 
-// Password configuration
+// Identity configuration
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Default Password settings.
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Password.RequiredUniqueChars = 1;
+    options.User.RequireUniqueEmail = true;
 });
 
 // JWT configuration

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { ProductKeys } from "../ProductKeys";
+
 import { getProductImage } from "../api/getProductImage";
+import { ProductKeys } from "../ProductKeys";
 
 interface UseGetProductImageParams {
   productId: number | null;

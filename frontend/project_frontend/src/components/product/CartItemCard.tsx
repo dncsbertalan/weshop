@@ -1,16 +1,17 @@
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { useModifyProductInCart } from "@/features/cart/hooks/useModifyProductInCart";
-import { useRemoveProductFromCart } from "@/features/cart/hooks/useRemoveProductFromCart";
-import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
-import { CartItem } from "@/models/cart";
-import { formatCurrency } from "@/utils/currency";
 import { Box, Flex, HStack, IconButton, Image, NumberInput, Text } from "@chakra-ui/react";
 import { FaXmark } from "react-icons/fa6";
 import { LuMinus, LuPlus } from "react-icons/lu";
 
-type CartItemCardProps = {
-  cartItem: CartItem;
-};
+import { CartItemDto } from "@/dtos/response/cart/CartItemDto";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { useModifyProductInCart } from "@/features/cart/hooks/useModifyProductInCart";
+import { useRemoveProductFromCart } from "@/features/cart/hooks/useRemoveProductFromCart";
+import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
+import { formatCurrency } from "@/utils/currency";
+
+interface CartItemCardProps {
+  cartItem: CartItemDto;
+}
 
 export function CartItemCard({ cartItem }: CartItemCardProps) {
   const { mutate: removeProductFromCart } = useRemoveProductFromCart();
@@ -19,6 +20,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
   const remove = async () => {
     removeProductFromCart({ cartId: user?.activeCartId!, cartItemId: cartItem.id });
   };
+
   const { data: image } = useGetProductImage({ productId: cartItem.productId });
 
   return (
@@ -29,15 +31,8 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
       borderBottom="solid 1px rgb(220, 220, 220)"
       padding={{ base: "20px 5px", md: "32px 5px" }}
     >
-      <Flex alignItems="center" justifyContent="space-between">
-        <Image
-          objectFit="cover"
-          maxHeight={{ base: "60px", md: "70px" }}
-          src={
-            image ??
-            "https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE="
-          }
-        />
+      <Flex alignItems="center" justifyContent="space-between" gap={1}>
+        <Image objectFit="cover" maxHeight={{ base: 60, md: 70 }} src={image ?? undefined} />
 
         <Flex
           alignItems="center"
@@ -58,7 +53,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
               fontSize="12px"
               fontWeight="400px"
             >
-              Added by {cartItem.addedByFirstName} {cartItem.addedByLastName}
+              Added by {cartItem.addedBy.firstName} {cartItem.addedBy.lastName}
             </Text>
           </Flex>
 

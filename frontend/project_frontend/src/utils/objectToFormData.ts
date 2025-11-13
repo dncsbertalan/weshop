@@ -2,7 +2,7 @@ export function objectToFormData(obj: Record<string, unknown>): FormData {
   const formData = new FormData();
 
   Object.entries(obj).forEach(([key, value]) => {
-    if (value === undefined || value === null) return;
+    if (value === undefined || value === null) {return;}
 
     if (Array.isArray(value)) {
       value.forEach((v) => formData.append(key, v));

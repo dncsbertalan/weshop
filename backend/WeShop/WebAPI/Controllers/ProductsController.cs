@@ -1,5 +1,6 @@
 ﻿using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Product;
 using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 

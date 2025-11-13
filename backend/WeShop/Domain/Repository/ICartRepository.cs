@@ -1,4 +1,6 @@
 ﻿using Domain.Dtos.Api;
+using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 using Domain.Models;
 
@@ -15,6 +17,8 @@ public interface ICartRepository
     #region Cart
 
     Task<CartWithParticipantsDto?> GetCartParticipantsAsync(long cartId);
+    Task<CartDto?> GetCartByOwnerAsync(string userId);
+    Task<CartDto?> GetCartByIdAsync(long cartId);
     Task<long> CreateCartAsync(string userId);
     Task DeleteCartAsync(long cartId);
     Task<long?> GetCartIdFromCartItemIdAsync(long cartItemId);

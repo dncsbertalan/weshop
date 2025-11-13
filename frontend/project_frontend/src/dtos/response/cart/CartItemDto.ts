@@ -1,10 +1,11 @@
 import z from "zod";
+
 import { CategoryDto } from "../category/CategoryDto";
 import { UserInformatioDto } from "../user/UserInformatioDto";
 
 export const CartItemDto = z
   .object({
-    cartItemId: z.number(),
+    id: z.number(),
     productId: z.number(),
     quantity: z.number(),
     name: z.string(),

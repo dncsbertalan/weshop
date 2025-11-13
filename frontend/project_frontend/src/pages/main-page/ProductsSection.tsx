@@ -1,13 +1,14 @@
-import { ProductCard } from "@/components/product/ProductCard";
-import { Flex, SimpleGrid, For, Pagination, ButtonGroup, IconButton, EmptyState, VStack } from "@chakra-ui/react";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { ButtonGroup, EmptyState, Flex, For, IconButton, Pagination, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { BiError } from "react-icons/bi";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+
+import { ProductCard } from "@/components/product/ProductCard";
 import { SkeletonProductCard } from "@/components/product/SkeletonProductCard";
-import { scrollToTopSmooth } from "@/utils/scroll";
 import { useGetProducts } from "@/features/products/hooks/useGetProducts";
 import { useProductFilters } from "@/features/products/hooks/useProductFilters";
 import { ProductFilterAction } from "@/features/products/productFilterReducer";
+import { scrollToTopSmooth } from "@/utils/scroll";
 
 export function ProductSection() {
   const { productFilters, dispatchProductFilters } = useProductFilters();

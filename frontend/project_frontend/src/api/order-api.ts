@@ -1,6 +1,7 @@
 import { CheckoutInfoData } from "@/dtos/chekout-info-data";
-import api from "./axios-instance"
 import { Orders } from "@/models/orders";
+
+import api from "./axios-instance"
 
 export const getOrders = async () => {
     const response = await api.get("/api/orders/me");

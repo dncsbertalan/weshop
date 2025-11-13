@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from "react";
-import { ProductFilter, ProductFilterDefaults } from "../ProductFilter";
 import { useSearchParams } from "react-router";
+
+import { ProductFilter, ProductFilterDefaults } from "../ProductFilter";
 import { ProductFilterKeys } from "../ProductFilterKeys";
 import { ProductFilterAction, productFilterReducer } from "../productFilterReducer";
 
@@ -31,12 +32,15 @@ export function useGetProductFilters() {
     if (productFilters.min) {
       params.set(ProductFilterKeys.minPrice, productFilters.min.toString());
     }
+
     if (productFilters.max) {
       params.set(ProductFilterKeys.maxPrice, productFilters.max.toString());
     }
+
     if (productFilters.productName !== null && productFilters.productName !== "") {
       params.set(ProductFilterKeys.productName, productFilters.productName);
     }
+
     if (productFilters.filters) {
       params.append(ProductFilterKeys.categories, productFilters.filters);
     }
