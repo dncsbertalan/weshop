@@ -17,7 +17,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
   const { mutate: removeProductFromCart } = useRemoveProductFromCart();
   const { mutate: modifyProductInCart } = useModifyProductInCart();
   const { user } = useAuthentication();
-  const remove = async () => {
+  const remove = () => {
     removeProductFromCart({ cartId: user?.activeCartId!, cartItemId: cartItem.id });
   };
 
@@ -32,7 +32,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
       padding={{ base: "20px 5px", md: "32px 5px" }}
     >
       <Flex alignItems="center" justifyContent="space-between" gap={1}>
-        <Image objectFit="cover" maxHeight={{ base: 60, md: 70 }} src={image ?? undefined} />
+        <Image objectFit="cover" maxHeight={{ base: 70, md: 70 }} src={image ?? undefined} />
 
         <Flex
           alignItems="center"

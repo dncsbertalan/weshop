@@ -8,10 +8,10 @@ namespace WebAPI.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/me")]
 public class UsersController(UserService _userService) : ControllerBase
 {
-    [HttpGet("me")]
+    [HttpGet]
     public async Task<ActionResult<UserDto>> GetUser()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -24,16 +24,17 @@ public class UsersController(UserService _userService) : ControllerBase
         return Ok(user);
     }
 
-    [HttpPatch("me/active-cart/{cartId:long}")]
+    [HttpPatch("active-cart/{cartId:long}")]
     public async Task<ActionResult> ChangeActiveCart(long cartId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var user = await _userService.GetUserAsync(userId);
+        var success = await _userService.ChangeActiveCartAsync(userId, cartId);
 
-        if (user is null) return Unauthorized();
+        if (!success)
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unexpected error while updating active cart.");
 
-        return Ok(user);
+        return Ok();
     }
 }

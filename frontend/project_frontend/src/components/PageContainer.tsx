@@ -1,22 +1,34 @@
-import { Flex, Spacer } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 
 import { GlobalNavBar } from "@/pages/page-components/navigation-bar/GlobalNavBar";
 import { NavBarFiller } from "@/pages/page-components/navigation-bar/NavBarFiller";
 
 import { Footer } from "./footer/Footer";
+import { Toaster } from "./ui/toaster";
 
-export function PageContainer({ children }: PropsWithChildren) {
+interface PageContainerProps {
+  cutFooter?: boolean;
+}
+
+export function PageContainer({ children, cutFooter }: PageContainerProps & PropsWithChildren) {
   return (
-    <Flex direction="column" width="100%" height="100vh" alignItems="center">
+    <Flex direction="column" width="100%" height="100vh" alignItems="center" overflow="auto">
+      <Toaster />
       <GlobalNavBar />
       <NavBarFiller />
-      <Flex width="100%" maxWidth="global-max-window-size">
-        <Flex direction="column" marginX={5} width="100%" height="100%">
+      <Flex
+        direction="column"
+        alignItems="center"
+        width="100%"
+        minHeight={cutFooter ? "100%" : undefined}
+        height={cutFooter ? undefined : "100%"}
+      >
+        <Flex direction="column" width="100%" maxWidth="global-max-window-size" height="100%" marginX={5}>
           {children}
         </Flex>
       </Flex>
-      <Spacer />
+      {/* <Spacer /> */}
       <Footer />
     </Flex>
   );

@@ -19,7 +19,7 @@ export function ProductNameSearch({ label, ...props }: ProductNameSearchProps) {
   const debouncedFilterName = useDebounce(inputValue, 300);
 
   useEffect(() => {
-    if (debouncedFilterName !== undefined && debouncedFilterName !== productFilters.productName) {
+    if (debouncedFilterName !== productFilters.productName) {
       dispatchProductFilters({ type: ProductFilterAction.SetProductName, payload: debouncedFilterName });
     }
   }, [debouncedFilterName, dispatchProductFilters, productFilters.productName]);
@@ -42,6 +42,7 @@ export function ProductNameSearch({ label, ...props }: ProductNameSearchProps) {
       <InputGroup endElement={endElement} startElement={<LuSearch />}>
         <Input
           ref={inputRef}
+          backgroundColor="bg"
           {...props}
           value={inputValue}
           placeholder="Search products"

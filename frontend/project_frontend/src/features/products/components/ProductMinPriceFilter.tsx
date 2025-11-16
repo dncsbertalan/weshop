@@ -30,6 +30,7 @@ export function ProductMinPriceFilter({ ...props }: ProductMinPriceFilterProps) 
         <InputGroup startElement="Ft" endElement={endElement}>
           <NumberInput.Input
             ref={inputRef}
+            backgroundColor="bg"
             {...props}
             value={productFilters.min}
             onChange={(event) => {

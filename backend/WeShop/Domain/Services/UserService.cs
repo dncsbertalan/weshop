@@ -14,7 +14,7 @@ public class UserService(
         return await _userRepository.GetUserByIdAsync(userId);
     }
 
-    public async Task<UserDto?> ChangeActiveCartAsync(string userId, long cartId)
+    public async Task<bool> ChangeActiveCartAsync(string userId, long cartId)
     {
         var cart = await _cartRepository.GetCartByIdAsync(cartId);
         if (cart is null) throw new NotFoundException("Cart", cartId);
@@ -22,6 +22,6 @@ public class UserService(
         if (!await _cartAccessService.UserHasCartAccessAsync(userId, cartId))
             throw new UserNotAuthorizedForCartException(userId, cartId);
 
-        return await _userRepository.GetUserByIdAsync(userId);
+        return await _userRepository.SetActiveCartAsync(userId, cartId);
     }
 }

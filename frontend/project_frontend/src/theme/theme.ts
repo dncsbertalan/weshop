@@ -1,20 +1,29 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
+import { menuSlotRecipe } from "./slotRecipes/menuSlotRecipe";
 import { selectSlotRecipe } from "./slotRecipes/selectSlotRecipe";
 
 const config = defineConfig({
   theme: {
     slotRecipes: {
       select: selectSlotRecipe,
+      menu: menuSlotRecipe,
     },
     breakpoints: {
-      sm: "576px",
-      md: "768px",
-      lg: "992px",
-      xl: "1220px",
+      // sm: "576px",
+      // md: "768px",
+      // lg: "992px",
+      // xl: "1220px",
       "max-screen-width": "1440px",
     },
     semanticTokens: {
+      shadows: {
+        gentle: {
+          value: {
+            _light: "0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)",
+          },
+        },
+      },
       colors: {
         primary: { value: { _light: "#0FEE0F", _dark: "#0FEE0F" } },
         secondary: { value: "#EE0F0F" },

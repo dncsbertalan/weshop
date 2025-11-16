@@ -30,6 +30,7 @@ export function ProductMaxPriceFilter({ ...props }: ProductMaxPriceFilterProps) 
         <InputGroup startElement="Ft" endElement={endElement}>
           <NumberInput.Input
             ref={inputRef}
+            backgroundColor="bg"
             {...props}
             value={productFilters.max}
             onChange={(event) => {

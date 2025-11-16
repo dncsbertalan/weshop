@@ -1,13 +1,13 @@
 import { Stack, StackProps } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 
-export function GlassContainer({ children }: PropsWithChildren & StackProps) {
+export function GlassContainer({ children, ...props }: PropsWithChildren & StackProps) {
   return (
     <Stack
       backgroundImage="linear-gradient(rgba(255, 255, 255, 0.4) 10%, rgba(255, 255, 255, 0.8))"
       backdropFilter="blur(4px)"
       rounded="3xl"
-      padding={3}
+      padding={4}
       shadow="rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 12px 12px 2px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px"
       position="relative"
       width="max-content"
@@ -34,6 +34,7 @@ export function GlassContainer({ children }: PropsWithChildren & StackProps) {
         maskComposite: "exclude",
         maskMode: "match-source, match-source",
       }}
+      {...props}
     >
       {children}
     </Stack>

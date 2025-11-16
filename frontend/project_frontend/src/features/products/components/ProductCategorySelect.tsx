@@ -20,7 +20,7 @@ export function ProductCategorySelect({ ...props }: ProductCategorySelectProps) 
         itemToString: (category) => category.name,
         itemToValue: ({ id }) => id.toString(),
       }),
-    [categories]
+    [categories],
   );
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function ProductCategorySelect({ ...props }: ProductCategorySelectProps) 
 
   return (
     <Field.Root>
-      <Field.Label>Categories {value}</Field.Label>
+      <Field.Label>Categories</Field.Label>
       <Select.Root
         multiple
         closeOnSelect={false}
@@ -44,7 +44,7 @@ export function ProductCategorySelect({ ...props }: ProductCategorySelectProps) 
         <Select.HiddenSelect />
 
         <Select.Control>
-          <Select.Trigger {...props}>
+          <Select.Trigger {...props} backgroundColor="bg">
             <Select.ValueText placeholder="Select categories" />
           </Select.Trigger>
 

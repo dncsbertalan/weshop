@@ -42,7 +42,7 @@ export function Footer() {
             </ChakraLink>
 
             <Text fontSize="sm" color={textMuted}>
-              Sustainable shopping made elegant — curated zero-waste products with a glassy, premium feel.
+              Stay connected while shopping.
             </Text>
           </VStack>
 

@@ -1,11 +1,11 @@
-import { CartDto } from "@/dtos/response/cart/CartDto";
-import { UserInformatioDto } from "@/dtos/response/user/UserInformatioDto";
-import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { Stack, Text } from "@chakra-ui/react";
 
-function getUserName(user: UserInformatioDto) {
-  return `${user.firstName} ${user.lastName}`;
-}
+import { GlassContainer } from "@/components/GlassContainer";
+import { CartDto } from "@/dtos/response/cart/CartDto";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { AddUserToCartDialog } from "@/features/cart/components/AddUserToCartDialog";
+import { ChangeCart } from "@/features/cart/components/ChangeCart";
+import { getUserCartName } from "@/features/cart/utils/getUserCartName";
 
 interface CartContentHeaderProps {
   cart: CartDto;
@@ -14,11 +14,17 @@ interface CartContentHeaderProps {
 export function CartContentHeader({ cart }: CartContentHeaderProps) {
   const { user } = useAuthentication();
   const isOwnCart = user?.ownedCartId === cart.id;
-  const name = isOwnCart ? "Your" : `${getUserName(cart.owner)}'s`;
+  const name = getUserCartName(cart.owner, isOwnCart);
 
   return (
-    <Stack padding={2} paddingX={4} backgroundColor="bg.muted" rounded="full" width="fit-content">
-      <Text>{`${name} cart`}</Text>
-    </Stack>
+    <GlassContainer width="100%" shadow="gentle">
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Text textStyle="xl" fontWeight="medium">{`${name} cart`}</Text>
+        <Stack direction="row" gap={2}>
+          <ChangeCart />
+          <AddUserToCartDialog />
+        </Stack>
+      </Stack>
+    </GlassContainer>
   );
 }

@@ -1,20 +1,17 @@
-import { Box, Button, defineStyle,Field, Flex, Icon, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, defineStyle, Field, Flex, Icon, Input, Text, VStack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { IoInformationCircleOutline } from "react-icons/io5";
 
 import { Tooltip } from "@/components/ui/tooltip";
 import { useCart } from "@/context/cartContext";
-import { AddUserToCartDto } from "@/dtos/AddUserToCartDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { AddUserToCartRequestDto } from "@/dtos/request/cart/AddUserToCartRequestDto";
 
 export function InviteUserToCart() {
-  const { register, handleSubmit } = useForm<AddUserToCartDto>();
+  const { register, handleSubmit } = useForm<AddUserToCartRequestDto>();
   const { addUserToCart } = useCart();
   const { user } = useAuthentication();
-  const onSubmit = async (data: AddUserToCartDto) => {
-    //authLogin(data);
-    //login(token!);
-    //navigate(Navigation.home);
+  const onSubmit = async (data: AddUserToCartRequestDto) => {
     if (!user) {
       return;
     }
