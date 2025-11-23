@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Cart;
-using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,12 +41,12 @@ public class CartsController(
 
     [HttpPut("{cartId}/products/{cartItemId}")]
     public async Task<IActionResult> ModifyCartItem(long cartId, long cartItemId,
-        [FromBody] CartItemModificationData modificationData)
+        [FromBody] CartItemModificationRequestDto modificationRequest)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _cartService.ModifyCartItemAsync(userId, cartId, cartItemId, modificationData);
+        var result = await _cartService.ModifyCartItemAsync(userId, cartId, cartItemId, modificationRequest);
 
         if (!result) return BadRequest(new { message = "An error occured modifying the product in cart." });
 
@@ -56,12 +56,12 @@ public class CartsController(
     }
 
     [HttpPost("{cartId}/products")]
-    public async Task<IActionResult> AddProductToCart(long cartId, [FromBody] AddProductToCartData productData)
+    public async Task<IActionResult> AddProductToCart(long cartId, [FromBody] AddProductToCartRequestDto productRequest)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _cartService.AddProductToCartAsync(userId, cartId, productData);
+        var result = await _cartService.AddProductToCartAsync(userId, cartId, productRequest);
 
         if (!result) return BadRequest("An error occured adding product to cart.");
 
@@ -87,12 +87,12 @@ public class CartsController(
     }
 
     [HttpPost("{cartId:long}/users")]
-    public async Task<IActionResult> AddUserToSharedCart(long cartId, [FromBody] AddUserToCartData data)
+    public async Task<IActionResult> AddUserToSharedCart(long cartId, [FromBody] AddUserToCartRequestDto request)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _sharedCartService.AddUserToCartAsync(userId, data, cartId);
+        var result = await _sharedCartService.AddUserToCartAsync(userId, request, cartId);
 
         if (!result) return BadRequest("An error occured adding the user to the cart.");
 

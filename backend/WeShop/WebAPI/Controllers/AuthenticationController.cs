@@ -3,8 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using DataAccess.Models;
 using Domain.Constants;
+using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response;
-using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,18 +21,18 @@ public class AuthenticationController(
     CartService _cartService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegistrationData registrationData)
+    public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
     {
         var user = new User_Data
         {
-            UserName = registrationData.Email,
-            Email = registrationData.Email,
-            FirstName = registrationData.FirstName,
-            LastName = registrationData.LastName,
-            BirthDate = registrationData.BirthDate
+            UserName = registrationRequestDto.Email,
+            Email = registrationRequestDto.Email,
+            FirstName = registrationRequestDto.FirstName,
+            LastName = registrationRequestDto.LastName,
+            BirthDate = registrationRequestDto.BirthDate
         };
 
-        var result = await _userManager.CreateAsync(user, registrationData.Password);
+        var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 

@@ -1,8 +1,8 @@
 ﻿using Domain.Dtos.Api;
+using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response;
 using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
-using Domain.Models;
 
 namespace Domain.Repository;
 
@@ -33,7 +33,7 @@ public interface ICartRepository
     Task<bool> DeleteProductFromCartAsync(long cartId, long productId);
     Task<CartItemDto?> GetCartItemByIdAsync(long cartItemId);
     Task<CartDto?> GetCartItemsAsync(long cartId);
-    Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationData modificationData);
+    Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest);
 
     #endregion
 }

@@ -1,6 +1,6 @@
-﻿namespace Domain.Models;
+﻿namespace Domain.Dtos.Api.Request;
 
-public class CreateOrderData
+public class CreateOrderRequestDto
 {
     public long CartId { get; set; }
 

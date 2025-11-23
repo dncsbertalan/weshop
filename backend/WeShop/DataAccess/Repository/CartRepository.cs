@@ -1,10 +1,8 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
-using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
-using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -207,12 +205,12 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart is null ? null : CartMapper.MapToCartDto(cart);
     }
 
-    public async Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationData modificationData)
+    public async Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest)
     {
         var cartItem = await _context.CartItems.FindAsync(cartItemId);
         if (cartItem is null) return false;
 
-        cartItem.Quantity = modificationData.Quantity;
+        cartItem.Quantity = modificationRequest.Quantity;
 
         await _context.SaveChangesAsync();
 

@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Api;
+﻿namespace Domain.Dtos.Api.Response;
 
 public class OrderItemDto
 {

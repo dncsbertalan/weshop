@@ -1,5 +1,5 @@
-﻿using Domain.Dtos.Api.Response.Cart;
-using Domain.Models;
+﻿using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Repository;
 
 namespace Domain.Services;
@@ -51,14 +51,14 @@ public class CartService(
 
     #region Cart items
 
-    public async Task<bool> AddProductToCartAsync(string userId, long cartId, AddProductToCartData productData)
+    public async Task<bool> AddProductToCartAsync(string userId, long cartId, AddProductToCartRequestDto productRequest)
     {
         if (!await _cartAccessService.UserHasCartAccessAsync(userId, cartId)) return false;
 
-        var product = await _productRepository.GetByIdAsync(productData.ProductId);
+        var product = await _productRepository.GetByIdAsync(productRequest.ProductId);
         if (product is null) return false;
 
-        return await _cartRepository.AddProductToCartAsync(cartId, productData.ProductId, userId);
+        return await _cartRepository.AddProductToCartAsync(cartId, productRequest.ProductId, userId);
     }
 
     public async Task<bool> RemoveItemFromCartAsync(string userId, long cartId, long cartItemId)
@@ -72,14 +72,14 @@ public class CartService(
     }
 
     public async Task<bool> ModifyCartItemAsync(string userId, long cartId, long cartItemId,
-        CartItemModificationData modificationData)
+        CartItemModificationRequestDto modificationRequest)
     {
         if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId)) return false;
 
         var cartIdFromCartItem = await _cartRepository.GetCartIdFromCartItemIdAsync(cartItemId);
         if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
 
-        return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationData);
+        return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationRequest);
     }
 
     #endregion

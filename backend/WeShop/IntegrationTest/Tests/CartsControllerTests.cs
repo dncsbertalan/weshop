@@ -1,8 +1,6 @@
 using System.Net.Http.Json;
-using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Cart;
-using Domain.Models;
 using FluentAssertions;
 using IntegrationTest.AuthenticationHandlers;
 using IntegrationTest.Fixtures;
@@ -51,7 +49,7 @@ public class CartsControllerTests(
     public async Task AddProductToCart_ShouldReturnOk()
     {
         // Arrange
-        var productData = new AddProductToCartData
+        var productData = new AddProductToCartRequestDto
         {
             ProductId = 1
         };
@@ -71,13 +69,13 @@ public class CartsControllerTests(
         var cartResponse = await _client.PostAsync("/api/carts", null);
         var cart = await cartResponse.Content.ReadFromJsonAsync<CartDto>();
 
-        var productData = new AddProductToCartData { ProductId = 1 };
+        var productData = new AddProductToCartRequestDto { ProductId = 1 };
         var addResponse = await _client.PostAsJsonAsync($"/api/carts/{cart.Id}/products", productData);
         addResponse.EnsureSuccessStatusCode();
 
         var cartItemId = 1; // depending on your DB seeding or return from AddProductToCart
 
-        var modificationData = new CartItemModificationData
+        var modificationData = new CartItemModificationRequestDto
         {
             Quantity = 5
         };
@@ -97,7 +95,7 @@ public class CartsControllerTests(
         var cartResponse = await _client.PostAsync("/api/carts", null);
         var cart = await cartResponse.Content.ReadFromJsonAsync<CartDto>();
 
-        var productData = new AddProductToCartData { ProductId = 1 };
+        var productData = new AddProductToCartRequestDto { ProductId = 1 };
         var addResponse = await _client.PostAsJsonAsync($"/api/carts/{cart.Id}/products", productData);
         addResponse.EnsureSuccessStatusCode();
 
@@ -115,7 +113,7 @@ public class CartsControllerTests(
         var cartResponse = await _client.PostAsync("/api/carts", null);
         var cart = await cartResponse.Content.ReadFromJsonAsync<CartDto>();
 
-        var userData = new AddUserToCartData
+        var userData = new AddUserToCartRequestDto
         {
             Email = "another-user@weshop.hu"
         };
