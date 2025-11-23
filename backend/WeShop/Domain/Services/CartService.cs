@@ -1,6 +1,4 @@
-﻿using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
-using Domain.Dtos.Api.Response.Cart;
+﻿using Domain.Dtos.Api.Response.Cart;
 using Domain.Models;
 using Domain.Repository;
 
@@ -20,6 +18,7 @@ public class CartService(
     }
 
     #endregion
+
 
     #region Cart
 
@@ -81,29 +80,6 @@ public class CartService(
         if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
 
         return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationData);
-    }
-
-    #endregion
-
-
-    #region Shared cart
-
-    public async Task<bool> AddUserToCartAsync(string ownerId, AddUserToCartData data, long cartId)
-    {
-        if (!await _cartAccessService.UserIsCartOwnerAsync(ownerId, cartId)) return false;
-
-        var userId = await _userRepository.GetUserByEmailAsync(data.Email);
-        // If the user is already added to the cart then don't add them again.
-        if (userId is null || await _cartAccessService.UserHasCartAccessAsync(userId, cartId)) return false;
-
-        var result = await _cartRepository.AddUserToSharedCartAsync(userId, cartId);
-
-        return result;
-    }
-
-    public async Task<bool> DoesUserHasCartAccess(string userId, long cartId)
-    {
-        return await _cartAccessService.UserHasCartAccessAsync(userId, cartId);
     }
 
     #endregion

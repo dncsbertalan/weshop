@@ -1,21 +1,17 @@
 ﻿using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 
 namespace WebAPI.Hubs;
 
 [Authorize]
-public class SharedCartHub(CartService _cartService) : Hub
+public class SharedCartHub(CartService _cartService, CartAccessService _cartAccessService) : Hub
 {
     public async Task JoinGroup(long cartId)
     {
         var userId = Context.UserIdentifier;
 
-        if (!await IsUserAuthorized(userId, cartId))
-        {
-            return;
-        }
+        if (!await IsUserAuthorized(userId, cartId)) return;
 
         await Groups.AddToGroupAsync(Context.ConnectionId, cartId.ToString());
     }
@@ -24,10 +20,7 @@ public class SharedCartHub(CartService _cartService) : Hub
     {
         var userId = Context.UserIdentifier;
 
-        if (!await IsUserAuthorized(userId, cartId))
-        {
-            return;
-        }
+        if (!await IsUserAuthorized(userId, cartId)) return;
 
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, cartId.ToString());
     }
@@ -37,12 +30,9 @@ public class SharedCartHub(CartService _cartService) : Hub
 
     private async Task<bool> IsUserAuthorized(string? userId, long cartId)
     {
-        if (string.IsNullOrEmpty(userId))
-        {
-            return false;
-        }
+        if (string.IsNullOrEmpty(userId)) return false;
 
-        return await _cartService.DoesUserHasCartAccess(userId, cartId);
+        return await _cartAccessService.UserHasCartAccessAsync(userId, cartId);
     }
 
     #endregion

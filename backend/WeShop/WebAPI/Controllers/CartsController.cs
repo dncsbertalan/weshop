@@ -12,7 +12,10 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class CartsController(CartService _cartService, IHubContext<SharedCartHub> _cartHub) : ControllerBase
+public class CartsController(
+    CartService _cartService,
+    SharedCartService _sharedCartService,
+    IHubContext<SharedCartHub> _cartHub) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateCart()
@@ -89,7 +92,7 @@ public class CartsController(CartService _cartService, IHubContext<SharedCartHub
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _cartService.AddUserToCartAsync(userId, data, cartId);
+        var result = await _sharedCartService.AddUserToCartAsync(userId, data, cartId);
 
         if (!result) return BadRequest("An error occured adding the user to the cart.");
 
