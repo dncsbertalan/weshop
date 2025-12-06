@@ -1,108 +1,87 @@
-import { Button, Field, Flex, Heading, Input, Text, VStack } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Button, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, useForm } from "react-hook-form";
+import { LuExternalLink } from "react-icons/lu";
 
-import { Footer } from "@/components/footer/Footer";
-import { PasswordInput } from "@/components/ui/password-input";
+import { FieldInput } from "@/components/input/FieldInput";
+import { FieldPasswordInput } from "@/components/input/FieldPasswordInput";
+import { LinkToOtherPage } from "@/components/LinkToOtherPage";
+import { PageContainer } from "@/components/PageContainer";
 import { LoginRequestDto } from "@/dtos/request/authentication/LoginRequestDto";
 import { useLoginUser } from "@/features/authentication/hooks/useLoginUser";
 import { Navigation } from "@/routes/navigation";
 import { getFieldKeys } from "@/utils/getFieldKeys";
 
-import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
-
 const loginRequestKeys = getFieldKeys(LoginRequestDto);
 
 export function LoginPage() {
-  const navigate = useNavigate();
   const {
     register,
-    handleSubmit,
+    control,
     formState: { errors },
-  } = useForm<LoginRequestDto>();
-  const { mutateAsync, isError } = useLoginUser();
-  const onSubmit = async (loginRequest: LoginRequestDto) => {
-    mutateAsync(loginRequest).then(() => navigate(Navigation.home));
+  } = useForm<LoginRequestDto>({
+    resolver: zodResolver(LoginRequestDto),
+  });
+  const { mutate, isPending } = useLoginUser();
+  const onSubmit = (loginRequest: LoginRequestDto) => {
+    mutate(loginRequest);
   };
 
   return (
-    <Flex background="bg-color" height="100vh" flexDirection="column">
-      <GlobalNavBar />
+    <PageContainer noFooter>
+      <Flex justifyContent="center" alignItems="center">
+        <Form onSubmit={({ data }) => onSubmit(data)} control={control} noValidate style={{ width: "100%" }}>
+          <VStack
+            paddingY={14}
+            paddingX={{ base: 10, md: 16 }}
+            borderRadius="4xl"
+            backgroundColor="bg"
+            shadow={{ md: "great" }}
+            minWidth={320}
+            maxWidth={400}
+            marginX="auto"
+            marginTop={{ md: 16 }}
+            gap={14}
+          >
+            <Heading size="4xl" marginBottom={4}>
+              Login
+            </Heading>
 
-      <Flex minHeight="100vh" alignItems="center">
-        <VStack
-          gap={4}
-          padding="34px"
-          borderRadius="34px"
-          backgroundColor="white"
-          minWidth="320px"
-          maxW="400px"
-          mx="auto"
-          shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
-          height="fit-content"
-        >
-          <Heading size="2xl" marginBottom="20px">
-            Login
-          </Heading>
+            <Stack width="full" gap={5}>
+              <FieldInput
+                required
+                label="E-mail"
+                error={errors.email}
+                type="email"
+                {...register(loginRequestKeys.email)}
+              />
 
-          <Field.Root required invalid={!!errors.email}>
-            <Field.Label>E-mail</Field.Label>
-            <Input
-              type="email"
-              {...register(loginRequestKeys.email, {
-                required: "E-mail is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email format",
-                },
-              })}
-              placeholder="example@email.com"
-            />{" "}
-            {/* ide 12 px padding */}
-            <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
-          </Field.Root>
+              <FieldPasswordInput
+                required
+                label="Password"
+                error={errors.password}
+                {...register(loginRequestKeys.password)}
+              />
+            </Stack>
 
-          <Field.Root required invalid={!!errors.password}>
-            <Field.Label>Password</Field.Label>
-            <PasswordInput
-              {...register(loginRequestKeys.password, {
-                required: "Password is required",
-              })}
-            />
-            <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
-          </Field.Root>
+            <Stack gap={4} width="full">
+              <Button type="submit" width="full" rounded="xl" loading={isPending}>
+                Log in
+              </Button>
 
-          {isError && (
-            <Flex
-              width="100%"
-              justifyContent="center"
-              border="1px solid"
-              borderColor="border.error"
-              backgroundColor="bg.error"
-              color="fg.error"
-              rounded="5px"
-              padding="5px"
-            >
-              <Text fontSize="14px">Wrong username or password.</Text>
-            </Flex>
-          )}
-
-          <Button width="full" onClick={handleSubmit(onSubmit)}>
-            Login
-          </Button>
-
-          <Flex flexDirection="column" alignItems="center" width="100%" marginTop="10px">
-            <Text fontSize="14px">Doesn't have an account yet?</Text>
-            <Link to={Navigation.registration}>
-              <Text fontSize="14px" _hover={{ textDecoration: "underline" }}>
-                Create one
-              </Text>
-            </Link>
-          </Flex>
-        </VStack>
+              <Stack alignItems="center" width="100%" gap={0}>
+                <Text fontSize="14px">Doesn&apos;t have an account yet?</Text>
+                <LinkToOtherPage
+                  label="Create one"
+                  navigateTo={Navigation.registration}
+                  icon={<LuExternalLink />}
+                  textProps={{ fontSize: "sm" }}
+                />
+              </Stack>
+            </Stack>
+          </VStack>
+        </Form>
       </Flex>
-
-      <Footer />
-    </Flex>
+    </PageContainer>
   );
 }

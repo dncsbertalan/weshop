@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { addUserToCart } from "../api/addUserToCart";
 import { toaster } from "@/components/ui/toaster";
+
+import { addUserToCart } from "../api/addUserToCart";
 
 export function useAddUserToCart() {
   return useMutation({

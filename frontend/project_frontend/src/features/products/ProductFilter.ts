@@ -1,15 +1,6 @@
-export interface ProductFilter {
-  page: number;
-  pageSize: number;
-  filters: string | null;
-  min?: number;
-  max?: number;
-  productName: string | null;
-}
-
 export const ProductFilterDefaults = {
   page: 1,
-  pageSize: 30,
+  pageSize: 36,
   minPrice: 0,
   maxPrice: 100000,
 };

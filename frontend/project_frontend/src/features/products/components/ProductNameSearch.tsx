@@ -5,7 +5,7 @@ import { LuSearch } from "react-icons/lu";
 import { useDebounce } from "@/hooks/useDebounce";
 
 import { useProductFilters } from "../hooks/useProductFilters";
-import { ProductFilterAction } from "../productFilterReducer";
+import { ProductFilterAction } from "../ProductFilterReducer";
 
 interface ProductNameSearchProps extends InputProps {
   label?: string;

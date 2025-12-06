@@ -18,6 +18,6 @@ export function useGetProductImage({ productId }: UseGetProductImageParams) {
       return await getProductImage(productId);
     },
     enabled: !!productId,
-    staleTime: 1000 * 60 * 60,
+    staleTime: Infinity,
   });
 }

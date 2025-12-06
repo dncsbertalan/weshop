@@ -26,11 +26,11 @@ export function productFilterReducer(state: ProductFilter, action: ProductFilter
     case ProductFilterAction.SetPageSize:
       return { ...state, pageSize: action.payload };
     case ProductFilterAction.SetMinPrice:
-      return { ...state, min: action.payload, page: 1 };
+      return { ...state, minPrice: action.payload, page: 1 };
     case ProductFilterAction.SetMaxPrice:
-      return { ...state, max: action.payload, page: 1 };
+      return { ...state, maxPrice: action.payload, page: 1 };
     case ProductFilterAction.SetCategoryIds:
-      return { ...state, filters: action.payload, page: 1 };
+      return { ...state, categoryIds: action.payload, page: 1 };
     case ProductFilterAction.SetProductName:
       return { ...state, productName: action.payload, page: 1 };
     case ProductFilterAction.SetAll:

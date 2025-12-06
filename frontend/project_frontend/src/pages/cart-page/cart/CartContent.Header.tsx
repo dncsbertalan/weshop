@@ -1,6 +1,5 @@
 import { Stack, Text } from "@chakra-ui/react";
 
-import { GlassContainer } from "@/components/GlassContainer";
 import { CartDto } from "@/dtos/response/cart/CartDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { AddUserToCartDialog } from "@/features/cart/components/AddUserToCartDialog";
@@ -17,7 +16,14 @@ export function CartContentHeader({ cart }: CartContentHeaderProps) {
   const name = getUserCartName(cart.owner, isOwnCart);
 
   return (
-    <GlassContainer width="100%" shadow="gentle">
+    <Stack
+      padding={4}
+      position="sticky"
+      top={0}
+      background="linear-gradient(to bottom, white 0%, rgba(255, 255, 255, 0.6) 70%, rgba(255, 255, 255, 0) 100%)"
+      backdropFilter="blur(1px)"
+      zIndex={1}
+    >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Text textStyle="xl" fontWeight="medium">{`${name} cart`}</Text>
         <Stack direction="row" gap={2}>
@@ -25,6 +31,6 @@ export function CartContentHeader({ cart }: CartContentHeaderProps) {
           <AddUserToCartDialog />
         </Stack>
       </Stack>
-    </GlassContainer>
+    </Stack>
   );
 }

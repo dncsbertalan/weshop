@@ -6,7 +6,7 @@ import { ModifyProductDialog } from "@/features/product-editor/components/Modify
 import { ProductDeleteButton } from "@/features/products/components/ProductDeleteButton";
 import { useGetProducts } from "@/features/products/hooks/useGetProducts";
 import { useProductFilters } from "@/features/products/hooks/useProductFilters";
-import { ProductFilterAction } from "@/features/products/productFilterReducer";
+import { ProductFilterAction } from "@/features/products/ProductFilterReducer";
 import { formatCurrencyFt } from "@/utils/currency";
 
 import { AdminPageProductFilters } from "./AdminPage.ProductFilters";

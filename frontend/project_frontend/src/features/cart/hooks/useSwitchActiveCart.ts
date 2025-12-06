@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { switchActiveCart } from "../api/switchActiveCart";
+
 import { UserKeys } from "@/features/users/UserKeys";
+
+import { switchActiveCart } from "../api/switchActiveCart";
 import { CartKeys } from "../CartKeys";
 
 export function useSwitchActiveCart() {
@@ -9,8 +11,8 @@ export function useSwitchActiveCart() {
   return useMutation({
     mutationFn: switchActiveCart,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [UserKeys.CurrentUser] });
-      queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
+      void queryClient.invalidateQueries({ queryKey: [UserKeys.CurrentUser] });
+      void queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
     },
   });
 }

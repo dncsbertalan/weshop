@@ -1,5 +1,6 @@
 import { Box, Spinner, Stack, VStack } from "@chakra-ui/react";
 
+import { Container } from "@/components/Container";
 import { CartDto } from "@/dtos/response/cart/CartDto";
 
 import { CartContentHeader } from "./CartContent.Header";
@@ -11,12 +12,12 @@ interface CartContentProps {
 
 export function CartContent({ cart }: CartContentProps) {
   return (
-    <Stack gap={8} width="100%">
+    <Container gap={0} width="100%" maxHeight={600} overflow="auto" padding={0}>
       <CartContentHeader cart={cart} />
-      <Box borderTop="1px solid" borderTopColor="separator-color">
+      <Box borderTop="1px solid" borderTopColor="separator-color" padding={4}>
         <CartItems cartItems={cart.cartItems} />
       </Box>
-    </Stack>
+    </Container>
   );
 }
 

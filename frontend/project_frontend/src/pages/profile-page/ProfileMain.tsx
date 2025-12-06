@@ -1,21 +1,16 @@
-import { Flex, Spacer, Text,VStack } from "@chakra-ui/react";
+import { Flex, Text, VStack } from "@chakra-ui/react";
 
-import { Footer } from "@/components/footer/Footer";
+import { PageContainer } from "@/components/PageContainer";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 
-import { GlobalNavBarProfil } from "../page-components/navigation-bar/GlobalNavBar";
-import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
 import { OrdersSection } from "./OrdersSection";
 
 export function ProfileMain() {
   const { user } = useAuthentication();
 
   return (
-    <Flex direction="column" minHeight="100vh">
-      <GlobalNavBarProfil />
-      <NavBarFiller />
-
+    <PageContainer>
       <Flex
         justifyContent="center"
         width="100%"
@@ -38,10 +33,6 @@ export function ProfileMain() {
           <OrdersSection />
         </VStack>
       </Flex>
-
-      <Spacer />
-
-      <Footer />
-    </Flex>
+    </PageContainer>
   );
 }

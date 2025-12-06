@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 import { ProductFilter } from "../ProductFilter";
-import { ProductFilterActionType } from "../productFilterReducer";
+import { ProductFilterActionType } from "../ProductFilterReducer";
 
 interface ProductFilterContextType {
   productFilters: ProductFilter;

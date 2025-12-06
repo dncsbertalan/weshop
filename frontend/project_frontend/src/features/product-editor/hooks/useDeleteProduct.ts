@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { toaster } from "@/components/ui/toaster";
+import { centralToaster } from "@/components/toaster/centralToasterDef";
 import { ProductKeys } from "@/features/products/ProductKeys";
 
 import { deleteProduct } from "../api/deleteProduct";
@@ -11,8 +11,8 @@ export function useDeleteProduct() {
   return useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] });
-      toaster.create({ title: "Successfully deleted product", type: "success" });
+      void queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] });
+      centralToaster.create({ title: "Successfully deleted product", type: "success" });
     },
   });
 }

@@ -1,14 +1,15 @@
-import { Navigation } from "@/routes/navigation";
-import { EmptyState, VStack, Button } from "@chakra-ui/react";
-import { MdOutlineShoppingCart } from "react-icons/md";
+import { Button, EmptyState, VStack } from "@chakra-ui/react";
+import { MdOutlineRemoveShoppingCart } from "react-icons/md";
 import { Link } from "react-router";
+
+import { Navigation } from "@/routes/navigation";
 
 export function EmptyCartItems() {
   return (
     <EmptyState.Root size="lg">
       <EmptyState.Content>
         <EmptyState.Indicator>
-          <MdOutlineShoppingCart />
+          <MdOutlineRemoveShoppingCart />
         </EmptyState.Indicator>
         <VStack textAlign="center">
           <EmptyState.Title>Your cart is empty</EmptyState.Title>

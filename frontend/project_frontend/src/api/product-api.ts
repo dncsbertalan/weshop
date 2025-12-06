@@ -13,17 +13,7 @@ export enum ProductFilterKeys {
 
 export enum ProductQueryDefaults {
   page = 1,
-  pageSize = 30,
+  pageSize = 36,
   minPrice = 1000,
   maxPrice = 100_000,
-}
-
-export async function getProducts(productFilters: ProductFilter) {
-  const response = await api.get("/api/products", { params: productFilters });
-  return (await response.data) as PagedProducts;
-}
-
-export async function getProduct(productId: number) {
-  const response = await api.get(`/api/products/${productId}`);
-  return (await response.data) as Product;
 }

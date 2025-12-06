@@ -4,62 +4,59 @@ import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 
 import { Role } from "@/features/authentication/Role";
 import { useGetCurrentUser } from "@/features/users/hooks/useGetCurrentUser";
+import { isTokenExpired } from "@/utils/isTokenExpired";
+import { normalizeArray } from "@/utils/normalizeArray";
 
 import { AuthenticationKeys } from "../AuthenticationKeys";
+import { AuthenticationTokenPayload } from "../AuthenticationTokenPayload";
 import { AuthenticationContext } from "../contexts/AuthenticationContext";
-import { normalizeArray } from "@/utils/normalizeArray";
-import { getInitialIsAuthenticated } from "../utils/getInitialIsAuthenticated";
-import { getInitialRoles } from "../utils/getInitialRoles";
-
-export interface JwtPayload {
-  exp: number;
-  email: string;
-  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": Role[];
-}
 
 export function AuthenticationProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(getInitialIsAuthenticated);
-  const [roles, setRoles] = useState<Role[]>(getInitialRoles);
   const [jwtToken, setJwtToken] = useState<string | null>(() =>
     localStorage.getItem(AuthenticationKeys.AuthenticatianTokenLocalStorageKey),
   );
 
-  const { data: user } = useGetCurrentUser({ enabled: isAuthenticated });
-
-  const isAdmin = useMemo(() => roles.includes(Role.Admin), [roles]);
-
-  // decode the JWT token returned on login, extracting the roles and expiration date from it
-  useEffect(() => {
+  const decoded = useMemo(() => {
     if (!jwtToken) {
-      console.log("az isten bassza meg");
-      setIsAuthenticated(false);
-      setRoles([]);
-      return;
+      return null;
     }
 
     try {
-      const decoded = jwtDecode<JwtPayload>(jwtToken);
-      const isExpired = decoded.exp * 1000 < Date.now();
-      if (isExpired) {
-        localStorage.removeItem(AuthenticationKeys.AuthenticatianTokenLocalStorageKey);
-        setJwtToken(null);
-        setIsAuthenticated(false);
-        setRoles([]);
-        queryClient.clear();
-        return;
-      }
-
-      const roles = normalizeArray(decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]);
-
-      setIsAuthenticated(true);
-      setRoles(roles);
-    } catch (err) {
-      console.error("Failed to decode token:", err);
-      setIsAuthenticated(false);
-      setRoles([]);
+      return jwtDecode<AuthenticationTokenPayload>(jwtToken);
+    } catch {
+      return null;
     }
-  }, [jwtToken, queryClient]);
+  }, [jwtToken]);
+
+  const expired = useMemo(() => {
+    if (!jwtToken) {
+      return true;
+    }
+
+    return isTokenExpired(jwtToken);
+  }, [jwtToken]);
+
+  const roles = useMemo(() => {
+    if (!decoded || expired) {
+      return [];
+    }
+
+    return normalizeArray(decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]);
+  }, [decoded, expired]);
+
+  const isAuthenticated = !!jwtToken && !expired;
+  const isAdmin = useMemo(() => roles.includes(Role.Admin), [roles]);
+
+  const { data: user } = useGetCurrentUser({ enabled: isAuthenticated });
+
+  useEffect(() => {
+    if (expired && jwtToken) {
+      localStorage.removeItem(AuthenticationKeys.AuthenticatianTokenLocalStorageKey);
+      setJwtToken(null);
+      queryClient.clear();
+    }
+  }, [expired, jwtToken, queryClient]);
 
   return (
     <AuthenticationContext.Provider

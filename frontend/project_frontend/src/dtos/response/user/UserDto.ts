@@ -8,7 +8,6 @@ export const UserDto = z
     firstName: z.string(),
     lastName: z.string(),
     email: z.string(),
-    birthDate: z.preprocess((value) => new Date(value as string), z.date()),
     activeCartId: z.number().positive(),
     ownedCartId: z.number().positive(),
     carts: CartInformationDto.array(),

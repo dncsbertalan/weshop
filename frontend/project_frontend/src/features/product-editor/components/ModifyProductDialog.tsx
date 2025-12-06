@@ -1,8 +1,8 @@
-import { Button, Link } from "@chakra-ui/react";
+import { Link } from "@chakra-ui/react";
 
-import { Dialog } from "@/components/Dialog";
+import { DialogWrapper } from "@/components/Dialog.Wrapper";
 
-import { ModifyProductDialogBody } from "./ModifyProductDialog.Body";
+import { ModifyProductDialogContent } from "./ModifyProductDialog.Content";
 
 interface ModifyProductDialogProps {
   productId: number;
@@ -10,19 +10,14 @@ interface ModifyProductDialogProps {
 
 export function ModifyProductDialog({ productId }: ModifyProductDialogProps) {
   return (
-    <Dialog
-      title="Add new product"
-      body={<ModifyProductDialogBody productId={productId} />}
+    <DialogWrapper
       trigger={
         <Link width="fit-content" _hover={{ cursor: "pointer" }}>
           View more
         </Link>
       }
-      footer={
-        <Button type="submit" rounded="full">
-          Create product
-        </Button>
-      }
-    />
+    >
+      <ModifyProductDialogContent productId={productId} />
+    </DialogWrapper>
   );
 }

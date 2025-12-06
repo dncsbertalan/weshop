@@ -1,8 +1,10 @@
-import { CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
+import { Box, CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
 import { useRef } from "react";
 
+import { floatingLabelStyles } from "@/theme/styles/floatingLabelStyle";
+
 import { useProductFilters } from "../hooks/useProductFilters";
-import { ProductFilterAction } from "../productFilterReducer";
+import { ProductFilterAction } from "../ProductFilterReducer";
 
 type ProductMaxPriceFilterProps = InputProps;
 
@@ -11,7 +13,7 @@ export function ProductMaxPriceFilter({ ...props }: ProductMaxPriceFilterProps) 
 
   const { productFilters, dispatchProductFilters } = useProductFilters();
 
-  const endElement = productFilters.max ? (
+  const endElement = productFilters.maxPrice ? (
     <CloseButton
       rounded="full"
       size="xs"
@@ -25,23 +27,25 @@ export function ProductMaxPriceFilter({ ...props }: ProductMaxPriceFilterProps) 
 
   return (
     <Field.Root required>
-      <Field.Label>Maximum price</Field.Label>
-      <NumberInput.Root min={0} width="100%">
-        <InputGroup startElement="Ft" endElement={endElement}>
-          <NumberInput.Input
-            ref={inputRef}
-            backgroundColor="bg"
-            {...props}
-            value={productFilters.max}
-            onChange={(event) => {
-              dispatchProductFilters({
-                type: ProductFilterAction.SetMaxPrice,
-                payload: Number(event.currentTarget.value),
-              });
-            }}
-          />
-        </InputGroup>
-      </NumberInput.Root>
+      <Box pos="relative" w="full">
+        <Field.Label css={floatingLabelStyles}>Maximum price</Field.Label>
+        <NumberInput.Root min={0} width="100%">
+          <InputGroup startElement="Ft" endElement={endElement}>
+            <NumberInput.Input
+              ref={inputRef}
+              backgroundColor="bg"
+              {...props}
+              value={productFilters.maxPrice}
+              onChange={(event) => {
+                dispatchProductFilters({
+                  type: ProductFilterAction.SetMaxPrice,
+                  payload: Number(event.currentTarget.value),
+                });
+              }}
+            />
+          </InputGroup>
+        </NumberInput.Root>
+      </Box>
     </Field.Root>
   );
 }

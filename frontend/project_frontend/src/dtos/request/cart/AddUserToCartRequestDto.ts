@@ -2,7 +2,7 @@ import z from "zod";
 
 export const AddUserToCartRequestDto = z
   .object({
-    email: z.string(),
+    email: z.email("E-mail is not valid"),
   })
   .strict();
 

@@ -11,7 +11,7 @@ export function useGetCurrentUser({ enabled }: UseGetCurrentUserParams) {
   return useQuery({
     queryKey: [UserKeys.CurrentUser],
     queryFn: getCurrentUser,
-    staleTime: 1000 * 30,
+    staleTime: Infinity,
     enabled,
   });
 }

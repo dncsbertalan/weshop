@@ -6,9 +6,7 @@ import { useAuthentication } from "@/features/authentication/hooks/useAuthentica
 import { useSwitchActiveCart } from "../hooks/useSwitchActiveCart";
 import { getUserCartName } from "../utils/getUserCartName";
 
-interface ChangeCartProps {}
-
-export function ChangeCart({}: ChangeCartProps) {
+export function ChangeCart() {
   const { user } = useAuthentication();
   const { mutate } = useSwitchActiveCart();
 

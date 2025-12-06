@@ -7,9 +7,9 @@ import { ProductNameSearch } from "@/features/products/components/ProductNameSea
 
 export function AdminPageProductFilters() {
   return (
-    <Stack width="100%" direction="row" flex={1}>
+    <Stack width="100%" direction="row" alignItems="end" flex={1}>
       <Stack flex={2}>
-        <ProductNameSearch label="Product name" />
+        <ProductNameSearch />
       </Stack>
       <Stack flex={1}>
         <ProductMinPriceFilter />

@@ -62,6 +62,7 @@ export default tseslint.config(
       "react/self-closing-comp": "error",
       "react/display-name": "off",
       "react/jsx-curly-brace-presence": ["error", "never"],
+      "react-hooks/set-state-in-effect": "off",
     },
   },
   {
@@ -85,5 +86,5 @@ export default tseslint.config(
     rules: {
       curly: ["error", "all"],
     },
-  }
+  },
 );

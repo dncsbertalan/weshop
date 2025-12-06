@@ -8,10 +8,10 @@ interface ProductDeleteButtonProps {
 }
 
 export function ProductDeleteButton({ productId }: ProductDeleteButtonProps) {
-  const { mutateAsync } = useDeleteProduct();
+  const { mutate } = useDeleteProduct();
 
   const handleDelete = () => {
-    mutateAsync(productId);
+    mutate(productId);
   };
 
   return (

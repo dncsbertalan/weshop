@@ -3,15 +3,15 @@ import { useSearchParams } from "react-router";
 
 import { ProductFilter, ProductFilterDefaults } from "../ProductFilter";
 import { ProductFilterKeys } from "../ProductFilterKeys";
-import { ProductFilterAction, productFilterReducer } from "../productFilterReducer";
+import { ProductFilterAction, productFilterReducer } from "../ProductFilterReducer";
 
 function getFiltersFromSearchParams(searchParams: URLSearchParams): ProductFilter {
   return {
     page: Number(searchParams.get(ProductFilterKeys.page)) || ProductFilterDefaults.page,
     pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
-    min: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
-    max: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
-    filters: searchParams.get(ProductFilterKeys.categories),
+    minPrice: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
+    maxPrice: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
+    categoryIds: searchParams.get(ProductFilterKeys.categories),
     productName: searchParams.get(ProductFilterKeys.productName) || "",
   };
 }
@@ -20,7 +20,7 @@ export function useGetProductFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [productFilters, dispatchProductFilters] = useReducer(
     productFilterReducer,
-    getFiltersFromSearchParams(searchParams)
+    getFiltersFromSearchParams(searchParams),
   );
 
   useEffect(() => {
@@ -29,27 +29,27 @@ export function useGetProductFilters() {
     params.set(ProductFilterKeys.page, productFilters.page.toString());
     params.set(ProductFilterKeys.pageSize, productFilters.pageSize.toString());
 
-    if (productFilters.min) {
-      params.set(ProductFilterKeys.minPrice, productFilters.min.toString());
+    if (productFilters.minPrice) {
+      params.set(ProductFilterKeys.minPrice, productFilters.minPrice.toString());
     }
 
-    if (productFilters.max) {
-      params.set(ProductFilterKeys.maxPrice, productFilters.max.toString());
+    if (productFilters.maxPrice) {
+      params.set(ProductFilterKeys.maxPrice, productFilters.maxPrice.toString());
     }
 
     if (productFilters.productName !== null && productFilters.productName !== "") {
       params.set(ProductFilterKeys.productName, productFilters.productName);
     }
 
-    if (productFilters.filters) {
-      params.append(ProductFilterKeys.categories, productFilters.filters);
+    if (productFilters.categoryIds) {
+      params.append(ProductFilterKeys.categories, productFilters.categoryIds);
     }
 
     setSearchParams(params);
   }, [
-    productFilters.filters,
-    productFilters.max,
-    productFilters.min,
+    productFilters.categoryIds,
+    productFilters.maxPrice,
+    productFilters.minPrice,
     productFilters.page,
     productFilters.pageSize,
     productFilters.productName,

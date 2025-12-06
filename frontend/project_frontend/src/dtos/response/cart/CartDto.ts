@@ -7,6 +7,8 @@ export const CartDto = z
   .object({
     id: z.number(),
     owner: UserInformatioDto,
+    quantity: z.number(),
+    priceTotal: z.number(),
     isShared: z.boolean(),
     cartItems: CartItemDto.array(),
   })

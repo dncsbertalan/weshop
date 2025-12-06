@@ -1,8 +1,8 @@
-import { Button, Field,FileUpload } from "@chakra-ui/react";
+import { Button, Field, FileUpload } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { LuFileImage } from "react-icons/lu";
 
-import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
+import { CreateProductRequestDto } from "@/dtos/request/product/CreateProductRequestDto";
 import { getFieldKeys } from "@/utils/getFieldKeys";
 
 import { UploadProductImageList } from "./UploadProductImageList";
