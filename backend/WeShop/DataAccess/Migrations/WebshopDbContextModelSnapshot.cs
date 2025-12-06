@@ -263,11 +263,9 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ModifiedByUserId");
 
-                    b.HasIndex(new[] { "AvailableQuantity" }, "IX_Product_AvailableQuantity");
+                    b.HasIndex("Name");
 
-                    b.HasIndex(new[] { "IsDeleted" }, "IX_Product_IsDeleted");
-
-                    b.HasIndex(new[] { "Price" }, "IX_Product_Price");
+                    b.HasIndex("IsDeleted", "AvailableQuantity", "Price");
 
                     b.ToTable("Product");
                 });
