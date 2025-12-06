@@ -310,9 +310,6 @@ namespace DataAccess.Migrations
                     b.Property<long?>("ActiveCartId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");

@@ -36,7 +36,6 @@ public static class TestDataSeeder
                 Id = TestAdminId,
                 UserName = "admin@weshop.hu",
                 Email = "admin@weshop.hu",
-                BirthDate = DateTime.Now,
                 LastName = "Admin",
                 FirstName = "Admin"
             };

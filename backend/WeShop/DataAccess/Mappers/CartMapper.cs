@@ -1,6 +1,4 @@
 ﻿using DataAccess.Models;
-using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
 using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 
@@ -15,7 +13,9 @@ public static class CartMapper
             Id = data.Id,
             Owner = UserMapper.MapToUserInformationDto(data.Owner),
             IsShared = data.IsShared,
-            CartItems = [.. data.CartItems.Select(CartItemMapper.MapToCartItemDto)]
+            CartItems = [.. data.CartItems.Select(CartItemMapper.MapToCartItemDto)],
+            PriceTotal = data.CartItems.Sum(cartItem => cartItem.Product.Price * cartItem.Quantity),
+            Quantity = data.CartItems.Count
         };
     }
 

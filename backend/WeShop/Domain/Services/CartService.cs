@@ -10,21 +10,11 @@ public class CartService(
     IProductRepository _productRepository,
     CartAccessService _cartAccessService)
 {
-    #region Helper methods
-
-    private async Task<bool> UserIsNotValid(string userId)
-    {
-        return await _userRepository.GetUserByIdAsync(userId) is null;
-    }
-
-    #endregion
-
-
     #region Cart
 
     public async Task<long?> CreateCartAsync(string userId)
     {
-        if (await UserIsNotValid(userId)) return null;
+        // The user must be a valid user at this point.
 
         var newCartId = await _cartRepository.CreateCartAsync(userId);
         await _userRepository.SetActiveCartAsync(userId, newCartId);

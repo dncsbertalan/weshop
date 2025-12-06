@@ -13,8 +13,6 @@ public class User_Data : IdentityUser
 
     [Required] public string LastName { get; set; } = string.Empty;
 
-    [Required] [DataType(DataType.Date)] public DateTime BirthDate { get; set; }
-
     [InverseProperty(nameof(Cart_Data.Owner))]
     public virtual Cart_Data OwnedCart { get; set; }
 

@@ -4,7 +4,7 @@ using IntegrationTest.AuthenticationHandlers;
 using IntegrationTest.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace IntegrationTest;
+namespace IntegrationTest.Tests;
 
 public class AdminControllerTests(
     AuthenticatedWeshopWebApplicationFactoryFixture<UserOnlyAuthenticationHandler> userFactory,
@@ -12,7 +12,6 @@ public class AdminControllerTests(
     :
         IClassFixture<AuthenticatedWeshopWebApplicationFactoryFixture<UserOnlyAuthenticationHandler>>,
         IClassFixture<AuthenticatedWeshopWebApplicationFactoryFixture<AdminAuthenticationHandler>>
-
 {
     private readonly HttpClient _adminClient =
         adminFactory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });

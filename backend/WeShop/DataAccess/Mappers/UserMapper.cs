@@ -13,7 +13,6 @@ public static class UserMapper
             FirstName = data.FirstName,
             LastName = data.LastName,
             Email = data.Email,
-            BirthDate = data.BirthDate,
             ActiveCartId = (long)data.ActiveCartId!,
             OwnedCartId = data.OwnedCart.Id,
             Carts = [.. data.SharedCarts.Select(CartMapper.MapToCartInfoDto)]

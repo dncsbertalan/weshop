@@ -8,4 +8,6 @@ public class CartDto
     public UserInformationDto Owner { get; set; }
     public bool IsShared { get; set; }
     public List<CartItemDto> CartItems { get; set; } = [];
+    public double PriceTotal { get; set; }
+    public int Quantity { get; set; }
 }

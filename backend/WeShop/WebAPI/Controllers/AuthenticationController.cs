@@ -28,8 +28,7 @@ public class AuthenticationController(
             UserName = registrationRequestDto.Email,
             Email = registrationRequestDto.Email,
             FirstName = registrationRequestDto.FirstName,
-            LastName = registrationRequestDto.LastName,
-            BirthDate = registrationRequestDto.BirthDate
+            LastName = registrationRequestDto.LastName
         };
 
         var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);

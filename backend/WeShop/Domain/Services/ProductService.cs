@@ -17,20 +17,20 @@ public class ProductService(IProductRepository _productRepository, ICategoryRepo
         if (productFilter.PageSize < 1)
             throw new ValidationException("Page size must be greater than 0.");
 
-        if (productFilter.Min < 0)
+        if (productFilter.MinPrice < 0)
             throw new ValidationException("Minimum price cannot be negative.");
 
-        if (productFilter.Max < productFilter.Min)
+        if (productFilter.MaxPrice < productFilter.MinPrice)
             throw new ValidationException("Maximum price must be greater than or equal to minimum price.");
 
         var categories = await _categoryRepository.GetCategoriesAsync();
         var existingCategoryIds = categories.Select(c => c.Id).ToHashSet();
 
-        if (productFilter.Filters is not null)
+        if (productFilter.CategoryIds is not null)
         {
-            if (productFilter.Filters.Contains(' ')) throw new ValidationException("Invalid categoryIds format.");
+            if (productFilter.CategoryIds.Contains(' ')) throw new ValidationException("Invalid categoryIds format.");
 
-            var categoryIds = productFilter.Filters.Split(',');
+            var categoryIds = productFilter.CategoryIds.Split(',');
 
             foreach (var idStr in categoryIds)
                 if (long.TryParse(idStr, out var id))
