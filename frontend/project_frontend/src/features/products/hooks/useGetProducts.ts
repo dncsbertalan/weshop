@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getProducts } from "@/api/product-api";
+import { ProductFilter } from "@/dtos/request/product/ProductFilter";
 
-import { ProductFilter } from "../ProductFilter";
+import { getProducts } from "../api/getProducts";
 import { ProductKeys } from "../ProductKeys";
 
 interface UseGetProductsParams {

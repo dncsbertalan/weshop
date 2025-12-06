@@ -1,8 +1,3 @@
-import { ProductFilter } from "@/features/products/ProductFilter";
-import { PagedProducts, Product } from "@/models/Product";
-
-import api from "./axios-instance";
-
 export enum ProductFilterKeys {
   page = "page",
   pageSize = "pageSize",

@@ -1,4 +1,4 @@
-import { ProductFilter } from "./ProductFilter";
+import { ProductFilter } from "@/dtos/request/product/ProductFilter";
 
 export enum ProductFilterAction {
   SetPage = "SetPage",
@@ -13,8 +13,8 @@ export enum ProductFilterAction {
 export type ProductFilterActionType =
   | { type: ProductFilterAction.SetPage; payload: number }
   | { type: ProductFilterAction.SetPageSize; payload: number }
-  | { type: ProductFilterAction.SetMinPrice; payload?: number }
-  | { type: ProductFilterAction.SetMaxPrice; payload?: number }
+  | { type: ProductFilterAction.SetMinPrice; payload: number | null }
+  | { type: ProductFilterAction.SetMaxPrice; payload: number | null }
   | { type: ProductFilterAction.SetCategoryIds; payload: string | null }
   | { type: ProductFilterAction.SetProductName; payload: string }
   | { type: ProductFilterAction.SetAll; payload: ProductFilter };

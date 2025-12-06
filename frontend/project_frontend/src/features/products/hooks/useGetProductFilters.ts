@@ -1,16 +1,22 @@
 import { useEffect, useReducer } from "react";
 import { useSearchParams } from "react-router";
 
-import { ProductFilter, ProductFilterDefaults } from "../ProductFilter";
+import { ProductFilter } from "@/dtos/request/product/ProductFilter";
+
 import { ProductFilterKeys } from "../ProductFilterKeys";
 import { ProductFilterAction, productFilterReducer } from "../ProductFilterReducer";
+
+export const ProductFilterDefaults = {
+  page: 1,
+  pageSize: 36,
+};
 
 function getFiltersFromSearchParams(searchParams: URLSearchParams): ProductFilter {
   return {
     page: Number(searchParams.get(ProductFilterKeys.page)) || ProductFilterDefaults.page,
     pageSize: Number(searchParams.get(ProductFilterKeys.pageSize)) || ProductFilterDefaults.pageSize,
-    minPrice: Number(searchParams.get(ProductFilterKeys.minPrice)) || undefined,
-    maxPrice: Number(searchParams.get(ProductFilterKeys.maxPrice)) || undefined,
+    minPrice: Number(searchParams.get(ProductFilterKeys.minPrice)) || null,
+    maxPrice: Number(searchParams.get(ProductFilterKeys.maxPrice)) || null,
     categoryIds: searchParams.get(ProductFilterKeys.categories),
     productName: searchParams.get(ProductFilterKeys.productName) || "",
   };

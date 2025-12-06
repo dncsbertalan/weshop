@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getProduct } from "@/api/product-api";
-
+import { getProduct } from "../api/getProduct";
 import { ProductKeys } from "../ProductKeys";
 
 interface UseGetProductParams {
