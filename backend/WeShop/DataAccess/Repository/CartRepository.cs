@@ -10,6 +10,17 @@ namespace DataAccess.Repository;
 
 public class CartRepository(WebshopDbContext _context) : ICartRepository
 {
+    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
+    {
+        //var cart = await _context.Carts.FindAsync(cartId);
+        var cartItem = await _context.CartItems
+            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
+            .ExecuteDeleteAsync();
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     #region Shared cart
 
     public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
@@ -29,18 +40,22 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
-    #endregion
-
-    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
+    public async Task<bool> DeleteUserFromSharedCartAsync(string userId, long cartId)
     {
-        //var cart = await _context.Carts.FindAsync(cartId);
-        var cartItem = await _context.CartItems
-            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
-            .ExecuteDeleteAsync();
+        var sharedCart = await _context.SharedCarts
+            .Where(sharedCart => sharedCart.CartId == cartId
+                                 && sharedCart.CartUserId == userId)
+            .FirstOrDefaultAsync();
 
+        if (sharedCart is null) return false;
+
+        _context.SharedCarts.Remove(sharedCart);
         await _context.SaveChangesAsync();
+
         return true;
     }
+
+    #endregion
 
     #region Cart
 
@@ -53,7 +68,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             {
                 CartId = cart.Id,
                 OwnerId = cart.OwnerId,
-                Participants = cart.Participants
+                Participants = cart.SharedWith
                     .Select(p => p.CartUserId)
                     .ToList()
             })
@@ -70,6 +85,8 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             .ThenInclude(product => product.Categories)
             .Include(cart => cart.CartItems)
             .ThenInclude(cartItem => cartItem.AddedBy)
+            .Include(cart => cart.SharedWith)
+            .ThenInclude(sharedWith => sharedWith.CartUser)
             .Where(cart => cart.OwnerId == userId)
             .FirstOrDefaultAsync();
 
@@ -86,6 +103,8 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             .ThenInclude(product => product.Categories)
             .Include(cart => cart.CartItems)
             .ThenInclude(cartItem => cartItem.AddedBy)
+            .Include(cart => cart.SharedWith)
+            .ThenInclude(sharedWith => sharedWith.CartUser)
             .Where(cart => cart.Id == cartId)
             .FirstOrDefaultAsync();
 
@@ -200,6 +219,8 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             .ThenInclude(product => product.Categories)
             .Include(cart => cart.CartItems)
             .ThenInclude(cartItem => cartItem.AddedBy)
+            .Include(cart => cart.SharedWith)
+            .ThenInclude(sharedWith => sharedWith.CartUser)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
 
         return cart is null ? null : CartMapper.MapToCartDto(cart);

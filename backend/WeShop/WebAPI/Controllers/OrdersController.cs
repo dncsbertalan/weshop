@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response;
 using Domain.Services;
@@ -24,7 +23,6 @@ public class OrdersController(OrderService _orderService) : ControllerBase
         if (!success) return BadRequest("Failed to create order.");
 
         return Ok(new { message = "Successfully created order." });
-        //return CreatedAtAction(nameof(GetOrderById), new { id = success.Id }, success);
     }
 
     [HttpGet("me")]

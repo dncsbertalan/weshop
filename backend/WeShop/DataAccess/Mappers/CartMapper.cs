@@ -15,7 +15,9 @@ public static class CartMapper
             IsShared = data.IsShared,
             CartItems = [.. data.CartItems.Select(CartItemMapper.MapToCartItemDto)],
             PriceTotal = data.CartItems.Sum(cartItem => cartItem.Product.Price * cartItem.Quantity),
-            Quantity = data.CartItems.Count
+            Quantity = data.CartItems.Count,
+            SharedWith =
+                [.. data.SharedWith.Select(sharedCart => UserMapper.MapToUserInformationDto(sharedCart.CartUser))]
         };
     }
 
@@ -24,7 +26,7 @@ public static class CartMapper
         return new CartWithParticipantsDto
         {
             OwnerId = data.OwnerId,
-            Participants = [.. data.Participants.Select(user => user.CartUserId)]
+            Participants = [.. data.SharedWith.Select(user => user.CartUserId)]
         };
     }
 

@@ -99,6 +99,19 @@ public class CartsController(
         return Ok();
     }
 
+    [HttpDelete("{cartId:long}/users/{userToRemoveId}")]
+    public async Task<IActionResult> RemoveUserFromSharedCart(long cartId, string userToRemoveId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await _sharedCartService.RemoveUserFromCartAsync(userId, userToRemoveId, cartId);
+
+        if (!result) return BadRequest("An error occured removing the user from the cart.");
+
+        return Ok();
+    }
+
 
     #region Helper methods
 

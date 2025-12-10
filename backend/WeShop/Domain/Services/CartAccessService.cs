@@ -1,3 +1,4 @@
+using Domain.Exceptions;
 using Domain.Repository;
 
 namespace Domain.Services;
@@ -11,10 +12,10 @@ public class CartAccessService(ICartRepository _cartRepository)
 
     public async Task<bool> UserHasCartAccessAsync(string userId, long cartId)
     {
-        var cart = await _cartRepository.GetCartParticipantsAsync(cartId);
+        var cart = await _cartRepository.GetCartByIdAsync(cartId);
         if (cart is null) return false;
 
-        return cart.OwnerId == userId || cart.Participants.Contains(userId);
+        return cart.Owner.Id == userId || cart.SharedWith.Any(user => user.Id == userId);
     }
 
     public async Task<bool> UserIsNotCartOwnerAsync(string userId, long cartId)
@@ -24,9 +25,9 @@ public class CartAccessService(ICartRepository _cartRepository)
 
     public async Task<bool> UserIsCartOwnerAsync(string userId, long cartId)
     {
-        var cart = await _cartRepository.GetCartParticipantsAsync(cartId);
-        if (cart is null) return false;
+        var cart = await _cartRepository.GetCartByIdAsync(cartId);
+        if (cart is null) throw new NotFoundException("Cart", cartId);
 
-        return cart.OwnerId == userId;
+        return cart.Owner.Id == userId;
     }
 }

@@ -3,17 +3,13 @@ using System.Net.Http.Json;
 using Domain.Dtos.Api.Request;
 using IntegrationTest.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit.Abstractions;
 
 namespace IntegrationTest.Tests;
 
-public class AuthenticationControllerTests(
-    WeshopWebApplicationFactoryFixture userFactory,
-    ITestOutputHelper testOutputHelper)
+public class AuthenticationControllerTests(WeshopWebApplicationFactoryFixture userFactory)
     : IClassFixture<WeshopWebApplicationFactoryFixture>
 {
     private readonly HttpClient _client = userFactory.CreateClient(new WebApplicationFactoryClientOptions());
-    private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
 
     [Fact]
     public async Task Registeration_Success()
@@ -46,7 +42,6 @@ public class AuthenticationControllerTests(
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var responseString = await response.Content.ReadAsStringAsync();
-        _testOutputHelper.WriteLine(responseString);
         Assert.Contains(erroMessage, responseString);
     }
 
@@ -57,7 +52,7 @@ public class AuthenticationControllerTests(
     [InlineData("email@", "InvalidEmail")]
     [InlineData("email()<>[],;@email.com", "is invalid, can only contain letters or digits.")]
     [InlineData("email @email.com", "is invalid, can only contain letters or digits.")]
-    public async Task Registeration_NoSuccess_BadEmail(string email, string erroMessage)
+    public async Task Registration_NoSuccess_BadEmail(string email, string erroMessage)
     {
         // Arrange
         var content = new RegistrationRequestDto
@@ -69,7 +64,6 @@ public class AuthenticationControllerTests(
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var responseString = await response.Content.ReadAsStringAsync();
-        _testOutputHelper.WriteLine(responseString);
         Assert.Contains(erroMessage, responseString);
     }
 }

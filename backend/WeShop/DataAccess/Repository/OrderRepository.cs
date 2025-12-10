@@ -1,6 +1,5 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
-using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response;
 using Domain.Repository;
@@ -24,7 +23,7 @@ public class OrderRepository(WebshopDbContext _context) : IOrderRepository
         {
             UserId = userId,
             Address = newAddress,
-            PaymentMethodId = orderRequest.PaymentMethod,
+            PaymentMethodId = orderRequest.PaymentMethod == "cash" ? 1 : 2,
             IsCompleted = false,
             CreatedAt = DateTime.UtcNow
         };

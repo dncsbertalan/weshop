@@ -10,4 +10,5 @@ public class CartDto
     public List<CartItemDto> CartItems { get; set; } = [];
     public double PriceTotal { get; set; }
     public int Quantity { get; set; }
+    public List<UserInformationDto> SharedWith { get; set; }
 }

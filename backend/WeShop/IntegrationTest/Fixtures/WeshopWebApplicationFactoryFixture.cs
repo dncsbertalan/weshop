@@ -13,14 +13,9 @@ namespace IntegrationTest.Fixtures;
 
 public class WeshopWebApplicationFactoryFixture : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _container;
-
-    public WeshopWebApplicationFactoryFixture()
-    {
-        _container = new MsSqlBuilder()
-            .WithCleanUp(true)
-            .Build();
-    }
+    private readonly MsSqlContainer _container = new MsSqlBuilder()
+        .WithCleanUp(true)
+        .Build();
 
     public async Task InitializeAsync()
     {
@@ -33,8 +28,6 @@ public class WeshopWebApplicationFactoryFixture : WebApplicationFactory<Program>
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User_Data>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-        //await dbContext.Database.MigrateAsync();
 
         await TestDataSeeder.SeedAsync(dbContext, userManager, roleManager);
     }
@@ -58,12 +51,8 @@ public class WeshopWebApplicationFactoryFixture : WebApplicationFactory<Program>
             using var scope = serviceProvider.CreateScope();
 
             var dbContext = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
-            //var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User_Data>>();
-            //var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             dbContext.Database.Migrate();
-
-            //TestDataSeeder.SeedAsync(dbContext, userManager, roleManager).GetAwaiter().GetResult();
         });
     }
 }

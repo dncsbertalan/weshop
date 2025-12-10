@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Transactions;
 using DataAccess.Models;
 using Domain.Constants;
 using Domain.Dtos.Api.Request;
@@ -23,6 +24,8 @@ public class AuthenticationController(
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
     {
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
         var user = new User_Data
         {
             UserName = registrationRequestDto.Email,
@@ -33,16 +36,27 @@ public class AuthenticationController(
 
         var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
-        if (!result.Succeeded) return BadRequest(result.Errors);
+        if (!result.Succeeded)
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                result.Errors
+            });
 
         var roleResult = await _userManager.AddToRoleAsync(user, RoleConstants.User);
 
-        if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
+        if (!roleResult.Succeeded)
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                roleResult.Errors
+            });
 
-        // TODO: New cart for the new user.
-        await _cartService.CreateCartAsync(user.Id);
 
-        return Ok(user.Id);
+        var newCart = await _cartService.CreateCartAsync(user.Id);
+        if (newCart is null)
+            return StatusCode(StatusCodes.Status500InternalServerError);
+
+        scope.Complete();
+        return Ok();
     }
 
     [HttpPost("login")]

@@ -21,5 +21,5 @@ public class Cart_Data
     [Required] public bool IsShared { get; set; }
 
     public virtual List<CartItem_Data> CartItems { get; set; } = [];
-    public virtual List<SharedCart_Data> Participants { get; set; } = [];
+    public virtual List<SharedCart_Data> SharedWith { get; set; } = [];
 }

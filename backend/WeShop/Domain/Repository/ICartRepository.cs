@@ -1,6 +1,4 @@
-﻿using Domain.Dtos.Api;
-using Domain.Dtos.Api.Request;
-using Domain.Dtos.Api.Response;
+﻿using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
 
@@ -11,6 +9,7 @@ public interface ICartRepository
     #region Shared cart
 
     Task<bool> AddUserToSharedCartAsync(string userId, long cartId);
+    Task<bool> DeleteUserFromSharedCartAsync(string userId, long cartId);
 
     #endregion
 

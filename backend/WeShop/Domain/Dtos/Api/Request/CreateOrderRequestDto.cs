@@ -13,5 +13,5 @@ public class CreateOrderRequestDto
     public string StreetName { get; set; }
     public int HouseNumber { get; set; }
 
-    public int PaymentMethod { get; set; }
+    public string PaymentMethod { get; set; }
 }
