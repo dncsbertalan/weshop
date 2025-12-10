@@ -1,5 +1,4 @@
-import { Button, Flex, Heading, Separator, VStack } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { Button, Flex, Heading, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 
 import { GlassContainer } from "@/components/GlassContainer";
@@ -18,30 +17,17 @@ export function CartSummary({ cart }: CartSummaryProps) {
     void navigate(Navigation.checkout);
   };
 
-  const total = useMemo(() => {
-    return cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  }, [cart.cartItems]);
-
   return (
-    <GlassContainer shadow="gentle" minWidth={400}>
-      {/* width={{ base: "100%", sm: "520px", md: "700px", lg: "285px", xl: "300px" }} */}
-
-      <VStack alignItems="flex-start" width="100%">
-        <Heading lineHeight="25px" fontSize="21px" fontWeight="500">
+    <GlassContainer shadow="gentle" width={{ base: "full" }} maxWidth={{ base: undefined, md: 400 }}>
+      <VStack alignItems="flex-start" width="100%" gap={8}>
+        <Heading fontSize="2xl" fontWeight="medium">
           Cart summary
         </Heading>
 
-        <InformationRow label="Subtotal" value={`${formatCurrency(total)} Ft`} />
-        <InformationRow label="VAT" value={`${formatCurrency(Math.ceil(total * 0.27))} Ft`} />
-        <InformationRow label="Rounding" value="0 Ft" />
-        <InformationRow label="Net total" value={`${formatCurrency(Math.ceil(total * 0.73))} Ft`} />
-
-        <Separator width="100%" />
-
-        <InformationRow label="Gross total" value={`${formatCurrency(total)} Ft`} />
+        <InformationRow label="Total" value={`${formatCurrency(cart.priceTotal)} Ft`} />
 
         <Flex width="100%" justifyContent="flex-end">
-          <Button rounded="full" marginTop="18px" onClick={checkout}>
+          <Button size="xl" paddingX={8} width="full" rounded="full" marginTop={0} onClick={checkout}>
             Proceed to checkout
           </Button>
         </Flex>

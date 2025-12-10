@@ -12,7 +12,7 @@ export function InformationRow({ label, value, bold }: InformationRowProps) {
       <Text lineHeight="moderate" fontSize="md" fontWeight={bold ? "bold" : undefined}>
         {label}
       </Text>
-      <Text lineHeight="moderate" fontSize="md" fontWeight={bold ? "bold" : undefined}>
+      <Text lineHeight="moderate" fontSize="lg">
         {value}
       </Text>
     </Flex>

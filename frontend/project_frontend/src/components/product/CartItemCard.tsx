@@ -1,13 +1,14 @@
-import { Box, Flex, HStack, IconButton, Image, NumberInput, Text } from "@chakra-ui/react";
-import { FaXmark } from "react-icons/fa6";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { Image, Stack, Text } from "@chakra-ui/react";
 
 import { CartItemDto } from "@/dtos/response/cart/CartItemDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
-import { useModifyProductInCart } from "@/features/cart/hooks/useModifyProductInCart";
 import { useRemoveProductFromCart } from "@/features/cart/hooks/useRemoveProductFromCart";
 import { useGetProductImage } from "@/features/products/hooks/useGetProductImage";
-import { formatCurrency } from "@/utils/currency";
+import { getUserName } from "@/features/users/utils/getUserName";
+import { formatCurrencyFt } from "@/utils/currency";
+
+import { RemoveButton } from "../button/RemoveButton";
+import { CartItemCardNumberButtons } from "./CartItemCard.NumberButtons";
 
 interface CartItemCardProps {
   cartItem: CartItemDto;
@@ -15,112 +16,74 @@ interface CartItemCardProps {
 
 export function CartItemCard({ cartItem }: CartItemCardProps) {
   const { mutate: removeProductFromCart } = useRemoveProductFromCart();
-  const { mutate: modifyProductInCart } = useModifyProductInCart();
   const { user } = useAuthentication();
   const remove = () => {
-    removeProductFromCart({ cartId: user?.activeCartId!, cartItemId: cartItem.id });
+    if (!user) {
+      return;
+    }
+
+    removeProductFromCart({ cartId: user.activeCartId, cartItemId: cartItem.id });
   };
 
   const { data: image } = useGetProductImage({ productId: cartItem.productId });
+  const addedBy = user?.activeCartId === user?.ownedCartId ? "you" : getUserName(cartItem.addedBy);
 
   return (
-    <Box
-      width={{ sm: "520px", md: "700px", lg: "620px", xl: "780px" }}
-      height="fit-content"
-      marginX="auto"
-      borderBottom="solid 1px rgb(220, 220, 220)"
-      padding={{ base: "20px 5px", md: "32px 5px" }}
-    >
-      <Flex alignItems="center" justifyContent="space-between" gap={1}>
-        <Image objectFit="cover" maxHeight={{ base: 70, md: 70 }} src={image ?? undefined} />
+    <Stack width="full" paddingY={2} paddingX={1.5}>
+      <Stack direction="row" alignItems="center" gap={4}>
+        <Stack minHeight={100} minWidth={100}>
+          <Image objectFit="cover" height={100} width={100} src={image ?? undefined} />
+        </Stack>
 
-        <Flex
-          alignItems="center"
+        <Stack
+          direction={{ base: "column", xl: "row" }}
+          alignItems={{ base: "start", xl: "center" }}
           justifyContent="space-between"
-          width={{ sm: "450px", md: "610px", lg: "530px", xl: "690px" }}
-          flexWrap={{ base: "wrap", sm: "nowrap" }}
+          height="100%"
+          width="full"
         >
-          <Flex flexDirection="column" width={{ base: "150px", md: "235px", lg: "195px", xl: "275px" }}>
-            <Text lineHeight="16px" fontSize="14px" fontWeight="400px">
-              {cartItem.name}
-            </Text>
-            <Text marginTop="6px" color="rgb(170, 170, 170)" lineHeight="16px" fontSize="12px" fontWeight="400px">
-              {cartItem.productId}
-            </Text>
-            <Text
-              marginTop="6px" //color="rgb(170, 170, 170)"
-              lineHeight="16px"
-              fontSize="12px"
-              fontWeight="400px"
+          <Stack gap={2} direction="column" justifyContent="start" width="full" flex={{ base: undefined, lg: 1.25 }}>
+            <Stack>
+              <Text fontSize="sm" fontWeight="400px">
+                {cartItem.name}
+              </Text>
+            </Stack>
+            <Stack>
+              <Text fontSize="xs" fontWeight="400px">
+                Added by {addedBy}
+              </Text>
+            </Stack>
+          </Stack>
+
+          <Stack
+            direction={{ base: "column", sm: "row" }}
+            flex={{ base: undefined, lg: 1.5 }}
+            alignItems={{ base: "start", sm: "center" }}
+            width="full"
+          >
+            <Stack flex={{ base: undefined, lg: 0.5 }} width="full" alignItems="end" paddingRight={4}>
+              <Stack>
+                <Text fontSize="md" fontWeight="bold">
+                  {formatCurrencyFt(cartItem.price)}
+                </Text>
+              </Stack>
+            </Stack>
+
+            <Stack
+              direction="row"
+              justifyContent={{ base: "end" }}
+              width="full"
+              alignItems="center"
+              gap={4}
+              flex={{ base: undefined, lg: 0.5 }}
             >
-              Added by {cartItem.addedBy.firstName} {cartItem.addedBy.lastName}
-            </Text>
-          </Flex>
+              <CartItemCardNumberButtons cartItem={cartItem} />
 
-          <Box width={{ base: "100px", md: "120px" }}>
-            <NumberInput.Root value={cartItem.quantity.toString()} unstyled spinOnPress={false}>
-              <HStack gap="2">
-                <NumberInput.DecrementTrigger
-                  asChild
-                  disabled={cartItem.quantity < 2}
-                  onClick={() =>
-                    modifyProductInCart({
-                      cartId: user?.activeCartId!,
-                      cartItemId: cartItem.id,
-                      quantity: cartItem.quantity - 1,
-                    })
-                  }
-                >
-                  <IconButton variant="outline" size="sm">
-                    <LuMinus />
-                  </IconButton>
-                </NumberInput.DecrementTrigger>
-
-                <NumberInput.ValueText textAlign="center" fontSize="lg" minW="3ch" />
-
-                <NumberInput.IncrementTrigger
-                  asChild
-                  onClick={() =>
-                    modifyProductInCart({
-                      cartId: user?.activeCartId!,
-                      cartItemId: cartItem.id,
-                      quantity: cartItem.quantity + 1,
-                    })
-                  }
-                >
-                  <IconButton variant="outline" size="sm">
-                    <LuPlus />
-                  </IconButton>
-                </NumberInput.IncrementTrigger>
-              </HStack>
-            </NumberInput.Root>
-          </Box>
-
-          <Box width={{ base: "100px", md: "120px" }} textAlign="right">
-            <Text lineHeight={{ base: "21px", md: "24px" }} fontSize={{ base: "14px", md: "16px" }} fontWeight="bold">
-              {formatCurrency(cartItem.price)} Ft
-            </Text>
-          </Box>
-
-          <Box width="40px" textAlign="right">
-            <IconButton
-              onClick={remove}
-              rounded="full"
-              color="red"
-              variant="outline"
-              borderColor="red"
-              size="2xs"
-              transition="background-color 0.3s, color 0.3s"
-              _hover={{
-                color: "white",
-                backgroundColor: "red",
-              }}
-            >
-              <FaXmark />
-            </IconButton>
-          </Box>
-        </Flex>
-      </Flex>
-    </Box>
+              <RemoveButton onClick={remove} />
+            </Stack>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Stack>
   );
 }

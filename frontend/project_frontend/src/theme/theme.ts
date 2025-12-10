@@ -1,6 +1,7 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
 import { menuSlotRecipe } from "./slotRecipes/menuSlotRecipe";
+import { popoverSlotRecipe } from "./slotRecipes/popoverSlotRecipe";
 import { selectSlotRecipe } from "./slotRecipes/selectSlotRecipe";
 import { toastSlotRecipe } from "./slotRecipes/toastSlotRecipe";
 
@@ -10,6 +11,7 @@ const config = defineConfig({
       select: selectSlotRecipe,
       menu: menuSlotRecipe,
       toast: toastSlotRecipe,
+      popover: popoverSlotRecipe,
     },
     breakpoints: {
       // sm: "576px",

@@ -10,7 +10,7 @@ export function useRemoveProductFromCart() {
     mutationFn: ({ cartId, cartItemId }: { cartId: number; cartItemId: number }) =>
       removeProductFromCart(cartId, cartItemId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
+      void queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
     },
   });
 }

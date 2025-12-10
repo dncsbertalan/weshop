@@ -1,16 +1,13 @@
 import z from "zod";
 
-import { CategoryDto } from "../category/CategoryDto";
+import { ProductDto } from "./ProductDto";
 
 export const PagedProduct = z
   .object({
-    id: z.number(),
-    name: z.string(),
-    description: z.string().nullable(),
-    price: z.number(),
-    availableQuantity: z.number(),
-    categories: CategoryDto.array(),
-    isDeleted: z.boolean(),
+    items: ProductDto.array(),
+    totalItems: z.number(),
+    totalPages: z.number(),
+    currentPage: z.number(),
   })
   .strict();
 

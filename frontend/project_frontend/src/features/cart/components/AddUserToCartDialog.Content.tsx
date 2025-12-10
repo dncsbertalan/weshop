@@ -1,17 +1,23 @@
-import { Button, Stack, Text } from "@chakra-ui/react";
+import { Button, Stack, Text, useDialogContext } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, useForm } from "react-hook-form";
 
 import { DialogContent } from "@/components/Dialog.Content";
 import { FieldInput } from "@/components/input/FieldInput";
+import { centralToaster } from "@/components/toaster/centralToasterDef";
 import { AddUserToCartRequestDto } from "@/dtos/request/cart/AddUserToCartRequestDto";
+import { CartDto } from "@/dtos/response/cart/CartDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { useAddUserToCart } from "@/features/shared-cart/hooks/useAddUserToCart";
 import { getFieldKeys } from "@/utils/getFieldKeys";
 
 const requestKeys = getFieldKeys(AddUserToCartRequestDto);
 
-export function AddUserToCartDialogContent() {
+interface AddUserToCartDialogContentProps {
+  cart: CartDto;
+}
+
+export function AddUserToCartDialogContent({ cart }: AddUserToCartDialogContentProps) {
   const {
     register,
     control,
@@ -19,12 +25,24 @@ export function AddUserToCartDialogContent() {
   } = useForm<AddUserToCartRequestDto>({ resolver: zodResolver(AddUserToCartRequestDto) });
   const { user } = useAuthentication();
   const { mutate } = useAddUserToCart();
+  const { setOpen } = useDialogContext();
   const onSubmit = (data: AddUserToCartRequestDto) => {
     if (!user) {
       return;
     }
 
-    mutate({ cartId: user.activeCartId, email: data.email });
+    if (cart.sharedWith.map(({ email }) => email).includes(data.email)) {
+      centralToaster.create({
+        type: "warning",
+        closable: true,
+        description: "This person is already a member of your cart",
+      });
+      console.log("fasz");
+      return;
+    }
+
+    mutate({ cartId: user.activeCartId, userData: { email: data.email } });
+    setOpen(false);
   };
 
   return (

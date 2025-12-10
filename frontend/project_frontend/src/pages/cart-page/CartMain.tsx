@@ -7,24 +7,17 @@ import { CartContent } from "./cart/CartContent";
 import { CartSummary } from "./cart/CartSummary";
 
 export function CartMain() {
-  const { data: cart, isPending, isError } = useGetCart();
+  const { data: cart } = useGetCart();
 
   return (
     <PageContainer>
-      <Flex paddingY={10} justifyContent="center">
-        <Flex
-          width="100%"
-          maxWidth="global-max-window-size"
-          justifyContent={{ mdDown: "center", lg: "space-around" }}
-          flexDirection={{ mdDown: "column", lg: "row" }}
-        >
-          <Flex flexDirection="column" alignItems="center">
-            {cart && <CartContent cart={cart} />}
-          </Flex>
+      <Flex direction={{ base: "column", md: "row" }} justifyContent="center" flex={1} paddingY={10} gap={10}>
+        <Flex flex={{ base: undefined, md: 1.75 }} direction="column" alignItems="center">
+          {cart && <CartContent cart={cart} />}
+        </Flex>
 
-          <Flex flexDirection="column" gap="30px" alignItems="center">
-            {cart && <CartSummary cart={cart} />}
-          </Flex>
+        <Flex flex={{ base: undefined, md: 1 }} width="full" direction="column" alignItems="center">
+          {cart && <CartSummary cart={cart} />}
         </Flex>
       </Flex>
     </PageContainer>

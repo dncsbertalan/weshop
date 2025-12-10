@@ -3,6 +3,7 @@ import { Stack, Text } from "@chakra-ui/react";
 import { CartDto } from "@/dtos/response/cart/CartDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { AddUserToCartDialog } from "@/features/cart/components/AddUserToCartDialog";
+import { CartInformation } from "@/features/cart/components/CartInformation";
 import { ChangeCart } from "@/features/cart/components/ChangeCart";
 import { getUserCartName } from "@/features/cart/utils/getUserCartName";
 
@@ -28,7 +29,8 @@ export function CartContentHeader({ cart }: CartContentHeaderProps) {
         <Text textStyle="xl" fontWeight="medium">{`${name} cart`}</Text>
         <Stack direction="row" gap={2}>
           <ChangeCart />
-          <AddUserToCartDialog />
+          {isOwnCart && <AddUserToCartDialog cart={cart} />}
+          <CartInformation cart={cart} isOwnCart={isOwnCart} />
         </Stack>
       </Stack>
     </Stack>

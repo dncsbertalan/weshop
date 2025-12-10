@@ -11,6 +11,7 @@ export const CartDto = z
     priceTotal: z.number(),
     isShared: z.boolean(),
     cartItems: CartItemDto.array(),
+    sharedWith: UserInformatioDto.array(),
   })
   .strict();
 

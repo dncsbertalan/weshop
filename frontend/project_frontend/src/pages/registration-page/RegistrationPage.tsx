@@ -4,6 +4,7 @@ import { Form, useForm } from "react-hook-form";
 import { LuExternalLink } from "react-icons/lu";
 
 import { FieldInput } from "@/components/input/FieldInput";
+import { FieldPasswordInput } from "@/components/input/FieldPasswordInput";
 import { LinkToOtherPage } from "@/components/LinkToOtherPage";
 import { PageContainer } from "@/components/PageContainer";
 import { RegistrationRequestDto } from "@/dtos/request/authentication/RegistrationRequestDto";
@@ -75,7 +76,7 @@ export function RegistrationPage() {
                 {...register(registrationRequestKeys.email)}
               />
 
-              <FieldInput
+              <FieldPasswordInput
                 required
                 label="Password"
                 error={errors.password}

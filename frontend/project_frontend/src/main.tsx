@@ -7,14 +7,20 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 
 import { ColorModeProvider } from "./components/ui/color-mode.tsx";
-import { OrdersProvider } from "./context/OrdersContext.tsx";
+import { OrdersProvider } from "./features/order/OrdersContext.tsx";
 import { AuthenticationProvider } from "./features/authentication/components/AuthenticationProvider.tsx";
 import router from "./routes/routes.tsx";
 import { system } from "./theme/theme.ts";
 
 const queryClient = new QueryClient();
 
-createRoot(document.getElementById("root")).render(
+const rootEl = document.getElementById("root");
+
+if (!rootEl) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootEl).render(
   <StrictMode>
     <ChakraProvider value={system}>
       <QueryClientProvider client={queryClient}>

@@ -7,17 +7,7 @@ import { CheckoutSteps } from "./CheckoutSteps";
 export function CheckoutPage() {
   return (
     <PageContainer>
-      <Center backgroundColor="bg-color" padding="20px">
-        {/*createOrderIsPending &&
-                    <Flex>
-                    LOADING
-                    </Flex>
-                    */}
-        {/*createOrderIsSuccess &&
-                    <Flex width="100%" height="500px" backgroundColor="red">
-                    SUCCESS
-                    </Flex>
-                    */}
+      <Center padding="20px">
         <CheckoutSteps />
       </Center>
     </PageContainer>

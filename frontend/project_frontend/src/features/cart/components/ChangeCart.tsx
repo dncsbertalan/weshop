@@ -11,6 +11,7 @@ export function ChangeCart() {
   const { mutate } = useSwitchActiveCart();
 
   const handleSwitchCart = (cartId: number) => {
+    console.log(cartId);
     mutate(cartId);
   };
 
@@ -18,10 +19,12 @@ export function ChangeCart() {
     return null;
   }
 
+  console.log(user);
+
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
-        <Button size="md" variant="ghost" rounded="full">
+        <Button size="md" variant="subtle" rounded="full">
           <LuRefreshCcw />
           Change cart
         </Button>
@@ -33,7 +36,7 @@ export function ChangeCart() {
             <Menu.ItemGroup>
               <Menu.ItemGroupLabel>Your cart</Menu.ItemGroupLabel>
               <Menu.Item value="ownCart" onClick={() => handleSwitchCart(user.ownedCartId)}>
-                {getUserCartName(user, true)}{" "}
+                {getUserCartName(user, true)} cart
               </Menu.Item>
             </Menu.ItemGroup>
             <Menu.Separator />
@@ -48,7 +51,7 @@ export function ChangeCart() {
                       handleSwitchCart(cart.cartId);
                     }}
                   >
-                    {getUserCartName(cart.owner, false)}
+                    {getUserCartName(cart.owner, false)} cart
                   </Menu.Item>
                 );
               })}

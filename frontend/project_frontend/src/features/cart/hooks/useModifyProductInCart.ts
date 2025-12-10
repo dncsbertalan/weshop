@@ -10,7 +10,7 @@ export function useModifyProductInCart() {
     mutationFn: ({ cartId, cartItemId, quantity }: { cartId: number; cartItemId: number; quantity: number }) =>
       modifyProductInCart(cartId, cartItemId, quantity),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
+      void queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
     },
   });
 }

@@ -1,6 +1,8 @@
+import { Stack } from "@chakra-ui/react";
+
 import { CartItemCard } from "@/components/product/CartItemCard";
 import { CartItemDto } from "@/dtos/response/cart/CartItemDto";
-import { Stack } from "@chakra-ui/react";
+
 import { EmptyCartItems } from "./EmptyCartItems";
 
 interface CartItemsProps {
