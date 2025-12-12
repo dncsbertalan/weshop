@@ -3,10 +3,13 @@ using System.Net.Http.Json;
 using Domain.Dtos.Api.Request;
 using IntegrationTest.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit.Abstractions;
 
 namespace IntegrationTest.Tests;
 
-public class AuthenticationControllerTests(WeshopWebApplicationFactoryFixture userFactory)
+public class AuthenticationControllerTests(
+    WeshopWebApplicationFactoryFixture userFactory,
+    ITestOutputHelper testOutputHelper)
     : IClassFixture<WeshopWebApplicationFactoryFixture>
 {
     private readonly HttpClient _client = userFactory.CreateClient(new WebApplicationFactoryClientOptions());
@@ -42,7 +45,7 @@ public class AuthenticationControllerTests(WeshopWebApplicationFactoryFixture us
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var responseString = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseString);
+        testOutputHelper.WriteLine(responseString);
         Assert.Contains(erroMessage, responseString);
     }
 

@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Transactions;
 using DataAccess.Models;
 using Domain.Constants;
 using Domain.Dtos.Api.Request;
@@ -34,11 +33,7 @@ public class AuthenticationController(
 
         var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
-        if (!result.Succeeded)
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                result.Errors
-            });
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         var roleResult = await _userManager.AddToRoleAsync(user, RoleConstants.User);
 
