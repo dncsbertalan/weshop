@@ -71,7 +71,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Create roles
+// Data seeding
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -80,6 +80,42 @@ using (var scope = app.Services.CreateScope())
     foreach (var role in roles)
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
+
+    var adminEmail = "admin@weshop.hu";
+    var adminPassword = "Admin123!";
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User_Data>>();
+
+    var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
+
+    if (existingAdmin == null)
+    {
+        var adminUser = new User_Data
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FirstName = "System",
+            LastName = "Administrator",
+            EmailConfirmed = true
+        };
+
+        var createResult = await userManager.CreateAsync(adminUser, adminPassword);
+
+        if (!createResult.Succeeded) throw new Exception("Could not create admin user.");
+
+        await userManager.AddToRoleAsync(adminUser, RoleConstants.Admin);
+    }
+
+    string[] paymentMethods = ["cash", "card"];
+
+    var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
+
+    foreach (var method in paymentMethods)
+        if (!db.PaymentMethods.Any(pm => pm.Name == method))
+        {
+            db.PaymentMethods.Add(new PaymentMethod_Data { Name = method });
+            await db.SaveChangesAsync();
+        }
 }
 
 // Configure the HTTP request pipeline.
