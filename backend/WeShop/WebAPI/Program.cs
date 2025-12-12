@@ -75,6 +75,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
+
     string[] roles = [RoleConstants.Admin, RoleConstants.User];
 
     foreach (var role in roles)
@@ -104,11 +106,16 @@ using (var scope = app.Services.CreateScope())
         if (!createResult.Succeeded) throw new Exception("Could not create admin user.");
 
         await userManager.AddToRoleAsync(adminUser, RoleConstants.Admin);
+
+        db.Carts.Add(new Cart_Data { Owner = adminUser, IsShared = false });
+        await db.SaveChangesAsync();
+
+        adminUser.ActiveCartId = 1;
+        await db.SaveChangesAsync();
     }
 
     string[] paymentMethods = ["cash", "card"];
 
-    var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
 
     foreach (var method in paymentMethods)
         if (!db.PaymentMethods.Any(pm => pm.Name == method))
@@ -116,6 +123,12 @@ using (var scope = app.Services.CreateScope())
             db.PaymentMethods.Add(new PaymentMethod_Data { Name = method });
             await db.SaveChangesAsync();
         }
+
+    if (!db.Categories.Any(category => category.Name == "Electronics"))
+    {
+        db.Categories.Add(new Category_Data { Name = "Electronics" });
+        await db.SaveChangesAsync();
+    }
 }
 
 // Configure the HTTP request pipeline.
