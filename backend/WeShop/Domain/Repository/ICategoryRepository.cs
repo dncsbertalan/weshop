@@ -1,4 +1,4 @@
-﻿using Domain.Dtos.Api;
+﻿using Domain.Dtos.Api.Response.Category;
 
 namespace Domain.Repository;
 

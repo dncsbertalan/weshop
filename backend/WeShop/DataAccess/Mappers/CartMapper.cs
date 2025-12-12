@@ -1,33 +1,41 @@
 ﻿using DataAccess.Models;
-using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
-using Riok.Mapperly.Abstractions;
 
 namespace DataAccess.Mappers;
 
-[Mapper]
-public static partial class CartMapper
+public static class CartMapper
 {
-    public static CartDto Map(Cart_Data data) => new()
+    public static CartDto MapToCartDto(Cart_Data data)
     {
-        Id = data.Id,
-        OwnerId = data.UserId,
-        IsShared = data.IsShared,
-        CartItems = [.. data.CartItems.Select(CartItemMapper.Map)]
-    };
+        return new CartDto
+        {
+            Id = data.Id,
+            Owner = UserMapper.MapToUserInformationDto(data.Owner),
+            IsShared = data.IsShared,
+            CartItems = [.. data.CartItems.Select(CartItemMapper.MapToCartItemDto)],
+            PriceTotal = data.CartItems.Sum(cartItem => cartItem.Product.Price * cartItem.Quantity),
+            Quantity = data.CartItems.Count,
+            SharedWith =
+                [.. data.SharedWith.Select(sharedCart => UserMapper.MapToUserInformationDto(sharedCart.CartUser))]
+        };
+    }
 
-    public static CartWithParticipantsDto MapToCartWithParticipantsDto(Cart_Data data) => new()
+    public static CartWithParticipantsDto MapToCartWithParticipantsDto(Cart_Data data)
     {
-        UserId = data.UserId,
-        Participants = [.. data.Participants.Select(user => user.CartUserId)],
-    };
+        return new CartWithParticipantsDto
+        {
+            OwnerId = data.OwnerId,
+            Participants = [.. data.SharedWith.Select(user => user.CartUserId)]
+        };
+    }
 
-    public static CartInformationDto MapToCartInfoDto(SharedCart_Data data) => new()
+    public static CartInformationDto MapToCartInfoDto(SharedCart_Data data)
     {
-        CartId = data.CartId,
-        OwnerEmail = data.Cart.User.Email,
-        OwnerFirstName = data.Cart.User.FirstName,
-        OwnerLastName = data.Cart.User.LastName,
-    };
+        return new CartInformationDto
+        {
+            CartId = data.CartId,
+            Owner = UserMapper.MapToUserInformationDto(data.Cart.Owner)
+        };
+    }
 }

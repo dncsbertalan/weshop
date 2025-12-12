@@ -1,15 +1,23 @@
-﻿using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+﻿using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
-using Domain.Models;
 
 namespace Domain.Repository;
 
 public interface ICartRepository
 {
+    #region Shared cart
+
+    Task<bool> AddUserToSharedCartAsync(string userId, long cartId);
+    Task<bool> DeleteUserFromSharedCartAsync(string userId, long cartId);
+
+    #endregion
+
     #region Cart
 
     Task<CartWithParticipantsDto?> GetCartParticipantsAsync(long cartId);
+    Task<CartDto?> GetCartByOwnerAsync(string userId);
+    Task<CartDto?> GetCartByIdAsync(long cartId);
     Task<long> CreateCartAsync(string userId);
     Task DeleteCartAsync(long cartId);
     Task<long?> GetCartIdFromCartItemIdAsync(long cartItemId);
@@ -18,20 +26,13 @@ public interface ICartRepository
 
     #endregion
 
-    #region Shared cart
-
-    Task<bool> AddUserToSharedCartAsync(string userId, long cartId);
-    Task<List<CartInformationDto>> GetUserCartInformationAsync(string userId);
-
-    #endregion
-
     #region Cart items
 
     Task<bool> AddProductToCartAsync(long cartId, long productId, string userId);
-    Task<bool> DeleteProductFromCartAsync(long cartId, long productId);
+    Task<long> DeleteProductFromCartAsync(long cartId, long productId);
     Task<CartItemDto?> GetCartItemByIdAsync(long cartItemId);
     Task<CartDto?> GetCartItemsAsync(long cartId);
-    Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationData modificationData);
+    Task<long?> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest);
 
     #endregion
 }

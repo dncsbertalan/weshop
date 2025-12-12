@@ -1,16 +1,17 @@
+import { Button, Link, Text } from "@chakra-ui/react";
+
 import { Dialog } from "@/components/Dialog";
 import { useDeleteProduct } from "@/features/product-editor/hooks/useDeleteProduct";
-import { Button, Link, Text } from "@chakra-ui/react";
 
 interface ProductDeleteButtonProps {
   productId: number;
 }
 
 export function ProductDeleteButton({ productId }: ProductDeleteButtonProps) {
-  const { mutateAsync } = useDeleteProduct();
+  const { mutate } = useDeleteProduct();
 
   const handleDelete = () => {
-    mutateAsync(productId);
+    mutate(productId);
   };
 
   return (

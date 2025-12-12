@@ -66,7 +66,7 @@ public class AdminController(ProductService _productService) : ControllerBase
 
         var result = await _productService.UpdateProductAsync(productId, userId, updateProductDto);
 
-        if (!result) return BadRequest("Could not create product.");
+        if (!result) return BadRequest("Could not update product.");
 
         return Ok();
     }

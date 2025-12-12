@@ -4,7 +4,7 @@ export const Navigation = {
   profile: "/profile",
   login: "/login",
   registration: "/registration",
-  product: "/product/:id",
+  product: "/product/",
   checkout: "/checkout",
   admin: "/admin",
 };

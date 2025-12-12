@@ -1,11 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using DataAccess.Models;
 using Domain.Constants;
+using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response;
-using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,29 +21,34 @@ public class AuthenticationController(
     CartService _cartService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegistrationData registrationData)
+    public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
     {
         var user = new User_Data
         {
-            UserName = registrationData.Email,
-            Email = registrationData.Email,
-            FirstName = registrationData.FirstName,
-            LastName = registrationData.LastName,
-            BirthDate = registrationData.BirthDate
+            UserName = registrationRequestDto.Email,
+            Email = registrationRequestDto.Email,
+            FirstName = registrationRequestDto.FirstName,
+            LastName = registrationRequestDto.LastName
         };
 
-        var result = await _userManager.CreateAsync(user, registrationData.Password);
+        var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         var roleResult = await _userManager.AddToRoleAsync(user, RoleConstants.User);
 
-        if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
+        if (!roleResult.Succeeded)
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                roleResult.Errors
+            });
 
-        // TODO: New cart for the new user.
-        await _cartService.CreateCartAsync(user.Id);
 
-        return Ok(user.Id);
+        var newCart = await _cartService.CreateCartAsync(user.Id);
+        if (newCart is null)
+            return StatusCode(StatusCodes.Status500InternalServerError);
+
+        return Ok();
     }
 
     [HttpPost("login")]
@@ -80,9 +84,6 @@ public class AuthenticationController(
         var roles = await _userManager.GetRolesAsync(user);
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-        var rolesJson = JsonSerializer.Serialize(roles);
-        claims.Add(new Claim("roles", rolesJson));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
 

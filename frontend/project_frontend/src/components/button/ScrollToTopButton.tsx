@@ -1,7 +1,8 @@
-import { scrollToTopSmooth } from "@/utils/scroll";
 import { IconButton } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 import { BsArrowUp } from "react-icons/bs";
+
+import { scrollToTopSmooth } from "@/utils/scroll";
 
 export function ScrollToTopButton() {
     const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +16,7 @@ export function ScrollToTopButton() {
         return () => window.removeEventListener("scroll", toggleVisibility);
     }, []);
 
-    if (!isVisible) return null;
+    if (!isVisible) {return null;}
 
     return (
         <IconButton

@@ -1,7 +1,7 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
-using Domain.Dtos.Api;
-using Domain.Models;
+using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,21 +9,21 @@ namespace DataAccess.Repository;
 
 public class OrderRepository(WebshopDbContext _context) : IOrderRepository
 {
-    public async Task<Guid> CreateOrderAsync(CreateOrderData orderData, string userId)
+    public async Task<Guid> CreateOrderAsync(CreateOrderRequestDto orderRequest, string userId)
     {
         var newAddress = new Address_Data
         {
-            PostCode = orderData.PostCode,
-            CityName = orderData.CityName,
-            StreetName = orderData.StreetName,
-            Number = orderData.HouseNumber
+            PostCode = orderRequest.PostCode,
+            CityName = orderRequest.CityName,
+            StreetName = orderRequest.StreetName,
+            Number = orderRequest.HouseNumber
         };
 
         var newOrder = new Order_Data
         {
             UserId = userId,
             Address = newAddress,
-            PaymentMethodId = orderData.PaymentMethod,
+            PaymentMethodId = orderRequest.PaymentMethod == "cash" ? 1 : 2,
             IsCompleted = false,
             CreatedAt = DateTime.UtcNow
         };

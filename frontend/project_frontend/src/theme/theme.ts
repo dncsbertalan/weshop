@@ -1,23 +1,37 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+
+import { menuSlotRecipe } from "./slotRecipes/menuSlotRecipe";
+import { popoverSlotRecipe } from "./slotRecipes/popoverSlotRecipe";
 import { selectSlotRecipe } from "./slotRecipes/selectSlotRecipe";
+import { toastSlotRecipe } from "./slotRecipes/toastSlotRecipe";
 
 const config = defineConfig({
   theme: {
     slotRecipes: {
       select: selectSlotRecipe,
+      menu: menuSlotRecipe,
+      toast: toastSlotRecipe,
+      popover: popoverSlotRecipe,
     },
     breakpoints: {
-      sm: "576px",
-      md: "768px",
-      lg: "992px",
-      xl: "1220px",
+      // sm: "576px",
+      // md: "768px",
+      // lg: "992px",
+      // xl: "1220px",
       "max-screen-width": "1440px",
     },
     semanticTokens: {
+      shadows: {
+        gentle: {
+          value: {
+            _light: "0px 10px 20px rgba(0, 0, 0, 0.09), 0px 0px 1px rgba(0, 0, 0, 0.2)",
+          },
+        },
+      },
       colors: {
         primary: { value: { _light: "#0FEE0F", _dark: "#0FEE0F" } },
         secondary: { value: "#EE0F0F" },
-        "bg-color": { value: { _light: "white", _dark: "purple" } },
+        "bg-color": { value: { _light: "#F9F9F9", _dark: "purple" } },
         "bg-color-footer": { value: { _light: "rgb(242, 242, 247)", _dark: "purple" } },
         //"global-navbar-bg-color": { value: { _light: "rgba(255, 255, 255, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
         "global-navbar-bg-color": { value: { _light: "rgba(250, 250, 252, 0.8)", _dark: "rgba(22, 22, 23, 0.8)" } },
@@ -41,6 +55,11 @@ const config = defineConfig({
         "button-color-primary-hover": { value: "#2997ff;" },
         "button-color-secondary": { value: "pink" },
         "button-color-tetriary": { value: "#2997ff" },
+      },
+      shadows: {
+        great: {
+          value: "rgba(120, 120, 128, 0.16) 0px 11px 34px 0px",
+        },
       },
       sizes: {
         "global-navbar-height": { value: "60px" },

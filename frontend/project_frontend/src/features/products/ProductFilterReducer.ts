@@ -1,4 +1,4 @@
-import { ProductFilter } from "./ProductFilter";
+import { ProductFilter } from "@/dtos/request/product/ProductFilter";
 
 export enum ProductFilterAction {
   SetPage = "SetPage",
@@ -13,8 +13,8 @@ export enum ProductFilterAction {
 export type ProductFilterActionType =
   | { type: ProductFilterAction.SetPage; payload: number }
   | { type: ProductFilterAction.SetPageSize; payload: number }
-  | { type: ProductFilterAction.SetMinPrice; payload?: number }
-  | { type: ProductFilterAction.SetMaxPrice; payload?: number }
+  | { type: ProductFilterAction.SetMinPrice; payload: number | null }
+  | { type: ProductFilterAction.SetMaxPrice; payload: number | null }
   | { type: ProductFilterAction.SetCategoryIds; payload: string | null }
   | { type: ProductFilterAction.SetProductName; payload: string }
   | { type: ProductFilterAction.SetAll; payload: ProductFilter };
@@ -26,11 +26,11 @@ export function productFilterReducer(state: ProductFilter, action: ProductFilter
     case ProductFilterAction.SetPageSize:
       return { ...state, pageSize: action.payload };
     case ProductFilterAction.SetMinPrice:
-      return { ...state, min: action.payload, page: 1 };
+      return { ...state, minPrice: action.payload, page: 1 };
     case ProductFilterAction.SetMaxPrice:
-      return { ...state, max: action.payload, page: 1 };
+      return { ...state, maxPrice: action.payload, page: 1 };
     case ProductFilterAction.SetCategoryIds:
-      return { ...state, filters: action.payload, page: 1 };
+      return { ...state, categoryIds: action.payload, page: 1 };
     case ProductFilterAction.SetProductName:
       return { ...state, productName: action.payload, page: 1 };
     case ProductFilterAction.SetAll:

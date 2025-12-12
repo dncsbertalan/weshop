@@ -1,23 +1,32 @@
 ﻿using DataAccess.Models;
-using Domain.Dtos.Api.Response;
-using Domain.Dtos.Data;
+using Domain.Dtos.Api.Response.User;
 
 namespace DataAccess.Mappers;
 
 public static class UserMapper
 {
-    public static SimpleUserDto MapToSimpleUserDto(User_Data data) => new()
+    public static UserDto MapToUserDto(User_Data data)
     {
-        UserId = data.Id,
-    };
+        return new UserDto
+        {
+            UserId = data.Id,
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Email = data.Email,
+            ActiveCartId = (long)data.ActiveCartId!,
+            OwnedCartId = data.OwnedCart.Id,
+            Carts = [.. data.SharedCarts.Select(CartMapper.MapToCartInfoDto)]
+        };
+    }
 
-    public static UserDto MapToUserDto(User_Data data) => new()
+    public static UserInformationDto MapToUserInformationDto(User_Data data)
     {
-        FirstName = data.FirstName,
-        LastName = data.LastName,
-        Email = data.Email,
-        BirthDate = data.BirthDate,
-        CartId = data.Cart.Id,
-        Carts = [.. data.SharedCarts.Select(CartMapper.MapToCartInfoDto)],
-    };
+        return new UserInformationDto
+        {
+            Id = data.Id,
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Email = data.Email
+        };
+    }
 }

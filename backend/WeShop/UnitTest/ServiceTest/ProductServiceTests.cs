@@ -1,5 +1,7 @@
 ﻿using Domain.Dtos.Api;
 using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Category;
+using Domain.Dtos.Api.Response.Product;
 using Domain.Exceptions;
 using Domain.Repository;
 using Domain.Services;
@@ -243,7 +245,7 @@ public class ProductServiceTests
     public async Task GetProductsAsync_ValidRequest_ReturnsPagedResult()
     {
         // Arrange
-        var filter = new ProductFilter { Page = 1, PageSize = 10, Min = 0, Max = 100, Filters = "1,2" };
+        var filter = new ProductFilter { Page = 1, PageSize = 10, MinPrice = 0, MaxPrice = 100, CategoryIds = "1,2" };
         var pagedResult = new PagedResult<ProductDto>([], 0, 1, 1);
         var categoryResult = new List<CategoryDto>([new CategoryDto { Id = 1 }, new CategoryDto { Id = 2 }]);
 
@@ -272,7 +274,7 @@ public class ProductServiceTests
         double max, string expectedMessage)
     {
         // Arrange
-        var filter = new ProductFilter { Page = page, PageSize = pageSize, Min = min, Max = max };
+        var filter = new ProductFilter { Page = page, PageSize = pageSize, MinPrice = min, MaxPrice = max };
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ValidationException>(() => _productService.GetProductsAsync(filter));
@@ -288,7 +290,7 @@ public class ProductServiceTests
         string categoryIds, string expectedMessage)
     {
         // Arrange
-        var filter = new ProductFilter { Page = page, PageSize = pageSize, Filters = categoryIds };
+        var filter = new ProductFilter { Page = page, PageSize = pageSize, CategoryIds = categoryIds };
         var categoryResult = new List<CategoryDto>([new CategoryDto { Id = 1 }]);
 
         _categoryRepositoryMock
@@ -317,7 +319,7 @@ public class ProductServiceTests
         string categoryIds, string expectedMessage)
     {
         // Arrange
-        var filter = new ProductFilter { Page = page, PageSize = pageSize, Filters = categoryIds };
+        var filter = new ProductFilter { Page = page, PageSize = pageSize, CategoryIds = categoryIds };
         var categoryResult = new List<CategoryDto>([new CategoryDto { Id = 1 }]);
 
         _categoryRepositoryMock

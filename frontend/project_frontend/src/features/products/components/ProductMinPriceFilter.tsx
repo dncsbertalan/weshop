@@ -1,7 +1,10 @@
-import { CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
+import { Box, CloseButton, Field, InputGroup, InputProps, NumberInput } from "@chakra-ui/react";
 import { useRef } from "react";
+
+import { floatingLabelStyles } from "@/theme/styles/floatingLabelStyle";
+
 import { useProductFilters } from "../hooks/useProductFilters";
-import { ProductFilterAction } from "../productFilterReducer";
+import { ProductFilterAction } from "../ProductFilterReducer";
 
 type ProductMinPriceFilterProps = InputProps;
 
@@ -10,7 +13,7 @@ export function ProductMinPriceFilter({ ...props }: ProductMinPriceFilterProps) 
 
   const { productFilters, dispatchProductFilters } = useProductFilters();
 
-  const endElement = productFilters.min ? (
+  const endElement = productFilters.minPrice ? (
     <CloseButton
       rounded="full"
       size="xs"
@@ -24,22 +27,25 @@ export function ProductMinPriceFilter({ ...props }: ProductMinPriceFilterProps) 
 
   return (
     <Field.Root required>
-      <Field.Label>Minimum price</Field.Label>
-      <NumberInput.Root min={0} width="100%">
-        <InputGroup startElement="Ft" endElement={endElement}>
-          <NumberInput.Input
-            ref={inputRef}
-            {...props}
-            value={productFilters.min}
-            onChange={(event) => {
-              dispatchProductFilters({
-                type: ProductFilterAction.SetMinPrice,
-                payload: Number(event.currentTarget.value),
-              });
-            }}
-          />
-        </InputGroup>
-      </NumberInput.Root>
+      <Box pos="relative" w="full">
+        <Field.Label css={floatingLabelStyles}>Minimum price</Field.Label>
+        <NumberInput.Root min={0} width="100%">
+          <InputGroup startElement="Ft" endElement={endElement}>
+            <NumberInput.Input
+              ref={inputRef}
+              backgroundColor="bg"
+              {...props}
+              value={productFilters.minPrice}
+              onChange={(event) => {
+                dispatchProductFilters({
+                  type: ProductFilterAction.SetMinPrice,
+                  payload: Number(event.currentTarget.value),
+                });
+              }}
+            />
+          </InputGroup>
+        </NumberInput.Root>
+      </Box>
     </Field.Root>
   );
 }

@@ -1,9 +1,11 @@
-import { FileUpload, Button, Field } from "@chakra-ui/react";
-import { LuFileImage } from "react-icons/lu";
-import { UploadProductImageList } from "./UploadProductImageList";
-import { CreateProductRequestDto } from "@/dtos/product/CreateProductRequestDto";
-import { getFieldKeys } from "@/utils/getFieldKeys";
+import { Button, Field, FileUpload } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+import { LuFileImage } from "react-icons/lu";
+
+import { CreateProductRequestDto } from "@/dtos/request/product/CreateProductRequestDto";
+import { getFieldKeys } from "@/utils/getFieldKeys";
+
+import { UploadProductImageList } from "./UploadProductImageList";
 
 const upsertProductKeys = getFieldKeys(CreateProductRequestDto);
 

@@ -1,9 +1,8 @@
 ﻿using DataAccess.Mappers;
 using DataAccess.Models;
-using Domain.Dtos.Api;
-using Domain.Dtos.Api.Response;
+using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Cart;
 using Domain.Dtos.Data;
-using Domain.Models;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +10,53 @@ namespace DataAccess.Repository;
 
 public class CartRepository(WebshopDbContext _context) : ICartRepository
 {
+    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
+    {
+        //var cart = await _context.Carts.FindAsync(cartId);
+        var cartItem = await _context.CartItems
+            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
+            .ExecuteDeleteAsync();
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    #region Shared cart
+
+    public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
+    {
+        var cart = await _context.Carts.FindAsync(cartId);
+        if (!cart!.IsShared) cart.IsShared = true;
+
+        var newData = new SharedCart_Data
+        {
+            CartId = cartId,
+            CartUserId = userId,
+            JoinedDate = DateTime.UtcNow
+        };
+
+        _context.SharedCarts.Add(newData);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteUserFromSharedCartAsync(string userId, long cartId)
+    {
+        var sharedCart = await _context.SharedCarts
+            .Where(sharedCart => sharedCart.CartId == cartId
+                                 && sharedCart.CartUserId == userId)
+            .FirstOrDefaultAsync();
+
+        if (sharedCart is null) return false;
+
+        _context.SharedCarts.Remove(sharedCart);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    #endregion
+
     #region Cart
 
     public async Task<CartWithParticipantsDto?> GetCartParticipantsAsync(long cartId)
@@ -21,19 +67,55 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
             .Select(cart => new CartWithParticipantsDto
             {
                 CartId = cart.Id,
-                UserId = cart.UserId,
-                Participants = cart.Participants
+                OwnerId = cart.OwnerId,
+                Participants = cart.SharedWith
                     .Select(p => p.CartUserId)
-                    .ToList(),
+                    .ToList()
             })
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<CartDto?> GetCartByOwnerAsync(string userId)
+    {
+        var cart = await _context.Carts
+            .AsNoTracking()
+            .Include(cart => cart.Owner)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.AddedBy)
+            .Include(cart => cart.SharedWith)
+            .ThenInclude(sharedWith => sharedWith.CartUser)
+            .Where(cart => cart.OwnerId == userId)
+            .FirstOrDefaultAsync();
+
+        return cart is null ? null : CartMapper.MapToCartDto(cart);
+    }
+
+    public async Task<CartDto?> GetCartByIdAsync(long cartId)
+    {
+        var cart = await _context.Carts
+            .AsNoTracking()
+            .Include(cart => cart.Owner)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
+            .Include(cart => cart.CartItems)
+            .ThenInclude(cartItem => cartItem.AddedBy)
+            .Include(cart => cart.SharedWith)
+            .ThenInclude(sharedWith => sharedWith.CartUser)
+            .Where(cart => cart.Id == cartId)
+            .FirstOrDefaultAsync();
+
+        return cart is null ? null : CartMapper.MapToCartDto(cart);
     }
 
     public async Task<long> CreateCartAsync(string userId)
     {
         var cart = new Cart_Data
         {
-            UserId = userId,
+            OwnerId = userId
         };
 
         _context.Carts.Add(cart);
@@ -44,14 +126,15 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     public async Task DeleteCartAsync(long cartId)
     {
-
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
+            .Include(cart => cart.SharedWith)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
 
         if (cart is null) return;
 
         _context.CartItems.RemoveRange(cart.CartItems);
+        _context.RemoveRange(cart.SharedWith);
         _context.Carts.Remove(cart);
 
         await _context.SaveChangesAsync();
@@ -65,53 +148,14 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
 
     public async Task<long?> GetCartIdFromUserIdAsync(string userId)
     {
-        var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.User.Id == userId);
+        var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.Owner.Id == userId);
         return cart?.Id;
     }
 
     public async Task<string?> GetCartOwnerIdAsync(long cartId)
     {
         var cart = await _context.Carts.FindAsync(cartId);
-        return cart?.UserId;
-    }
-
-    #endregion
-
-    #region Shared cart
-
-    public async Task<bool> AddUserToSharedCartAsync(string userId, long cartId)
-    {
-        var cart = await _context.Carts.FindAsync(cartId);
-        if (!cart!.IsShared)
-        {
-            cart.IsShared = true;
-        }
-
-        var newData = new SharedCart_Data
-        {
-            CartId = cartId,
-            CartUserId = userId,
-            JoinedDate = DateTime.UtcNow,
-        };
-
-        _context.SharedCarts.Add(newData);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<List<CartInformationDto>> GetUserCartInformationAsync(string userId)
-    {
-        return await _context.SharedCarts
-            .Where(sharedCart => sharedCart.CartUserId == userId)
-            .Select(sharedCart => new CartInformationDto
-            {
-                CartId = sharedCart.CartId,
-                OwnerEmail = sharedCart.CartUser.Email,
-                OwnerFirstName = sharedCart.CartUser.FirstName,
-                OwnerLastName = sharedCart.CartUser.LastName,
-            })
-            .AsNoTracking()
-            .ToListAsync();
+        return cart?.OwnerId;
     }
 
     #endregion
@@ -142,7 +186,7 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
                 Product = product,
                 Cart = cart,
                 Quantity = 1,
-                UserId = userId,
+                UserId = userId
             };
 
             _context.CartItems.Add(newCartItem);
@@ -153,58 +197,50 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
-    public async Task<bool> DeleteProductFromCartAsync(long cartId, long cartItemId)
+    public async Task<long> DeleteProductFromCartAsync(long cartId, long cartItemId)
     {
-        var deletedCartItems = await _context.CartItems
-            .Where(ci => ci.Id == cartItemId && ci.CartId == cartId)
-            .ExecuteDeleteAsync();
+        var deletedCartItem = await _context.CartItems
+            .FindAsync(cartItemId);
 
-        return deletedCartItems > 0;
+        _context.CartItems.Remove(deletedCartItem);
+        await _context.SaveChangesAsync();
+
+        return deletedCartItem.ProductId;
     }
 
     public async Task<CartItemDto?> GetCartItemByIdAsync(long cartItemId)
     {
         var cartItem = await _context.CartItems.FindAsync(cartItemId);
-        return cartItem is null ? null : CartItemMapper.Map(cartItem);
+        return cartItem is null ? null : CartItemMapper.MapToCartItemDto(cartItem);
     }
 
     public async Task<CartDto?> GetCartItemsAsync(long cartId)
     {
         var cart = await _context.Carts
+            .Include(cart => cart.Owner)
             .Include(cart => cart.CartItems)
-                .ThenInclude(cartItem => cartItem.Product)
-                    .ThenInclude(product => product.Categories)
+            .ThenInclude(cartItem => cartItem.Product)
+            .ThenInclude(product => product.Categories)
             .Include(cart => cart.CartItems)
-                .ThenInclude(cartItem => cartItem.AddedBy)
+            .ThenInclude(cartItem => cartItem.AddedBy)
+            .Include(cart => cart.SharedWith)
+            .ThenInclude(sharedWith => sharedWith.CartUser)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
-        
-        return cart is null ? null : CartMapper.Map(cart);
+
+        return cart is null ? null : CartMapper.MapToCartDto(cart);
     }
 
-    public async Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationData modificationData)
+    public async Task<long?> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest)
     {
         var cartItem = await _context.CartItems.FindAsync(cartItemId);
-        if (cartItem is null) return false;
+        if (cartItem is null) return null;
 
-        cartItem.Quantity = modificationData.Quantity;
+        cartItem.Quantity = modificationRequest.Quantity;
 
         await _context.SaveChangesAsync();
 
-        return true;
+        return cartItem.ProductId;
     }
 
     #endregion
-
-
-
-    public async Task<bool> DeleteProductFromCart_ByProductId(long cartId, long productId)
-    {
-        //var cart = await _context.Carts.FindAsync(cartId);
-        var cartItem = await _context.CartItems
-            .Where(ci => ci.Product.Id == productId && ci.Cart.Id == cartId)
-            .ExecuteDeleteAsync();
-
-        await _context.SaveChangesAsync();
-        return true;
-    }
 }

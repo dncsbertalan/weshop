@@ -1,43 +1,45 @@
-import { Flex, Spacer, VStack, Text } from "@chakra-ui/react";
-import { Footer } from "../page-components/footer/Footer";
-import { NavBarFiller } from "../page-components/navigation-bar/NavBarFiller";
-import { GlobalNavBarProfil } from "../page-components/navigation-bar/GlobalNavBar";
+import { EmptyState, Flex, Stack, Text, VStack } from "@chakra-ui/react";
+import { BiError } from "react-icons/bi";
+
+import { GradientText } from "@/components/GradientText";
+import { PageContainer } from "@/components/PageContainer";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
+import { getUserName } from "@/features/users/utils/getUserName";
+
 import { OrdersSection } from "./OrdersSection";
-import { useUser } from "@/hooks/use-user";
-import { ColorModeButton } from "@/components/ui/color-mode";
 
 export function ProfileMain() {
-    const user = useUser();
+  const { user } = useAuthentication();
 
-    return (
-        <Flex direction="column" minHeight="100vh">
-            <GlobalNavBarProfil />
-            <NavBarFiller />
+  return (
+    <PageContainer>
+      <Flex justifyContent="center" width="100%" minHeight="calc(100vh - var(--chakra-sizes-global-navbar-height))">
+        {!user ? (
+          <EmptyState.Root size="lg">
+            <EmptyState.Content>
+              <EmptyState.Indicator>
+                <BiError />
+              </EmptyState.Indicator>
+              <VStack textAlign="center">
+                <EmptyState.Title>Something went wrong</EmptyState.Title>
+                <EmptyState.Description>Contact customer service</EmptyState.Description>
+              </VStack>
+            </EmptyState.Content>
+          </EmptyState.Root>
+        ) : (
+          <Stack alignItems="center" gap={10} paddingY={5} flex={1}>
+            <Stack direction="row" alignItems="center">
+              <Text fontSize="2xl">Hello, </Text>{" "}
+              <Text fontSize="2xl">
+                <GradientText text={getUserName(user)} />
+              </Text>
+              <Text fontSize="2xl">! </Text>
+            </Stack>
 
-            <Flex justifyContent="center" width="100%" margin="0px 20px" minHeight="calc(100vh - var(--chakra-sizes-global-navbar-height))">
-                <VStack maxWidth="global-max-window-size" width="100%" padding="20px 0px">
-
-                    <Flex
-                        //padding={5}
-                        gap={10}
-                        //flexDirection="column"
-                    >
-                        <Text
-                            fontSize="25px" lineHeight="28px"
-                        >
-                            Hello, {user.data?.firstName} {user.data?.lastName}!
-                        </Text>
-
-                        <ColorModeButton />
-                    </Flex>
-
-                    <OrdersSection />
-                </VStack>
-            </Flex>
-
-            <Spacer />
-
-            <Footer />
-        </Flex>
-    );
+            <OrdersSection />
+          </Stack>
+        )}
+      </Flex>
+    </PageContainer>
+  );
 }

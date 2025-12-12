@@ -5,9 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Models;
 
 [Table("Product")]
-[Index(nameof(Price), Name = "IX_Product_Price")]
-[Index(nameof(AvailableQuantity), Name = "IX_Product_AvailableQuantity")]
-[Index(nameof(IsDeleted), Name = "IX_Product_IsDeleted")]
+[Index(nameof(IsDeleted), nameof(AvailableQuantity), nameof(Price))]
+[Index(nameof(Name))]
 public class Product_Data
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

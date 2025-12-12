@@ -1,6 +1,6 @@
-﻿using Domain.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Models;
 
@@ -12,15 +12,18 @@ public class CartItem_Data
     public long Id { get; set; }
 
     public long CartId { get; set; }
-    [ForeignKey("CartId")]
+
+    [DeleteBehavior(DeleteBehavior.Restrict)]
+    [ForeignKey(nameof(CartId))]
     public Cart_Data Cart { get; set; }
 
     public long ProductId { get; set; }
-    [ForeignKey("ProductId")]
-    public Product_Data Product { get; set; }
+
+    [ForeignKey(nameof(ProductId))] public Product_Data Product { get; set; }
+
     public int Quantity { get; set; }
 
-    public string? UserId { get; set; }
-    [ForeignKey("UserId")]
-    public User_Data? AddedBy { get; set; }
+    [Required] public string UserId { get; set; }
+
+    [ForeignKey(nameof(UserId))] public virtual User_Data AddedBy { get; set; }
 }

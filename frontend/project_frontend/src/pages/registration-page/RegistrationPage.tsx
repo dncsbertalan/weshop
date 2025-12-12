@@ -1,122 +1,107 @@
-import { Button, Field, Flex, Heading, HStack, Input, VStack } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { GlobalNavBar } from "../page-components/navigation-bar/GlobalNavBar";
-import { Footer } from "../page-components/footer/Footer";
-import { PasswordInput } from "@/components/ui/password-input";
-import { useRegisterUser } from "@/features/authentication/hooks/useRegisterUser";
-import { getFieldKeys } from "@/utils/getFieldKeys";
+import { Button, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, useForm } from "react-hook-form";
+import { LuExternalLink } from "react-icons/lu";
+
+import { FieldInput } from "@/components/input/FieldInput";
+import { FieldPasswordInput } from "@/components/input/FieldPasswordInput";
+import { LinkToOtherPage } from "@/components/LinkToOtherPage";
+import { PageContainer } from "@/components/PageContainer";
 import { RegistrationRequestDto } from "@/dtos/request/authentication/RegistrationRequestDto";
-import { useNavigate } from "react-router";
+import { useRegisterUser } from "@/features/authentication/hooks/useRegisterUser";
 import { Navigation } from "@/routes/navigation";
+import { getFieldKeys } from "@/utils/getFieldKeys";
 
 const registrationRequestKeys = getFieldKeys(RegistrationRequestDto);
 
 export function RegistrationPage() {
-  const navigate = useNavigate();
-  const { mutateAsync } = useRegisterUser();
+  const { mutate } = useRegisterUser();
   const {
     register,
-    handleSubmit,
+    control,
     formState: { errors },
-  } = useForm<RegistrationRequestDto>();
+  } = useForm<RegistrationRequestDto>({
+    resolver: zodResolver(RegistrationRequestDto),
+  });
 
-  const onSubmit = async (registrationRequest: RegistrationRequestDto) => {
-    mutateAsync(registrationRequest).then(() => navigate(Navigation.home));
+  const onSubmit = (registrationRequest: RegistrationRequestDto) => {
+    mutate(registrationRequest);
   };
 
   return (
-    <Flex backgroundColor="bg-color" height="100vh" flexDirection="column">
-      <GlobalNavBar />
+    <PageContainer noFooter>
+      <Flex justifyContent="center" alignItems="center">
+        <Form onSubmit={({ data }) => onSubmit(data)} control={control} noValidate style={{ width: "100%" }}>
+          <VStack
+            paddingY={14}
+            paddingX={{ base: 10, md: 16 }}
+            borderRadius="4xl"
+            backgroundColor="bg"
+            shadow={{ md: "great" }}
+            maxWidth={570}
+            marginX="auto"
+            marginTop={{ md: 16 }}
+            gap={14}
+          >
+            <Heading size="4xl" marginBottom={4}>
+              Sign up
+            </Heading>
 
-      <Flex minHeight="100vh" alignItems="center">
-        <VStack
-          padding="34px"
-          borderRadius="34px"
-          backgroundColor="white"
-          shadow="rgba(120, 120, 128, 0.16) 0px 11px 34px 0px"
-          maxWidth="420px"
-          mx="auto"
-          mt={10}
-        >
-          <Heading size="2xl" marginBottom="20px">
-            Registration
-          </Heading>
+            <Stack width="full" gap={5}>
+              <Stack
+                direction={{ base: "column", sm: "row" }}
+                alignItems={{ base: "column", sm: "star" }}
+                gap={{ base: 5, md: 4 }}
+              >
+                <FieldInput
+                  required
+                  label="First name"
+                  error={errors.firstName}
+                  {...register(registrationRequestKeys.firstName)}
+                />
 
-          <HStack height="fit-content" alignItems="flex-start">
-            <Field.Root required invalid={!!errors.firstName}>
-              <Field.Label>First name</Field.Label>
-              <Input
-                {...register(registrationRequestKeys.firstName, {
-                  required: "First name is required",
-                })}
-                placeholder="First name"
+                <FieldInput
+                  required
+                  label="Last name"
+                  error={errors.lastName}
+                  {...register(registrationRequestKeys.lastName)}
+                />
+              </Stack>
+
+              <FieldInput
+                required
+                label="E-mail"
+                error={errors.email}
+                type="email"
+                {...register(registrationRequestKeys.email)}
               />
-              <Field.ErrorText>{errors.firstName?.message}</Field.ErrorText>
-            </Field.Root>
-            <Field.Root required invalid={!!errors.lastName}>
-              <Field.Label>Last name</Field.Label>
-              <Input
-                {...register(registrationRequestKeys.lastName, {
-                  required: "Last name is required",
-                })}
-                placeholder="Last name"
+
+              <FieldPasswordInput
+                required
+                label="Password"
+                error={errors.password}
+                {...register(registrationRequestKeys.password)}
               />
-              <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText>
-            </Field.Root>
-          </HStack>
+            </Stack>
 
-          <Field.Root required invalid={!!errors.email}>
-            <Field.Label>E-mail</Field.Label>
-            <Input
-              type="email"
-              {...register(registrationRequestKeys.email, {
-                required: "E-mail is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email format",
-                },
-              })}
-              placeholder="example@email.com"
-            />
-            <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
-          </Field.Root>
+            <Stack gap={4} width="full">
+              <Button type="submit" rounded="xl" width="full">
+                Sign up
+              </Button>
 
-          <Field.Root required invalid={!!errors.birtDate}>
-            <Field.Label>Date of birth</Field.Label>
-            <Input
-              type="date"
-              {...register(registrationRequestKeys.birtDate, {
-                required: "Date of birth is required",
-              })}
-            />
-            <Field.ErrorText>{errors.birtDate?.message}</Field.ErrorText>
-          </Field.Root>
-
-          <Field.Root required invalid={!!errors.password}>
-            <Field.Label>Password</Field.Label>
-            <PasswordInput
-              {...register(registrationRequestKeys.password, {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
-                validate: {
-                  hasNumber: (v) => /\d/.test(v) || "Must contain a number",
-                  hasUppercase: (v) => /[A-Z]/.test(v) || "Must contain an uppercase letter",
-                },
-              })}
-            />
-            <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
-          </Field.Root>
-
-          <Button width="full" onClick={handleSubmit(onSubmit)}>
-            Register
-          </Button>
-        </VStack>
+              <Stack alignItems="center" width="100%" gap={0}>
+                <Text fontSize="14px">Already have an account?</Text>
+                <LinkToOtherPage
+                  label="Log in"
+                  navigateTo={Navigation.login}
+                  icon={<LuExternalLink />}
+                  textProps={{ fontSize: "sm" }}
+                />
+              </Stack>
+            </Stack>
+          </VStack>
+        </Form>
       </Flex>
-
-      <Footer />
-    </Flex>
+    </PageContainer>
   );
 }

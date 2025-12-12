@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { ProductKeys } from "../ProductKeys";
+
 import { getProductImage } from "../api/getProductImage";
+import { ProductKeys } from "../ProductKeys";
 
 interface UseGetProductImageParams {
   productId: number | null;
@@ -17,6 +18,6 @@ export function useGetProductImage({ productId }: UseGetProductImageParams) {
       return await getProductImage(productId);
     },
     enabled: !!productId,
-    staleTime: 1000 * 60 * 60,
+    staleTime: Infinity,
   });
 }

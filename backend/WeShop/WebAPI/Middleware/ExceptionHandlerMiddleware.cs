@@ -29,15 +29,20 @@ public class ExceptionHandlerMiddleware(RequestDelegate _next, ILogger<Exception
         {
             await HandleDomainExceptionAsync(context, exception, HttpStatusCode.UnprocessableEntity);
         }
+        catch (UserNotAuthorizedForCartException exception)
+        {
+            await HandleDomainExceptionAsync(context, exception, HttpStatusCode.Forbidden);
+        }
         catch (Exception exception)
         {
             _logger.LogError(exception, "Unhandled exception occurred");
-            await HandleDomainExceptionAsync(context, exception, HttpStatusCode.InternalServerError, 
+            await HandleDomainExceptionAsync(context, exception, HttpStatusCode.InternalServerError,
                 "An unexpected error occurred. Please try again later.");
         }
     }
-    
-    private async Task HandleDomainExceptionAsync(HttpContext context, Exception exception, HttpStatusCode statusCode, string? customMessage = null)
+
+    private async Task HandleDomainExceptionAsync(HttpContext context, Exception exception, HttpStatusCode statusCode,
+        string? customMessage = null)
     {
         _logger.LogWarning(exception, "Error handled by middleware");
 

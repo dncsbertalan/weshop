@@ -1,13 +1,15 @@
-import { useGetProducts } from "@/features/products/hooks/useGetProducts";
-import { formatCurrencyFt } from "@/utils/currency";
 import { ButtonGroup, IconButton, Pagination, Stack, Table, Text } from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import { useProductFilters } from "@/features/products/hooks/useProductFilters";
-import { AdminPageProductFilters } from "./AdminPage.ProductFilters";
-import { ProductDeleteButton } from "@/features/products/components/ProductDeleteButton";
-import { ProductFilterAction } from "@/features/products/productFilterReducer";
+
 import { CreatePorductDialog } from "@/features/product-editor/components/CreatePorductDialog";
 import { ModifyProductDialog } from "@/features/product-editor/components/ModifyProductDialog";
+import { ProductDeleteButton } from "@/features/products/components/ProductDeleteButton";
+import { useGetProducts } from "@/features/products/hooks/useGetProducts";
+import { useProductFilters } from "@/features/products/hooks/useProductFilters";
+import { ProductFilterAction } from "@/features/products/ProductFilterReducer";
+import { formatCurrencyFt } from "@/utils/currency";
+
+import { AdminPageProductFilters } from "./AdminPage.ProductFilters";
 
 export function AdminPageProductTab() {
   const { productFilters, dispatchProductFilters } = useProductFilters();
@@ -60,7 +62,7 @@ export function AdminPageProductTab() {
       <Pagination.Root
         count={products?.totalItems}
         pageSize={productFilters.pageSize}
-        page={products?.currentsPages}
+        page={products?.currentPage}
         onPageChange={(details) => {
           dispatchProductFilters({ type: ProductFilterAction.SetPage, payload: details.page });
         }}

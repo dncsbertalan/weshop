@@ -1,6 +1,7 @@
-import { Role } from "@/context/authContext";
-import { UserDto } from "@/dtos/response/user/UserDto";
 import { createContext } from "react";
+
+import { UserDto } from "@/dtos/response/user/UserDto";
+import { Role } from "@/features/authentication/Role";
 
 interface AuthenticationContextType {
   user: UserDto | undefined;

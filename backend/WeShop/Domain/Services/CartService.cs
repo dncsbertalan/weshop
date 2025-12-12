@@ -1,33 +1,38 @@
-﻿using Domain.Dtos.Api;
-using Domain.Models;
+﻿using Domain.Dtos.Api.Request;
+using Domain.Dtos.Api.Response.Cart;
+using Domain.Exceptions;
 using Domain.Repository;
 
 namespace Domain.Services;
 
-public class CartService(ICartRepository _cartRepository, IUserRepository _userRepository, IProductRepository _productRepository)
+public class CartService(
+    ICartRepository _cartRepository,
+    IUserRepository _userRepository,
+    IProductRepository _productRepository,
+    CartAccessService _cartAccessService)
 {
     #region Cart
 
     public async Task<long?> CreateCartAsync(string userId)
     {
-        if (await UserIsNotValid(userId)) return null;
+        // The user must be a valid user at this point.
 
-        return await _cartRepository.CreateCartAsync(userId);
+        var newCartId = await _cartRepository.CreateCartAsync(userId);
+        await _userRepository.SetActiveCartAsync(userId, newCartId);
+
+        return newCartId;
     }
 
     public async Task DeleteCartAsync(long cartId)
     {
-        //var user = await _userRepository.GetUserById(cartId);
-        //if (user is null) return;
-
         await _cartRepository.DeleteCartAsync(cartId);
     }
 
     public async Task<CartDto?> GetCartByIdAsync(string userId, long cartId)
     {
-        if (await UserDoesNotHaveCartAccesAsync(userId, cartId)) return null;
+        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId)) return null;
 
-        var cartItems = await _cartRepository.GetCartItemsAsync((long)cartId);
+        var cartItems = await _cartRepository.GetCartItemsAsync(cartId);
 
         return cartItems;
     }
@@ -37,89 +42,39 @@ public class CartService(ICartRepository _cartRepository, IUserRepository _userR
 
     #region Cart items
 
-    public async Task<bool> AddProductToCartAsync(string userId, long cartId, AddProductToCartData productData)
+    public async Task<bool> AddProductToCartAsync(string userId, long cartId, AddProductToCartRequestDto productRequest)
     {
-        if (!await UserHasCartAccesAsync(userId, cartId)) return false;
+        if (!await _cartAccessService.UserHasCartAccessAsync(userId, cartId))
+            throw new UserNotAuthorizedForCartActionException(userId, cartId, "adding product");
 
-        var product = await _productRepository.GetByIdAsync(productData.ProductId);
+        var product = await _productRepository.GetByIdAsync(productRequest.ProductId);
         if (product is null) return false;
 
-        return await _cartRepository.AddProductToCartAsync(cartId, productData.ProductId, userId);
+        return await _cartRepository.AddProductToCartAsync(cartId, productRequest.ProductId, userId);
     }
 
-    public async Task<bool> RemoveItemFromCartAsync(string userId, long cartId, long cartItemId)
+    public async Task<long?> RemoveItemFromCartAsync(string userId, long cartId, long cartItemId)
     {
-        if (await UserDoesNotHaveCartAccesAsync(userId, cartId)) return false;
+        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId))
+            throw new UserNotAuthorizedForCartActionException(userId, cartId, "removing product");
 
         var cartIdFromCartItem = await _cartRepository.GetCartIdFromCartItemIdAsync(cartItemId);
-        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
+        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return null;
 
         return await _cartRepository.DeleteProductFromCartAsync(cartId, cartItemId);
     }
 
-    public async Task<bool> ModifyCartItemAsync(string userId, long cartId, long cartItemId, CartItemModificationData modificationData)
+    public async Task<long?> ModifyCartItemAsync(string userId, long cartId, long cartItemId,
+        CartItemModificationRequestDto modificationRequest)
     {
-        if (await UserDoesNotHaveCartAccesAsync(userId, cartId)) return false;
+        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId))
+            throw new UserNotAuthorizedForCartActionException(userId, cartId, "modifying product");
 
         var cartIdFromCartItem = await _cartRepository.GetCartIdFromCartItemIdAsync(cartItemId);
-        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
+        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return null;
 
-        return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationData);
+        return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationRequest);
     }
-
-    #endregion
-
-
-    #region Shared cart
-
-    public async Task<bool> AddUserToCartAsync(string ownerId, AddUserToCartData data, long cartId)
-    {
-        if (!await UserIsCartOwnerAsync(ownerId, cartId)) return false;
-
-        var userId = await _userRepository.GetUserByEmailAsync(data.Email);
-        // If the user is already added to the cart then don't add them again.
-        if (userId is null || await UserHasCartAccesAsync(userId, cartId)) return false;
-
-        var result = await _cartRepository.AddUserToSharedCartAsync(userId, cartId);
-
-        return result;
-    }
-
-    public async Task<bool> DoesUserHasCartAccess(string userId, long cartId) => await UserHasCartAccesAsync(userId, cartId);
-
-    #endregion
-
-
-
-    #region Helper methods
-
-    private async Task<bool> UserDoesNotHaveCartAccesAsync(string userId, long cartId) => !await UserHasCartAccesAsync(userId, cartId);
-
-    private async Task<bool> UserHasCartAccesAsync(string userId, long cartId)
-    {
-        var cart = await _cartRepository.GetCartParticipantsAsync(cartId);
-        if (cart is null) return false;
-
-        if (cart.UserId == userId) return true;
-
-        if (cart.Participants.Contains(userId)) return true;
-
-        return false;
-    }
-
-    private async Task<bool> UserIsNotCartOwnerAsync(string userId, long cartId) => !await UserIsCartOwnerAsync(userId, cartId);
-
-    private async Task<bool> UserIsCartOwnerAsync(string userId, long cartId)
-    {
-        var cart = await _cartRepository.GetCartParticipantsAsync(cartId);
-        if (cart is null) return false;
-
-        if (cart.UserId == userId) return true;
-
-        return false;
-    }
-
-    private async Task<bool> UserIsNotValid(string userId) => await _userRepository.GetSimpleUserByIdAsync(userId) is null;
 
     #endregion
 }

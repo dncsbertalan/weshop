@@ -1,11 +1,11 @@
 import z from "zod";
 
+import { UserInformatioDto } from "../user/UserInformatioDto";
+
 export const CartInformationDto = z
   .object({
     cartId: z.number(),
-    ownerEmail: z.email(),
-    ownerFirstName: z.string(),
-    ownerLastName: z.string(),
+    owner: UserInformatioDto,
   })
   .strict();
 

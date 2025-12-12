@@ -1,14 +1,12 @@
+using System.Text;
 using DataAccess;
 using DataAccess.Models;
-using DataAccess.Repository;
 using Domain.Constants;
-using Domain.Repository;
-using Domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using WebAPI.Extensions;
 using WebAPI.Hubs;
 using WebAPI.Middleware;
 
@@ -18,18 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 
 // Adding services to the container.
-builder.Services.AddControllers();
-builder.Services.AddScoped<CartService>();
-builder.Services.AddScoped<CategoryService>();
-builder.Services.AddScoped<OrderService>();
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,16 +32,16 @@ builder.Services.AddIdentity<User_Data, IdentityRole>()
     .AddEntityFrameworkStores<WebshopDbContext>()
     .AddDefaultTokenProviders();
 
-// Password configuration
+// Identity configuration
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Default Password settings.
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Password.RequiredUniqueChars = 1;
+    options.User.RequireUniqueEmail = true;
 });
 
 // JWT configuration
@@ -84,46 +71,51 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Create roles
+// Data seeding
 using (var scope = app.Services.CreateScope())
 {
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User_Data>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     string[] roles = [RoleConstants.Admin, RoleConstants.User];
 
     foreach (var role in roles)
-    {
         if (!await roleManager.RoleExistsAsync(role))
-        {
             await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
 
-    // Create default admin if not exists
-    string adminEmail = "dncs@gmail.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
+    var adminEmail = "admin@weshop.hu";
+    var adminPassword = "Admin123!";
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User_Data>>();
+
+    var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
+
+    if (existingAdmin == null)
     {
-        adminUser = new User_Data
+        var adminUser = new User_Data
         {
             UserName = adminEmail,
             Email = adminEmail,
-            FirstName = "Admin",
-            LastName = "User",
-            BirthDate = DateTime.Now
+            FirstName = "System",
+            LastName = "Administrator",
+            EmailConfirmed = true
         };
 
-        var result = await userManager.CreateAsync(adminUser, "Admin123!");
-        if (result.Succeeded)
-        {
-            await userManager.AddToRoleAsync(adminUser, RoleConstants.Admin);
-        }
-    }
+        var createResult = await userManager.CreateAsync(adminUser, adminPassword);
 
-    if (!await userManager.IsInRoleAsync(adminUser, RoleConstants.Admin))
-    {
+        if (!createResult.Succeeded) throw new Exception("Could not create admin user.");
+
         await userManager.AddToRoleAsync(adminUser, RoleConstants.Admin);
     }
+
+    string[] paymentMethods = ["cash", "card"];
+
+    var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
+
+    foreach (var method in paymentMethods)
+        if (!db.PaymentMethods.Any(pm => pm.Name == method))
+        {
+            db.PaymentMethods.Add(new PaymentMethod_Data { Name = method });
+            await db.SaveChangesAsync();
+        }
 }
 
 // Configure the HTTP request pipeline.
@@ -147,3 +139,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// This is needed in order to expose the Program class for testing purposes
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class Program
+{
+}

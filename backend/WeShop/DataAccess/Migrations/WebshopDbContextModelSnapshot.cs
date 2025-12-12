@@ -82,6 +82,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -106,13 +107,13 @@ namespace DataAccess.Migrations
                     b.Property<bool>("IsShared")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("OwnerId")
                         .IsUnique();
 
                     b.ToTable("Cart");
@@ -262,11 +263,9 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ModifiedByUserId");
 
-                    b.HasIndex(new[] { "AvailableQuantity" }, "IX_Product_AvailableQuantity");
+                    b.HasIndex("Name");
 
-                    b.HasIndex(new[] { "IsDeleted" }, "IX_Product_IsDeleted");
-
-                    b.HasIndex(new[] { "Price" }, "IX_Product_Price");
+                    b.HasIndex("IsDeleted", "AvailableQuantity", "Price");
 
                     b.ToTable("Product");
                 });
@@ -306,8 +305,8 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                    b.Property<long?>("ActiveCartId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -352,6 +351,9 @@ namespace DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -363,6 +365,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActiveCartId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -528,7 +532,7 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.Cart_Data", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DataAccess.Models.Product_Data", "Product")
@@ -539,7 +543,9 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.Models.User_Data", "AddedBy")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AddedBy");
 
@@ -550,13 +556,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
-                    b.HasOne("DataAccess.Models.User_Data", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("DataAccess.Models.Cart_Data", "UserId")
+                    b.HasOne("DataAccess.Models.User_Data", "Owner")
+                        .WithOne("OwnedCart")
+                        .HasForeignKey("DataAccess.Models.Cart_Data", "OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("DataAccess.Models.OrderItem_Data", b =>
@@ -609,7 +615,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
                 {
                     b.HasOne("DataAccess.Models.Cart_Data", "Cart")
-                        .WithMany("Participants")
+                        .WithMany("SharedWith")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -623,6 +629,16 @@ namespace DataAccess.Migrations
                     b.Navigation("Cart");
 
                     b.Navigation("CartUser");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.User_Data", b =>
+                {
+                    b.HasOne("DataAccess.Models.Cart_Data", "ActiveCart")
+                        .WithMany("ActiveUsers")
+                        .HasForeignKey("ActiveCartId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ActiveCart");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -678,9 +694,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.Cart_Data", b =>
                 {
+                    b.Navigation("ActiveUsers");
+
                     b.Navigation("CartItems");
 
-                    b.Navigation("Participants");
+                    b.Navigation("SharedWith");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>
@@ -690,7 +708,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.User_Data", b =>
                 {
-                    b.Navigation("Cart")
+                    b.Navigation("OwnedCart")
                         .IsRequired();
 
                     b.Navigation("SharedCarts");

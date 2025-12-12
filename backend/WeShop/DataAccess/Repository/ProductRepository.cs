@@ -90,8 +90,11 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
         product.Price = updateProductDto.Price;
         product.AvailableQuantity = updateProductDto.AvailableQuantity;
         product.Categories = categories;
-        product.ImageMimeType = updateProductDto.ImageMimeType;
-        product.Image = updateProductDto.Image;
+        if (updateProductDto.Image is not null)
+        {
+            product.ImageMimeType = updateProductDto.ImageMimeType;
+            product.Image = updateProductDto.Image;
+        }
 
         product.ModificationDate = DateTime.UtcNow;
         product.ModifiedByUserId = userId;
@@ -105,12 +108,12 @@ public class ProductRepository(WebshopDbContext _context) : IProductRepository
             .Include(product => product.Categories)
             .AsQueryable()
             .AvailableAndNotDeleted()
-            .FilterByPrice(productFilter.Min, productFilter.Max)
+            .FilterByPrice(productFilter.MinPrice, productFilter.MaxPrice)
             .FilterByName(productFilter.ProductName)
-            .FilterByCategories(productFilter.Filters);
+            .FilterByCategories(productFilter.CategoryIds);
 
         var totalItems = await query.CountAsync();
-        if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 0, 0);
+        if (totalItems == 0) return new PagedResult<ProductDto>([], 0, 1, 0);
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)productFilter.PageSize);
 
