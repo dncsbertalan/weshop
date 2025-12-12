@@ -5,12 +5,12 @@ import { Role } from "@/features/authentication/Role";
 import { AdminPage } from "@/pages/admin-page/AdminPage";
 import { CartMain } from "@/pages/cart-page/CartMain";
 import { CheckoutPage } from "@/pages/checkout-page/CheckoutPage";
+import { ErrorScreen } from "@/pages/ErrorScreen";
 import { LoginPage } from "@/pages/login-page/LoginPage";
 import { MainPage } from "@/pages/main-page/MainPage";
 import { ProductPage } from "@/pages/product-page/ProductPage";
 import { ProfileMain } from "@/pages/profile-page/ProfileMain";
 import { RegistrationPage } from "@/pages/registration-page/RegistrationPage";
-import { TempErrorScreen } from "@/pages/TempErrorScreen";
 import { Navigation } from "@/routes/navigation";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   {
     path: Navigation.home,
     element: <AppShell />,
-    errorElement: <TempErrorScreen />,
+    errorElement: <ErrorScreen />,
     children: [
       {
         path: Navigation.home,

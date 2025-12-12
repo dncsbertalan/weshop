@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 import { EmptyState } from "@/components/ui/EmptyState";
 
-export function TempErrorScreen() {
+export function ErrorScreen() {
   return (
     <Stack width="full" height="100vh" backgroundColor="bg" flex={1} alignItems="center" justifyContent="center">
       <EmptyState size="lg" icon={<BiError />} title="Something went wrong" description="Contact customer service" />

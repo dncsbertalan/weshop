@@ -54,7 +54,7 @@ export function ProductPage() {
 
               <Separator />
 
-              <MultilineText text={product.description} />
+              <MultilineText text={product.description ?? ""} />
             </Stack>
           </Stack>
         </Stack>
