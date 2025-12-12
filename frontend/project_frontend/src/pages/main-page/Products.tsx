@@ -4,13 +4,13 @@ import React from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { ProductCard } from "@/components/product/ProductCard";
+import { PagedProduct } from "@/dtos/response/product/PagedProduct";
 import { useProductFilters } from "@/features/products/hooks/useProductFilters";
 import { ProductFilterAction } from "@/features/products/ProductFilterReducer";
-import { PagedProducts } from "@/models/Product";
 import { scrollToTopSmooth } from "@/utils/scroll";
 
 interface ProductSectionProps {
-  products: PagedProducts;
+  products: PagedProduct;
 }
 
 export function Products({ products }: ProductSectionProps) {
