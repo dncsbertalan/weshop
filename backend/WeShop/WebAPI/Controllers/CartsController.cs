@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using WebAPI.Hubs;
+using WebAPI.Models;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers;
 
@@ -15,7 +17,8 @@ namespace WebAPI.Controllers;
 public class CartsController(
     CartService _cartService,
     SharedCartService _sharedCartService,
-    IHubContext<SharedCartHub> _cartHub) : ControllerBase
+    NotificationService _notificationService,
+    IHubContext<SharedCartHub> _sharedCartHub) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateCart()
@@ -28,7 +31,7 @@ public class CartsController(
         return Ok(newCart);
     }
 
-    [HttpGet("{cartId}")]
+    [HttpGet("{cartId:long}")]
     public async Task<ActionResult<CartDto>> GetCart(long cartId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -39,7 +42,7 @@ public class CartsController(
         return Ok(carts);
     }
 
-    [HttpPut("{cartId}/products/{cartItemId}")]
+    [HttpPut("{cartId:long}/products/{cartItemId:long}")]
     public async Task<IActionResult> ModifyCartItem(long cartId, long cartItemId,
         [FromBody] CartItemModificationRequestDto modificationRequest)
     {
@@ -48,14 +51,15 @@ public class CartsController(
 
         var result = await _cartService.ModifyCartItemAsync(userId, cartId, cartItemId, modificationRequest);
 
-        if (!result) return BadRequest(new { message = "An error occured modifying the product in cart." });
+        if (result is null) return BadRequest(new { message = "An error occured modifying the product in cart." });
 
-        await NotifyCartChange(cartId);
+        await _notificationService.NotifyAddedProductToCart(cartId, (long)result, userId,
+            CartChangeType.ProductUpdated);
 
-        return Ok(new { message = "Product successfully modifyed in cart." });
+        return Ok(new { message = "Product successfully modified in cart." });
     }
 
-    [HttpPost("{cartId}/products")]
+    [HttpPost("{cartId:long}/products")]
     public async Task<IActionResult> AddProductToCart(long cartId, [FromBody] AddProductToCartRequestDto productRequest)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -65,7 +69,8 @@ public class CartsController(
 
         if (!result) return BadRequest("An error occured adding product to cart.");
 
-        await NotifyCartChange(cartId);
+        await _notificationService.NotifyAddedProductToCart(cartId, productRequest.ProductId, userId,
+            CartChangeType.NewProductAdded);
 
         return Ok("Product successfully added to cart.");
     }
@@ -78,12 +83,12 @@ public class CartsController(
 
         var result = await _cartService.RemoveItemFromCartAsync(userId, cartId, cartItemId);
 
-        if (!result) return NotFound(new { message = "Cart or product not found in the cart." });
+        if (result is null) return NotFound(new { message = "Cart or product not found in the cart." });
 
-        await NotifyCartChange(cartId);
+        await _notificationService.NotifyAddedProductToCart(cartId, (long)result, userId,
+            CartChangeType.ProductRemoved);
 
         return Ok();
-        //return NoContent();
     }
 
     [HttpPost("{cartId:long}/users")]
@@ -111,20 +116,4 @@ public class CartsController(
 
         return Ok();
     }
-
-
-    #region Helper methods
-
-    private async Task NotifyCartChange(long cartId)
-    {
-        await _cartHub
-            .Clients
-            .Group(cartId.ToString())
-            .SendAsync("ProductAdded", new
-            {
-                cartId
-            });
-    }
-
-    #endregion
 }

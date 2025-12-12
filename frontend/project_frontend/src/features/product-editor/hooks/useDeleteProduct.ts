@@ -14,5 +14,8 @@ export function useDeleteProduct() {
       void queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] });
       centralToaster.create({ title: "Successfully deleted product", type: "success" });
     },
+    onError: () => {
+      centralToaster.create({ type: "error", closable: true, description: "Something went wrong." });
+    },
   });
 }

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { messageToaster } from "@/components/toaster/messageToasterDef";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 
 import { addProductToCart } from "../api/addProductToCart";
@@ -19,6 +20,10 @@ export function useAddProductToCart() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
+      messageToaster.create({ type: "success", closable: true, description: "Added product to cart." });
+    },
+    onError: () => {
+      messageToaster.create({ type: "error", closable: true, description: "Something went wrong." });
     },
   });
 }

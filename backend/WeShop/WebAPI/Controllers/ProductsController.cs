@@ -22,7 +22,8 @@ public class ProductsController(ProductService _productService) : ControllerBase
     public async Task<ActionResult<ProductDto>> Get(long id)
     {
         var product = await _productService.GetByIdAsync(id);
-        return product is not null ? Ok(product) : NotFound();
+
+        return Ok(product);
     }
 
     [HttpGet("{id:long}/image")]

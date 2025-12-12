@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, FormProvider, useForm } from "react-hook-form";
 
 import { DialogContent } from "@/components/Dialog.Content";
-import { toaster } from "@/components/ui/toaster";
+import { centralToaster } from "@/components/toaster/centralToasterDef";
 import { CreateProductRequestDto } from "@/dtos/request/product/CreateProductRequestDto";
 import { ProductKeys } from "@/features/products/ProductKeys";
 
@@ -21,7 +21,10 @@ export function CreateProductDialogContent() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ProductKeys.Products] });
       reset();
-      toaster.create({ title: "Succesfully created product", type: "success" });
+      centralToaster.create({ title: "Succesfully created product", type: "success" });
+    },
+    onError: () => {
+      centralToaster.create({ type: "error", closable: true, description: "Something went wrong." });
     },
   });
 

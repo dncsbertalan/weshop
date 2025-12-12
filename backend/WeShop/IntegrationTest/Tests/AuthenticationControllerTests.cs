@@ -42,6 +42,7 @@ public class AuthenticationControllerTests(WeshopWebApplicationFactoryFixture us
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseString);
         Assert.Contains(erroMessage, responseString);
     }
 

@@ -16,8 +16,7 @@ export function useAddUserToCart() {
       await queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
       centralToaster.create({ type: "success", description: "Successfully added to your cart." });
     },
-    onError: (error) => {
-      console.error("Error adding user to cart:", error);
+    onError: () => {
       centralToaster.create({ type: "error", description: "Something went wrong." });
     },
   });

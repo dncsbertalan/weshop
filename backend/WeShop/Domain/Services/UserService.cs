@@ -14,6 +14,13 @@ public class UserService(
         return await _userRepository.GetUserByIdAsync(userId);
     }
 
+    public async Task<UserInformationDto> GetUserInformationAsync(string userId)
+    {
+        var user = await _userRepository.GetUserInformationByIdAsync(userId);
+
+        return user ?? throw new NotFoundException("User", userId);
+    }
+
     public async Task<bool> ChangeActiveCartAsync(string userId, long cartId)
     {
         var cart = await _cartRepository.GetCartByIdAsync(cartId);

@@ -29,10 +29,10 @@ public interface ICartRepository
     #region Cart items
 
     Task<bool> AddProductToCartAsync(long cartId, long productId, string userId);
-    Task<bool> DeleteProductFromCartAsync(long cartId, long productId);
+    Task<long> DeleteProductFromCartAsync(long cartId, long productId);
     Task<CartItemDto?> GetCartItemByIdAsync(long cartItemId);
     Task<CartDto?> GetCartItemsAsync(long cartId);
-    Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest);
+    Task<long?> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest);
 
     #endregion
 }

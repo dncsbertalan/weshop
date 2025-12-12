@@ -11,15 +11,12 @@ export function ChangeCart() {
   const { mutate } = useSwitchActiveCart();
 
   const handleSwitchCart = (cartId: number) => {
-    console.log(cartId);
     mutate(cartId);
   };
 
   if (!user || user.carts.length < 1) {
     return null;
   }
-
-  console.log(user);
 
   return (
     <Menu.Root>

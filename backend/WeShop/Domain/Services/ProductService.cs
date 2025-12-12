@@ -51,9 +51,11 @@ public class ProductService(IProductRepository _productRepository, ICategoryRepo
             : result;
     }
 
-    public async Task<ProductDto?> GetByIdAsync(long id)
+    public async Task<ProductDto> GetByIdAsync(long id)
     {
-        return await _productRepository.GetByIdAsync(id);
+        var product = await _productRepository.GetByIdAsync(id);
+
+        return product ?? throw new NotFoundException("Product", id);
     }
 
     public async Task<bool> CreateProductAsync(CreateProductDto createProductDto)

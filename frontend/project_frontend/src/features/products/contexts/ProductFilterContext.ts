@@ -1,6 +1,7 @@
 import { createContext } from "react";
 
-import { ProductFilter } from "../ProductFilter";
+import { ProductFilter } from "@/dtos/request/product/ProductFilter";
+
 import { ProductFilterActionType } from "../ProductFilterReducer";
 
 interface ProductFilterContextType {

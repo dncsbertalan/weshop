@@ -15,7 +15,14 @@ export function Footer() {
 
   return (
     <Stack width="full" padding={4} alignItems="center">
-      <Stack as="footer" width="100%" position="relative" backgroundColor="#030302" rounded="3xl">
+      <Stack
+        as="footer"
+        width="100%"
+        position="relative"
+        //backgroundColor="#030302"
+        backgroundImage="linear-gradient(90deg, #94a3b8, #6ee7b7)"
+        rounded="3xl"
+      >
         <Stack
           position="absolute"
           width="100%"
@@ -25,7 +32,7 @@ export function Footer() {
           backgroundRepeat="repeat"
           backgroundPosition="left top"
           mixBlendMode="screen"
-          opacity={0.4}
+          opacity={0.99}
         />
         <Container maxW="global-max-window-size" py={{ base: 8, md: 12 }}>
           <Stack

@@ -6,8 +6,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 
-import { ColorModeProvider } from "./components/ui/color-mode.tsx";
-import { OrdersProvider } from "./features/order/OrdersContext.tsx";
 import { AuthenticationProvider } from "./features/authentication/components/AuthenticationProvider.tsx";
 import router from "./routes/routes.tsx";
 import { system } from "./theme/theme.ts";
@@ -24,16 +22,9 @@ createRoot(rootEl).render(
   <StrictMode>
     <ChakraProvider value={system}>
       <QueryClientProvider client={queryClient}>
-        {/* <BrowserRouter> */}
         <AuthenticationProvider>
-          <OrdersProvider>
-            <ColorModeProvider>
-              {/* <AppRoutes /> */}
-              <RouterProvider router={router} />
-            </ColorModeProvider>
-          </OrdersProvider>
+          <RouterProvider router={router} />
         </AuthenticationProvider>
-        {/* </BrowserRouter> */}
       </QueryClientProvider>
     </ChakraProvider>
   </StrictMode>,

@@ -12,7 +12,7 @@ public class OrderItemRepository(WebshopDbContext _context) : IOrderItemReposito
             .Include(cart => cart.CartItems)
             .ThenInclude(cartItem => cartItem.Product)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
-        if (cart == null || cart.CartItems == null || cart.CartItems.Count == 0) return false;
+        if (cart is null || cart.CartItems.Count == 0) return false;
 
         var quantityCheck = cart.CartItems.All(cartItem => cartItem.Quantity <= cartItem.Product.AvailableQuantity);
         if (!quantityCheck) return false;
@@ -23,14 +23,14 @@ public class OrderItemRepository(WebshopDbContext _context) : IOrderItemReposito
             ProductName = cartItem.Product.Name,
             Price = cartItem.Product.Price,
             Quantity = cartItem.Quantity,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow
         });
 
         cart.CartItems.ForEach(cartItem => cartItem.Product.AvailableQuantity -= cartItem.Quantity);
 
         _context.AddRange(orderItems);
         await _context.SaveChangesAsync();
-        
+
         return true;
     }
 }

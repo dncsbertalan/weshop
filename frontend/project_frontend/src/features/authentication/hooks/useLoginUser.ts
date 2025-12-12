@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
-import { centralToaster } from "@/components/toaster/centralToasterDef";
 import { Navigation } from "@/routes/navigation";
 
 import { loginUser } from "../api/loginUser";
@@ -27,7 +26,6 @@ export function useLoginUser() {
       void navigate(Navigation.home);
     },
     onError: (error) => {
-      console.log(centralToaster);
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         if (!status) {

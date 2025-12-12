@@ -2,9 +2,11 @@ import * as signalR from "@microsoft/signalr";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-import { messageToaster } from "@/components/toaster/messageToasterDef";
+import { CartChangedResponseDto } from "@/dtos/response/cart/CartChangedResponseDto";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication";
 import { CartKeys } from "@/features/cart/CartKeys";
+
+import { sharedCartNotificationService } from "../utils/sharedCartNotificationService";
 
 export function useCartHub() {
   const queryClient = useQueryClient();
@@ -23,14 +25,13 @@ export function useCartHub() {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    connection.on("ProductAdded", () => {
-      void queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
-      messageToaster.create({ closable: true, description: "fasz", title: "pina" });
-      console.log("működik az isten faszaaaa az isten verje meg yeaaa");
-    });
+    connection.on("CartUpdated", (response: CartChangedResponseDto) => {
+      if (user.userId === response.changedByUser.id) {
+        return;
+      }
 
-    connection.on("ProductModified", () => {
       void queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
+      sharedCartNotificationService.cartUpdated(response);
     });
 
     let isMounted = true;
@@ -41,8 +42,6 @@ export function useCartHub() {
         if (!isMounted) {
           return;
         }
-
-        console.log("SignalR connected.");
 
         await connection.invoke("JoinGroup", user.activeCartId);
       })

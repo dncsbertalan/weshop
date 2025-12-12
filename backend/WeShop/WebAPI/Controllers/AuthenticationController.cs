@@ -24,8 +24,6 @@ public class AuthenticationController(
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
     {
-        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
         var user = new User_Data
         {
             UserName = registrationRequestDto.Email,
@@ -55,7 +53,6 @@ public class AuthenticationController(
         if (newCart is null)
             return StatusCode(StatusCodes.Status500InternalServerError);
 
-        scope.Complete();
         return Ok();
     }
 

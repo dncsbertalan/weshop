@@ -128,11 +128,13 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
     {
         var cart = await _context.Carts
             .Include(cart => cart.CartItems)
+            .Include(cart => cart.SharedWith)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
 
         if (cart is null) return;
 
         _context.CartItems.RemoveRange(cart.CartItems);
+        _context.RemoveRange(cart.SharedWith);
         _context.Carts.Remove(cart);
 
         await _context.SaveChangesAsync();
@@ -195,13 +197,15 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return true;
     }
 
-    public async Task<bool> DeleteProductFromCartAsync(long cartId, long cartItemId)
+    public async Task<long> DeleteProductFromCartAsync(long cartId, long cartItemId)
     {
-        var deletedCartItems = await _context.CartItems
-            .Where(ci => ci.Id == cartItemId && ci.CartId == cartId)
-            .ExecuteDeleteAsync();
+        var deletedCartItem = await _context.CartItems
+            .FindAsync(cartItemId);
 
-        return deletedCartItems > 0;
+        _context.CartItems.Remove(deletedCartItem);
+        await _context.SaveChangesAsync();
+
+        return deletedCartItem.ProductId;
     }
 
     public async Task<CartItemDto?> GetCartItemByIdAsync(long cartItemId)
@@ -226,16 +230,16 @@ public class CartRepository(WebshopDbContext _context) : ICartRepository
         return cart is null ? null : CartMapper.MapToCartDto(cart);
     }
 
-    public async Task<bool> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest)
+    public async Task<long?> ModifyCartItemAsync(long cartItemId, CartItemModificationRequestDto modificationRequest)
     {
         var cartItem = await _context.CartItems.FindAsync(cartItemId);
-        if (cartItem is null) return false;
+        if (cartItem is null) return null;
 
         cartItem.Quantity = modificationRequest.Quantity;
 
         await _context.SaveChangesAsync();
 
-        return true;
+        return cartItem.ProductId;
     }
 
     #endregion

@@ -37,7 +37,6 @@ export function AddUserToCartDialogContent({ cart }: AddUserToCartDialogContentP
         closable: true,
         description: "This person is already a member of your cart",
       });
-      console.log("fasz");
       return;
     }
 

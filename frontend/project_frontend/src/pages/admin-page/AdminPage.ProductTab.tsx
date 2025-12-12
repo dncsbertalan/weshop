@@ -62,7 +62,7 @@ export function AdminPageProductTab() {
       <Pagination.Root
         count={products?.totalItems}
         pageSize={productFilters.pageSize}
-        page={products?.currentsPages}
+        page={products?.currentPage}
         onPageChange={(details) => {
           dispatchProductFilters({ type: ProductFilterAction.SetPage, payload: details.page });
         }}

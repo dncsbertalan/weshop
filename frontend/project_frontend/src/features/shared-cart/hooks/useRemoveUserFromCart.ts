@@ -14,8 +14,7 @@ export function useRemoveUserFromCart() {
       await queryClient.invalidateQueries({ queryKey: [CartKeys.Cart] });
       centralToaster.create({ type: "success", description: "Successfully removed removed from your cart." });
     },
-    onError: (error) => {
-      console.error("Error adding user to cart:", error);
+    onError: () => {
       centralToaster.create({ type: "error", description: "Something went wrong." });
     },
   });

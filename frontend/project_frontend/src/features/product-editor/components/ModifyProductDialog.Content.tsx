@@ -1,4 +1,4 @@
-import { Button, Text } from "@chakra-ui/react";
+import { Button, Text, useDialogContext } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { Form, FormProvider, useForm } from "react-hook-form";
@@ -7,7 +7,7 @@ import { Dialog } from "@/components/Dialog";
 import { DialogContent } from "@/components/Dialog.Content";
 import { centralToaster } from "@/components/toaster/centralToasterDef";
 import { UpdateProductRequestDto } from "@/dtos/request/product/UpdateProductRequestDto";
-import { useGetProduct } from "@/features/products/hooks/useGetProduct";
+import { ProductDto } from "@/dtos/response/product/ProductDto";
 import { ProductKeys } from "@/features/products/ProductKeys";
 
 import { updateProduct } from "../api/updateProduct";
@@ -15,28 +15,29 @@ import { ModifyProductDialogBody } from "./ModifyProductDialog.Body";
 
 interface ModifyProductDialogContentProps {
   productId: number;
+  product: ProductDto;
 }
 
-export function ModifyProductDialogContent({ productId }: ModifyProductDialogContentProps) {
+export function ModifyProductDialogContent({ productId, product }: ModifyProductDialogContentProps) {
   const queryClient = useQueryClient();
-  const { data: product } = useGetProduct({ productId });
 
   const defaultValues: UpdateProductRequestDto = useMemo(
     () => ({
-      name: product?.name ?? "",
-      availableQuantity: product?.availableQuantity ?? 0,
-      categoryIds: product?.categories.map(({ id }) => id.toString()) ?? [],
-      description: product?.description ?? null,
-      price: product?.price ?? 0,
+      name: product.name,
+      availableQuantity: product.availableQuantity,
+      categoryIds: product.categories.map(({ id }) => id.toString()),
+      description: product.description ?? null,
+      price: product.price,
       image: null,
     }),
-    [product?.availableQuantity, product?.categories, product?.description, product?.name, product?.price],
+    [product.availableQuantity, product.categories, product.description, product.name, product.price],
   );
 
   const modifyProductForm = useForm<UpdateProductRequestDto>({
     defaultValues,
     disabled: !product,
   });
+  const { setOpen } = useDialogContext();
 
   const { control, reset, handleSubmit } = modifyProductForm;
   const { mutate, isPending } = useMutation({
@@ -47,7 +48,11 @@ export function ModifyProductDialogContent({ productId }: ModifyProductDialogCon
       void queryClient.invalidateQueries({ queryKey: [ProductKeys.Product, productId] });
       void queryClient.invalidateQueries({ queryKey: [ProductKeys.ProductImage, productId] });
       reset(defaultValues);
+      setOpen(false);
       centralToaster.create({ title: "Succesfully saved changes", type: "success" });
+    },
+    onError: () => {
+      centralToaster.create({ type: "error", closable: true, description: "Something went wrong." });
     },
   });
 

@@ -615,7 +615,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.SharedCart_Data", b =>
                 {
                     b.HasOne("DataAccess.Models.Cart_Data", "Cart")
-                        .WithMany("Participants")
+                        .WithMany("SharedWith")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -698,7 +698,7 @@ namespace DataAccess.Migrations
 
                     b.Navigation("CartItems");
 
-                    b.Navigation("Participants");
+                    b.Navigation("SharedWith");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Order_Data", b =>

@@ -9,6 +9,13 @@ namespace DataAccess.Repository;
 
 public class UserRepository(UserManager<User_Data> _userManager) : IUserRepository
 {
+    public async Task<UserInformationDto?> GetUserInformationByIdAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        return user is null ? null : UserMapper.MapToUserInformationDto(user);
+    }
+
     public async Task<string?> GetUserByEmailAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);

@@ -46,7 +46,7 @@ export function AddProductToCartButton({ productId, ...rest }: AddProductToCartB
             paddingY={10}
             icon={<LuLogIn />}
             title="Looks like you are not logged in"
-            description="Log into your account in order to place items to your cart. If you have no account yet, you could sign up."
+            description="Log into your account in order to place items into your cart. If you have no account yet, you could sign up."
           />
         }
         footer={

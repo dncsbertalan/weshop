@@ -1,5 +1,6 @@
 ﻿using Domain.Dtos.Api.Request;
 using Domain.Dtos.Api.Response.Cart;
+using Domain.Exceptions;
 using Domain.Repository;
 
 namespace Domain.Services;
@@ -43,7 +44,8 @@ public class CartService(
 
     public async Task<bool> AddProductToCartAsync(string userId, long cartId, AddProductToCartRequestDto productRequest)
     {
-        if (!await _cartAccessService.UserHasCartAccessAsync(userId, cartId)) return false;
+        if (!await _cartAccessService.UserHasCartAccessAsync(userId, cartId))
+            throw new UserNotAuthorizedForCartActionException(userId, cartId, "adding product");
 
         var product = await _productRepository.GetByIdAsync(productRequest.ProductId);
         if (product is null) return false;
@@ -51,23 +53,25 @@ public class CartService(
         return await _cartRepository.AddProductToCartAsync(cartId, productRequest.ProductId, userId);
     }
 
-    public async Task<bool> RemoveItemFromCartAsync(string userId, long cartId, long cartItemId)
+    public async Task<long?> RemoveItemFromCartAsync(string userId, long cartId, long cartItemId)
     {
-        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId)) return false;
+        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId))
+            throw new UserNotAuthorizedForCartActionException(userId, cartId, "removing product");
 
         var cartIdFromCartItem = await _cartRepository.GetCartIdFromCartItemIdAsync(cartItemId);
-        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
+        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return null;
 
         return await _cartRepository.DeleteProductFromCartAsync(cartId, cartItemId);
     }
 
-    public async Task<bool> ModifyCartItemAsync(string userId, long cartId, long cartItemId,
+    public async Task<long?> ModifyCartItemAsync(string userId, long cartId, long cartItemId,
         CartItemModificationRequestDto modificationRequest)
     {
-        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId)) return false;
+        if (await _cartAccessService.UserDoesNotHaveCartAccessAsync(userId, cartId))
+            throw new UserNotAuthorizedForCartActionException(userId, cartId, "modifying product");
 
         var cartIdFromCartItem = await _cartRepository.GetCartIdFromCartItemIdAsync(cartItemId);
-        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return false;
+        if (cartIdFromCartItem is null || cartIdFromCartItem != cartId) return null;
 
         return await _cartRepository.ModifyCartItemAsync(cartItemId, modificationRequest);
     }

@@ -1,6 +1,7 @@
 using DataAccess.Repository;
 using Domain.Repository;
 using Domain.Services;
+using WebAPI.Services;
 
 namespace WebAPI.Extensions;
 
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UserService>();
         services.AddScoped<CartAccessService>();
         services.AddScoped<SharedCartService>();
+        services.AddScoped<NotificationService>();
 
         // Repositories
         services.AddScoped<ICartRepository, CartRepository>();
